@@ -15,10 +15,9 @@ def astype(
     dtype: DType,
     /,
     *,
-    copy: bool = True,
+    copy: bool = True,  # TODO: support  # pylint: disable=unused-argument
     device: Device | None = None,
 ) -> Value:
-    # TODO: copy is not yet supported
     out = jax.lax.convert_element_type(x, dtype)
     return jax.device_put(out, device=device)
 

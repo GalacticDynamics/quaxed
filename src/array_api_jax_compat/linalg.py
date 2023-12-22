@@ -38,8 +38,13 @@ from ._utils import quaxify
 
 
 @quaxify
-def cholesky(x: Value, /, *, upper: bool = False) -> Value:
-    return jnp.linalg.cholesky(x, upper=upper)
+def cholesky(
+    x: Value,
+    /,
+    *,
+    upper: bool = False,  # TODO: support  # pylint: disable=unused-argument
+) -> Value:
+    return jnp.linalg.cholesky(x)
 
 
 @quaxify
@@ -95,7 +100,7 @@ def matrix_power(x: Value, n: int, /) -> Value:
 
 @quaxify
 def matrix_rank(x: Value, /, *, rtol: float | Value | None = None) -> Value:
-    return jnp.linalg.matrix_rank(x, rtol=rtol)
+    return jnp.linalg.matrix_rank(x, tol=rtol)
 
 
 @quaxify
@@ -109,8 +114,13 @@ def outer(x1: Value, x2: Value, /) -> Value:
 
 
 @quaxify
-def pinv(x: Value, /, *, rtol: float | Value | None = None) -> Value:
-    return jnp.linalg.pinv(x, rtol=rtol)
+def pinv(
+    x: Value,
+    /,
+    *,
+    rtol: float | Value | None = None,  # pylint: disable=unused-argument
+) -> Value:
+    return jnp.linalg.pinv(x, rcond=rtol)
 
 
 @quaxify
@@ -140,7 +150,7 @@ def svd(x: Value, /, *, full_matrices: bool = True) -> tuple[Value, Value, Value
 
 @quaxify
 def svdvals(x: Value, /) -> Value:
-    return jnp.linalg.svdvals(x)
+    return jnp.linalg.svd(x, compute_uv=False)
 
 
 @quaxify
@@ -160,8 +170,14 @@ def trace(x: Value, /, *, offset: int = 0, dtype: DType | None = None) -> Value:
 
 
 @quaxify
-def vecdot(x1: Value, x2: Value, /, *, axis: int | None = None) -> Value:
-    return jnp.dot(x1, x2, axis=axis)
+def vecdot(
+    x1: Value,
+    x2: Value,
+    /,
+    *,
+    axis: int | None = None,  # TODO: support  # pylint: disable=unused-argument
+) -> Value:
+    return jnp.dot(x1, x2)
 
 
 @quaxify
@@ -171,6 +187,6 @@ def vector_norm(
     *,
     axis: int | tuple[int, ...] | None = None,
     keepdims: bool = False,
-    ord: int | float = 2,
+    ord: int | float = 2,  # pylint: disable=redefined-builtin
 ) -> Value:
     return jnp.linalg.norm(x, axis=axis, keepdims=keepdims, ord=ord)
