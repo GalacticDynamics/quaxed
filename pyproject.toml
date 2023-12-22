@@ -161,4 +161,3 @@ messages_control.disable = [
   "redefined-builtin",
   "wrong-import-position",
 ]
-
