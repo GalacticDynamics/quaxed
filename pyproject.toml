@@ -1,0 +1,159 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "array-api-jax-compat"
+authors = [
+  { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
+]
+description = "Array-API JAX compatibility"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Typing :: Typed",
+]
+dynamic = ["version"]
+dependencies = [
+  "numpy",
+  "plum-dispatch",
+  "quax",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest >=6",
+  "pytest-cov >=3",
+]
+dev = [
+  "pytest >=6",
+  "pytest-cov >=3",
+]
+docs = [
+  "sphinx>=7.0",
+  "myst_parser>=0.13",
+  "sphinx_copybutton",
+  "sphinx_autodoc_typehints",
+  "furo>=2023.08.17",
+]
+
+[project.urls]
+Homepage = "https://github.com/GalacticDynamics/array-api-jax-compat"
+"Bug Tracker" = "https://github.com/GalacticDynamics/array-api-jax-compat/issues"
+Discussions = "https://github.com/GalacticDynamics/array-api-jax-compat/discussions"
+Changelog = "https://github.com/GalacticDynamics/array-api-jax-compat/releases"
+
+
+[tool.hatch]
+version.source = "vcs"
+build.hooks.vcs.version-file = "src/array_api_jax_compat/_version.py"
+
+[tool.hatch.env.default]
+features = ["test"]
+scripts.test = "pytest {args}"
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+xfail_strict = true
+filterwarnings = [
+  "error",
+]
+log_cli_level = "INFO"
+testpaths = [
+  "tests",
+]
+
+
+[tool.coverage]
+run.source = ["array_api_jax_compat"]
+port.exclude_lines = [
+  'pragma: no cover',
+  '\.\.\.',
+  'if typing.TYPE_CHECKING:',
+]
+
+[tool.mypy]
+files = ["src", "tests"]
+python_version = "3.10"
+warn_unused_configs = true
+strict = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+warn_unreachable = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+warn_return_any = false
+plugins = [
+  "numpy.typing.mypy_plugin",
+]
+
+  [[tool.mypy.overrides]]
+  module = "array_api_jax_compat.*"
+  disallow_untyped_defs = true
+  disallow_incomplete_defs = true
+
+  [[tool.mypy.overrides]]
+  module = [
+    "jax.*",
+    "plum.*",
+    "quax.*",
+  ]
+  ignore_missing_imports = true
+
+
+
+[tool.ruff]
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = ["ALL"]
+ignore = [
+  "A001",  # Variable is shadowing a Python builtin
+  "A002",  # Argument is shadowing a Python builtin
+  "ANN101",  # Missing type annotation for self in method
+  "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed  # TODO
+  "ARG001",  # Unused function argument
+  "D103",  # Missing docstring in public function  # TODO
+  "D203",  # one-blank-line-before-class
+  "D213",  # Multi-line docstring summary should start at the second line
+  "ERA001",  # Found commented-out code
+  "FIX002",  # Line contains TODO, consider resolving the issue
+  "PYI041",  # Use `float` instead of `int | float`
+  "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
+  "TD003",  # Missing issue link on the line following this TODO
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["INP001", "S101", "T20"]
+"__init__.py" = ["F403"]
+"noxfile.py" = ["T20"]
+"docs/conf.py" = ["INP001"]
+"scratch/**" = ["ANN", "D", "FBT", "INP"]
+
+
+[tool.pylint]
+py-version = "3.10"
+ignore-paths = [".*/_version.py"]
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+messages_control.disable = [
+  "design",
+  "fixme",
+  "line-too-long",
+  "missing-module-docstring",
+  "wrong-import-position",
+]
