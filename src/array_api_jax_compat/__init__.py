@@ -3,6 +3,8 @@
 array-api-jax-compat: Array-API JAX compatibility
 """
 
+# pylint: disable=redefined-builtin
+
 
 from __future__ import annotations
 
@@ -55,8 +57,8 @@ __all__ += _utility_functions.__all__
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation
     """Forward all other attribute accesses to Quaxified JAX."""
-    import jax
-    from quax import quaxify
+    import jax  # pylint: disable=C0415,W0621
+    from quax import quaxify  # pylint: disable=C0415,W0621
 
     # TODO: detect if the attribute is a function or a module.
     # If it is a function, quaxify it. If it is a module, return a proxy object

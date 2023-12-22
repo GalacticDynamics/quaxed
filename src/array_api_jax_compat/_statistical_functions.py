@@ -15,13 +15,13 @@ def cumulative_sum(
     *,
     axis: int | None = None,
     dtype: DType | None = None,
-    include_initial: bool = False,
+    include_initial: bool = False,  # TODO: support  # pylint: disable=unused-argument
 ) -> Value:
     return jnp.cumsum(x, axis=axis, dtype=dtype)
 
 
 @quaxify
-def max(
+def max(  # pylint: disable=redefined-builtin
     x: Value,
     /,
     *,
@@ -43,7 +43,7 @@ def mean(
 
 
 @quaxify
-def min(
+def min(  # pylint: disable=redefined-builtin
     x: Value,
     /,
     *,
@@ -74,11 +74,11 @@ def std(
     correction: int | float = 0.0,
     keepdims: bool = False,
 ) -> Value:
-    return jnp.std(x, axis=axis, correction=correction, keepdims=keepdims)
+    return jnp.std(x, axis=axis, ddof=correction, keepdims=keepdims)
 
 
 @quaxify
-def sum(
+def sum(  # pylint: disable=redefined-builtin
     x: Value,
     /,
     *,
@@ -98,4 +98,4 @@ def var(
     correction: int | float = 0.0,
     keepdims: bool = False,
 ) -> Value:
-    return jnp.var(x, axis=axis, correction=correction, keepdims=keepdims)
+    return jnp.var(x, axis=axis, ddof=correction, keepdims=keepdims)

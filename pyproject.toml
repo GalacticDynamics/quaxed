@@ -28,6 +28,8 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
+  "jax",
+  "jaxlib",
   "numpy",
   "plum-dispatch",
   "quax",
@@ -154,6 +156,8 @@ messages_control.disable = [
   "design",
   "fixme",
   "line-too-long",
+  "missing-function-docstring",  # TODO: reinstate.
   "missing-module-docstring",
+  "redefined-builtin",
   "wrong-import-position",
 ]

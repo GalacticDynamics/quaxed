@@ -19,13 +19,15 @@ class DType(Protocol):
 
 
 class SupportsBufferProtocol(Protocol):
-    ...  # TODO: add whatever defines the buffer protocol support
+    """Supports the buffer protocol."""
 
 
 _T_co = TypeVar("_T_co", covariant=True)
 
 
 class NestedSequence(Protocol[_T_co]):
+    """A nested sequence."""
+
     def __getitem__(self, key: int, /) -> "_T_co | NestedSequence[_T_co]":
         ...
 

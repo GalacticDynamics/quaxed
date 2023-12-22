@@ -97,5 +97,12 @@ def tile(x: Value, repetitions: tuple[int, ...], /) -> Value:
 
 
 @quaxify
-def unstack(x: Value, /, *, axis: int = 0) -> tuple[Value, ...]:
-    return jnp.split(x, axis=axis)
+def unstack(
+    x: Value,  # TODO: support  # pylint: disable=unused-argument
+    /,
+    *,
+    axis: int = 0,  # TODO: support  # pylint: disable=unused-argument
+) -> tuple[Value, ...]:
+    msg = "not yet supported."
+    raise NotImplementedError(msg)
+    # return jnp.split(x, axis=axis)

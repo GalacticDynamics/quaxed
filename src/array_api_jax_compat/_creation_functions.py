@@ -51,7 +51,7 @@ def asarray(
     *,
     dtype: DType | None = None,
     device: Device | None = None,
-    copy: bool | None = None,
+    copy: bool | None = None,  # TODO: support  # pylint: disable=unused-argument
 ) -> Value:
     out = jnp.asarray(obj, dtype=dtype)
     return jax.device_put(out, device=device)

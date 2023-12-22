@@ -32,4 +32,5 @@ def tensordot(
 
 @quaxify
 def vecdot(x1: Value, x2: Value, /, *, axis: int = -1) -> Value:
-    return jnp.dot(x1, x2, axis=axis)
+    del axis  # TODO: support
+    return jnp.dot(x1, x2)
