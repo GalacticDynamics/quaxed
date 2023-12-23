@@ -31,6 +31,7 @@ from collections.abc import Sequence
 from typing import Literal
 
 import jax.numpy as jnp
+from jax.experimental import array_api
 from quax import Value
 
 from ._types import DType
@@ -38,48 +39,43 @@ from ._utils import quaxify
 
 
 @quaxify
-def cholesky(
-    x: Value,
-    /,
-    *,
-    upper: bool = False,  # TODO: support  # pylint: disable=unused-argument
-) -> Value:
-    return jnp.linalg.cholesky(x)
+def cholesky(x: Value, /, *, upper: bool = False) -> Value:
+    return array_api.linalg.cholesky(x, upper=upper)
 
 
 @quaxify
 def cross(x1: Value, x2: Value, /, *, axis: int = -1) -> Value:
-    return jnp.cross(x1, x2, axis=axis)
+    return array_api.linalg.cross(x1, x2, axis=axis)
 
 
 @quaxify
 def det(x: Value, /) -> Value:
-    return jnp.linalg.det(x)
+    return array_api.linalg.det(x)
 
 
 @quaxify
 def diagonal(x: Value, /, *, offset: int = 0) -> Value:
-    return jnp.diagonal(x, offset=offset)
+    return array_api.linalg.diagonal(x, offset=offset)
 
 
 @quaxify
 def eigh(x: Value, /) -> tuple[Value]:
-    return jnp.linalg.eigh(x)
+    return array_api.linalg.eigh(x)
 
 
 @quaxify
 def eigvalsh(x: Value, /) -> Value:
-    return jnp.linalg.eigvalsh(x)
+    return array_api.linalg.eigvalsh(x)
 
 
 @quaxify
 def inv(x: Value, /) -> Value:
-    return jnp.linalg.inv(x)
+    return array_api.linalg.inv(x)
 
 
 @quaxify
 def matmul(x1: Value, x2: Value, /) -> Value:
-    return jnp.matmul(x1, x2)
+    return array_api.matmul(x1, x2)
 
 
 @quaxify
@@ -90,37 +86,32 @@ def matrix_norm(
     keepdims: bool = False,
     ord: int | float | Literal["fro", "nuc"] | None = "fro",
 ) -> Value:
-    return jnp.linalg.norm(x, keepdims=keepdims, ord=ord)
+    return array_api.linalg.matrix_norm(x, keepdims=keepdims, ord=ord)
 
 
 @quaxify
 def matrix_power(x: Value, n: int, /) -> Value:
-    return jnp.linalg.matrix_power(x, n)
+    return array_api.linalg.matrix_power(x, n)
 
 
 @quaxify
 def matrix_rank(x: Value, /, *, rtol: float | Value | None = None) -> Value:
-    return jnp.linalg.matrix_rank(x, tol=rtol)
+    return array_api.linalg.matrix_rank(x, rtol=rtol)
 
 
 @quaxify
 def matrix_transpose(x: Value, /) -> Value:
-    return jnp.transpose(x)
+    return array_api.linalg.matrix_transpose(x)
 
 
 @quaxify
 def outer(x1: Value, x2: Value, /) -> Value:
-    return jnp.outer(x1, x2)
+    return array_api.linalg.outer(x1, x2)
 
 
 @quaxify
-def pinv(
-    x: Value,
-    /,
-    *,
-    rtol: float | Value | None = None,  # pylint: disable=unused-argument
-) -> Value:
-    return jnp.linalg.pinv(x, rcond=rtol)
+def pinv(x: Value, /, *, rtol: float | Value | None = None) -> Value:
+    return array_api.linalg.pinv(x, rtol=rtol)
 
 
 @quaxify
@@ -130,27 +121,27 @@ def qr(
     *,
     mode: Literal["reduced", "complete"] = "reduced",
 ) -> tuple[Value, Value]:
-    return jnp.linalg.qr(x, mode=mode)
+    return array_api.linalg.qr(x, mode=mode)
 
 
 @quaxify
 def slogdet(x: Value, /) -> tuple[Value, Value]:
-    return jnp.linalg.slogdet(x)
+    return array_api.linalg.slogdet(x)
 
 
 @quaxify
 def solve(x1: Value, x2: Value, /) -> Value:
-    return jnp.linalg.solve(x1, x2)
+    return array_api.linalg.solve(x1, x2)
 
 
 @quaxify
 def svd(x: Value, /, *, full_matrices: bool = True) -> tuple[Value, Value, Value]:
-    return jnp.linalg.svd(x, full_matrices=full_matrices)
+    return array_api.linalg.svd(x, full_matrices=full_matrices)
 
 
 @quaxify
 def svdvals(x: Value, /) -> Value:
-    return jnp.linalg.svd(x, compute_uv=False)
+    return array_api.linalg.svdvals(x)
 
 
 @quaxify
@@ -161,7 +152,7 @@ def tensordot(
     *,
     axes: int | tuple[Sequence[int], Sequence[int]] = 2,
 ) -> Value:
-    return jnp.tensordot(x1, x2, axes=axes)
+    return array_api.tensordot(x1, x2, axes=axes)
 
 
 @quaxify
@@ -170,14 +161,8 @@ def trace(x: Value, /, *, offset: int = 0, dtype: DType | None = None) -> Value:
 
 
 @quaxify
-def vecdot(
-    x1: Value,
-    x2: Value,
-    /,
-    *,
-    axis: int | None = None,  # TODO: support  # pylint: disable=unused-argument
-) -> Value:
-    return jnp.dot(x1, x2)
+def vecdot(x1: Value, x2: Value, /, *, axis: int | None = None) -> Value:
+    return array_api.vecdot(x1, x2, axis=axis)
 
 
 @quaxify
@@ -189,4 +174,4 @@ def vector_norm(
     keepdims: bool = False,
     ord: int | float = 2,  # pylint: disable=redefined-builtin
 ) -> Value:
-    return jnp.linalg.norm(x, axis=axis, keepdims=keepdims, ord=ord)
+    return array_api.linalg.vector_norm(x, axis=axis, keepdims=keepdims, ord=ord)
