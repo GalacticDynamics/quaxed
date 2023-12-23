@@ -111,6 +111,7 @@ plugins = [
   [[tool.mypy.overrides]]
   module = [
     "jax.*",
+    "jaxtyping.*",
     "plum.*",
     "quax.*",
   ]

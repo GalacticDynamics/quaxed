@@ -16,7 +16,6 @@ __all__ = [
     "bitwise_xor",
     "ceil",
     "conj",
-    "copysign",
     "cos",
     "cosh",
     "divide",
@@ -42,8 +41,6 @@ __all__ = [
     "logical_not",
     "logical_or",
     "logical_xor",
-    "maximum",
-    "minimum",
     "multiply",
     "negative",
     "not_equal",
@@ -53,7 +50,6 @@ __all__ = [
     "remainder",
     "round",
     "sign",
-    "signbit",
     "sin",
     "sinh",
     "square",
@@ -65,7 +61,7 @@ __all__ = [
 ]
 
 
-import jax.numpy as jnp
+from jax.experimental import array_api
 from quax import Value
 
 from ._utils import quaxify
@@ -73,314 +69,294 @@ from ._utils import quaxify
 
 @quaxify
 def abs(x: Value, /) -> Value:
-    return jnp.abs(x)
+    return array_api.abs(x)
 
 
 @quaxify
 def acos(x: Value, /) -> Value:
-    return jnp.arccos(x)
+    return array_api.acos(x)
 
 
 @quaxify
 def acosh(x: Value, /) -> Value:
-    return jnp.arccosh(x)
+    return array_api.acosh(x)
 
 
 @quaxify
 def add(x1: Value, x2: Value, /) -> Value:
-    return jnp.add(x1, x2)
+    return array_api.add(x1, x2)
 
 
 @quaxify
 def asin(x: Value, /) -> Value:
-    return jnp.arcsin(x)
+    return array_api.asin(x)
 
 
 @quaxify
 def asinh(x: Value, /) -> Value:
-    return jnp.arcsinh(x)
+    return array_api.asinh(x)
 
 
 @quaxify
 def atan(x: Value, /) -> Value:
-    return jnp.arctan(x)
+    return array_api.atan(x)
 
 
 @quaxify
 def atan2(x1: Value, x2: Value, /) -> Value:
-    return jnp.arctan2(x1, x2)
+    return array_api.atan2(x1, x2)
 
 
 @quaxify
 def atanh(x: Value, /) -> Value:
-    return jnp.arctanh(x)
+    return array_api.atanh(x)
 
 
 @quaxify
 def bitwise_and(x1: Value, x2: Value, /) -> Value:
-    return jnp.bitwise_and(x1, x2)
+    return array_api.bitwise_and(x1, x2)
 
 
 @quaxify
 def bitwise_left_shift(x1: Value, x2: Value, /) -> Value:
-    return jnp.left_shift(x1, x2)
+    return array_api.bitwise_left_shift(x1, x2)
 
 
 @quaxify
 def bitwise_invert(x: Value, /) -> Value:
-    return jnp.bitwise_not(x)
+    return array_api.bitwise_invert(x)
 
 
 @quaxify
 def bitwise_or(x1: Value, x2: Value, /) -> Value:
-    return jnp.bitwise_or(x1, x2)
+    return array_api.bitwise_or(x1, x2)
 
 
 @quaxify
 def bitwise_right_shift(x1: Value, x2: Value, /) -> Value:
-    return jnp.right_shift(x1, x2)
+    return array_api.bitwise_right_shift(x1, x2)
 
 
 @quaxify
 def bitwise_xor(x1: Value, x2: Value, /) -> Value:
-    return jnp.bitwise_xor(x1, x2)
+    return array_api.bitwise_xor(x1, x2)
 
 
 @quaxify
 def ceil(x: Value, /) -> Value:
-    return jnp.ceil(x)
+    return array_api.ceil(x)
 
 
 @quaxify
 def conj(x: Value, /) -> Value:
-    return jnp.conj(x)
-
-
-@quaxify
-def copysign(x1: Value, x2: Value, /) -> Value:
-    return jnp.copysign(x1, x2)
+    return array_api.conj(x)
 
 
 @quaxify
 def cos(x: Value, /) -> Value:
-    return jnp.cos(x)
+    return array_api.cos(x)
 
 
 @quaxify
 def cosh(x: Value, /) -> Value:
-    return jnp.cosh(x)
+    return array_api.cosh(x)
 
 
 @quaxify
 def divide(x1: Value, x2: Value, /) -> Value:
-    return jnp.divide(x1, x2)
+    return array_api.divide(x1, x2)
 
 
 @quaxify
 def equal(x1: Value, x2: Value, /) -> Value:
-    return jnp.equal(x1, x2)
+    return array_api.equal(x1, x2)
 
 
 @quaxify
 def exp(x: Value, /) -> Value:
-    return jnp.exp(x)
+    return array_api.exp(x)
 
 
 @quaxify
 def expm1(x: Value, /) -> Value:
-    return jnp.expm1(x)
+    return array_api.expm1(x)
 
 
 @quaxify
 def floor(x: Value, /) -> Value:
-    return jnp.floor(x)
+    return array_api.floor(x)
 
 
 @quaxify
 def floor_divide(x1: Value, x2: Value, /) -> Value:
-    return jnp.floor_divide(x1, x2)
+    return array_api.floor_divide(x1, x2)
 
 
 @quaxify
 def greater(x1: Value, x2: Value, /) -> Value:
-    return jnp.greater(x1, x2)
+    return array_api.greater(x1, x2)
 
 
 @quaxify
 def greater_equal(x1: Value, x2: Value, /) -> Value:
-    return jnp.greater_equal(x1, x2)
+    return array_api.greater_equal(x1, x2)
 
 
 @quaxify
 def imag(x: Value, /) -> Value:
-    return jnp.imag(x)
+    return array_api.imag(x)
 
 
 @quaxify
 def isfinite(x: Value, /) -> Value:
-    return jnp.isfinite(x)
+    return array_api.isfinite(x)
 
 
 @quaxify
 def isinf(x: Value, /) -> Value:
-    return jnp.isinf(x)
+    return array_api.isinf(x)
 
 
 @quaxify
 def isnan(x: Value, /) -> Value:
-    return jnp.isnan(x)
+    return array_api.isnan(x)
 
 
 @quaxify
 def less(x1: Value, x2: Value, /) -> Value:
-    return jnp.less(x1, x2)
+    return array_api.less(x1, x2)
 
 
 @quaxify
 def less_equal(x1: Value, x2: Value, /) -> Value:
-    return jnp.less_equal(x1, x2)
+    return array_api.less_equal(x1, x2)
 
 
 @quaxify
 def log(x: Value, /) -> Value:
-    return jnp.log(x)
+    return array_api.log(x)
 
 
 @quaxify
 def log1p(x: Value, /) -> Value:
-    return jnp.log1p(x)
+    return array_api.log1p(x)
 
 
 @quaxify
 def log2(x: Value, /) -> Value:
-    return jnp.log2(x)
+    return array_api.log2(x)
 
 
 @quaxify
 def log10(x: Value, /) -> Value:
-    return jnp.log10(x)
+    return array_api.log10(x)
 
 
 @quaxify
 def logaddexp(x1: Value, x2: Value, /) -> Value:
-    return jnp.logaddexp(x1, x2)
+    return array_api.logaddexp(x1, x2)
 
 
 @quaxify
 def logical_and(x1: Value, x2: Value, /) -> Value:
-    return jnp.logical_and(x1, x2)
+    return array_api.logical_and(x1, x2)
 
 
 @quaxify
 def logical_not(x: Value, /) -> Value:
-    return jnp.logical_not(x)
+    return array_api.logical_not(x)
 
 
 @quaxify
 def logical_or(x1: Value, x2: Value, /) -> Value:
-    return jnp.logical_or(x1, x2)
+    return array_api.logical_or(x1, x2)
 
 
 @quaxify
 def logical_xor(x1: Value, x2: Value, /) -> Value:
-    return jnp.logical_xor(x1, x2)
-
-
-@quaxify
-def maximum(x1: Value, x2: Value, /) -> Value:
-    return jnp.maximum(x1, x2)
-
-
-@quaxify
-def minimum(x1: Value, x2: Value, /) -> Value:
-    return jnp.minimum(x1, x2)
+    return array_api.logical_xor(x1, x2)
 
 
 @quaxify
 def multiply(x1: Value, x2: Value, /) -> Value:
-    return jnp.multiply(x1, x2)
+    return array_api.multiply(x1, x2)
 
 
 @quaxify
 def negative(x: Value, /) -> Value:
-    return jnp.negative(x)
+    return array_api.negative(x)
 
 
 @quaxify
 def not_equal(x1: Value, x2: Value, /) -> Value:
-    return jnp.not_equal(x1, x2)
+    return array_api.not_equal(x1, x2)
 
 
 @quaxify
 def positive(x: Value, /) -> Value:
-    return jnp.positive(x)
+    return array_api.positive(x)
 
 
 @quaxify
 def pow(x1: Value, x2: Value, /) -> Value:
-    return jnp.power(x1, x2)
+    return array_api.pow(x1, x2)
 
 
 @quaxify
 def real(x: Value, /) -> Value:
-    return jnp.real(x)
+    return array_api.real(x)
 
 
 @quaxify
 def remainder(x1: Value, x2: Value, /) -> Value:
-    return jnp.remainder(x1, x2)
+    return array_api.remainder(x1, x2)
 
 
 @quaxify
 def round(x: Value, /) -> Value:
-    return jnp.round(x)
+    return array_api.round(x)
 
 
 @quaxify
 def sign(x: Value, /) -> Value:
-    return jnp.sign(x)
-
-
-@quaxify
-def signbit(x: Value, /) -> Value:
-    return jnp.signbit(x)
+    return array_api.sign(x)
 
 
 @quaxify
 def sin(x: Value, /) -> Value:
-    return jnp.sin(x)
+    return array_api.sin(x)
 
 
 @quaxify
 def sinh(x: Value, /) -> Value:
-    return jnp.sinh(x)
+    return array_api.sinh(x)
 
 
 @quaxify
 def square(x: Value, /) -> Value:
-    return jnp.square(x)
+    return array_api.square(x)
 
 
 @quaxify
 def sqrt(x: Value, /) -> Value:
-    return jnp.sqrt(x)
+    return array_api.sqrt(x)
 
 
 @quaxify
 def subtract(x1: Value, x2: Value, /) -> Value:
-    return jnp.subtract(x1, x2)
+    return array_api.subtract(x1, x2)
 
 
 @quaxify
 def tan(x: Value, /) -> Value:
-    return jnp.tan(x)
+    return array_api.tan(x)
 
 
 @quaxify
 def tanh(x: Value, /) -> Value:
-    return jnp.tanh(x)
+    return array_api.tanh(x)
 
 
 @quaxify
 def trunc(x: Value, /) -> Value:
-    return jnp.trunc(x)
+    return array_api.trunc(x)

@@ -1,7 +1,7 @@
 __all__ = ["argsort", "sort"]
 
 
-import jax.numpy as jnp
+from jax.experimental import array_api
 from quax import Value
 
 from ._utils import quaxify
@@ -13,10 +13,10 @@ def argsort(
     /,
     *,
     axis: int = -1,
-    descending: bool = False,  # TODO: support  # pylint: disable=unused-argument
+    descending: bool = False,
     stable: bool = True,
 ) -> Value:
-    return jnp.argsort(x, axis=axis, kind="stable" if stable else "quicksort")
+    return array_api.argsort(x, axis=axis, descending=descending, stable=stable)
 
 
 @quaxify
@@ -25,7 +25,7 @@ def sort(
     /,
     *,
     axis: int = -1,
-    descending: bool = False,  # TODO: support  # pylint: disable=unused-argument
+    descending: bool = False,
     stable: bool = True,
 ) -> Value:
-    return jnp.sort(x, axis=axis, kind="stable" if stable else "quicksort")
+    return array_api.sort(x, axis=axis, descending=descending, stable=stable)

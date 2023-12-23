@@ -1,8 +1,8 @@
 __all__ = ["astype", "can_cast", "finfo", "iinfo", "isdtype", "result_type"]
 
 
-import jax
-from jax import Device
+from jax.experimental import array_api
+from jax.experimental.array_api._data_type_functions import FInfo, IInfo
 from quax import Value
 
 from ._types import DType
@@ -10,38 +10,30 @@ from ._utils import quaxify
 
 
 @quaxify
-def astype(
-    x: Value,
-    dtype: DType,
-    /,
-    *,
-    copy: bool = True,  # TODO: support  # pylint: disable=unused-argument
-    device: Device | None = None,
-) -> Value:
-    out = jax.lax.convert_element_type(x, dtype)
-    return jax.device_put(out, device=device)
+def astype(x: Value, dtype: DType, /, *, copy: bool = True) -> Value:
+    return array_api.astype(x, dtype, copy=copy)
 
 
 @quaxify
 def can_cast(from_: DType | Value, to: DType, /) -> bool:
-    return jax.numpy.can_cast(from_, to)
+    return array_api.can_cast(from_, to)
 
 
 @quaxify
-def finfo(type: DType | Value, /) -> jax.numpy.finfo:
-    return jax.numpy.finfo(type)
+def finfo(type: DType | Value, /) -> FInfo:
+    return array_api.finfo(type)
 
 
 @quaxify
-def iinfo(type: DType | Value, /) -> jax.numpy.iinfo:
-    return jax.numpy.iinfo(type)
+def iinfo(type: DType | Value, /) -> IInfo:
+    return array_api.iinfo(type)
 
 
 @quaxify
 def isdtype(dtype: DType, kind: DType | str | tuple[DType | str, ...]) -> bool:
-    raise NotImplementedError
+    return array_api.isdtype(dtype, kind)
 
 
 @quaxify
 def result_type(*arrays_and_dtypes: Value | DType) -> DType:
-    return jax.numpy.result_type(*arrays_and_dtypes)
+    return array_api.result_type(*arrays_and_dtypes)

@@ -3,7 +3,7 @@ __all__ = ["matmul", "matrix_transpose", "tensordot", "vecdot"]
 
 from collections.abc import Sequence
 
-import jax.numpy as jnp
+from jax.experimental import array_api
 from quax import Value
 
 from ._utils import quaxify
@@ -11,12 +11,12 @@ from ._utils import quaxify
 
 @quaxify
 def matmul(x1: Value, x2: Value, /) -> Value:
-    return jnp.matmul(x1, x2)
+    return array_api.matmul(x1, x2)
 
 
 @quaxify
 def matrix_transpose(x: Value, /) -> Value:
-    return jnp.transpose(x)
+    return array_api.matrix_transpose(x)
 
 
 @quaxify
@@ -27,10 +27,9 @@ def tensordot(
     *,
     axes: int | tuple[Sequence[int], Sequence[int]] = 2,
 ) -> Value:
-    return jnp.tensordot(x1, x2, axes=axes)
+    return array_api.tensordot(x1, x2, axes=axes)
 
 
 @quaxify
 def vecdot(x1: Value, x2: Value, /, *, axis: int = -1) -> Value:
-    del axis  # TODO: support
-    return jnp.dot(x1, x2)
+    return array_api.vecdot(x1, x2, axis=axis)
