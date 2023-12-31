@@ -21,7 +21,7 @@ __all__ = [
 
 
 from functools import partial
-from typing import Any, TypeVar
+from typing import TypeVar
 
 import jax
 import jax.numpy as jnp
@@ -30,7 +30,7 @@ from jax.experimental import array_api
 from quax import Value
 
 from ._dispatch import dispatcher
-from ._types import DType, NestedSequence, SupportsBufferProtocol
+from ._types import DType
 from ._utils import quaxify
 
 T = TypeVar("T")
@@ -38,16 +38,29 @@ T = TypeVar("T")
 # =============================================================================
 
 
-@quaxify  # TODO: probably need to dispatch this instead
+@dispatcher  # type: ignore[misc]
 def arange(
-    start: Value,
+    start: int | float | complex | jax.Array,
     /,
-    stop: Value | None = None,
-    step: Value = 1,
+    stop: int | float | complex | jax.Array | None = None,
+    step: int | float | complex | jax.Array = 1,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
-) -> Value:
+) -> jax.Array | jax.core.Tracer | Value:
+    return array_api.arange(start, stop, step, dtype=dtype, device=device)
+
+
+@dispatcher  # type: ignore[misc]
+def arange(
+    start: jax.Array | jax.core.Tracer,
+    /,
+    stop: jax.Array | None = None,
+    step: jax.Array | int = 1,
+    *,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> jax.Array | jax.core.Tracer:
     return array_api.arange(start, stop, step, dtype=dtype, device=device)
 
 
@@ -57,13 +70,7 @@ def arange(
 @partial(jax.jit, static_argnames=("dtype", "device", "copy"))
 @quaxify
 def asarray(
-    obj: Value
-    | bool
-    | int
-    | float
-    | complex
-    | NestedSequence[Any]
-    | SupportsBufferProtocol,
+    obj: Value,
     /,
     *,
     dtype: DType | None = None,

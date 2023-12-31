@@ -13,7 +13,7 @@ from typing import Any
 from jax.experimental.array_api import __array_api_version__
 from jaxtyping import install_import_hook
 
-with install_import_hook("array_api_jax_compat", "beartype.beartype"):
+with install_import_hook("array_api_jax_compat", None):
     from . import (
         _constants,
         _creation_functions,
