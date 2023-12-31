@@ -10,53 +10,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from jax.experimental.array_api import __array_api_version__
 from jaxtyping import install_import_hook
 
 with install_import_hook("array_api_jax_compat", None):
-    from . import (
-        _constants,
-        _creation_functions,
-        _data_type_functions,
-        _elementwise_functions,
-        _indexing_functions,
-        _linear_algebra_functions,
-        _manipulation_functions,
-        _searching_functions,
-        _set_functions,
-        _sorting_functions,
-        _statistical_functions,
-        _utility_functions,
-        fft,
-        linalg,
-    )
-    from ._constants import *
-    from ._creation_functions import *
-    from ._data_type_functions import *
-    from ._elementwise_functions import *
-    from ._indexing_functions import *
-    from ._linear_algebra_functions import *
-    from ._manipulation_functions import *
-    from ._searching_functions import *
-    from ._set_functions import *
-    from ._sorting_functions import *
-    from ._statistical_functions import *
-    from ._utility_functions import *
+    from . import _array_api
+    from ._array_api import *
     from ._version import version as __version__
 
-__all__ = ["__version__", "__array_api_version__", "fft", "linalg"]
-__all__ += _constants.__all__
-__all__ += _creation_functions.__all__
-__all__ += _data_type_functions.__all__
-__all__ += _elementwise_functions.__all__
-__all__ += _indexing_functions.__all__
-__all__ += _linear_algebra_functions.__all__
-__all__ += _manipulation_functions.__all__
-__all__ += _searching_functions.__all__
-__all__ += _set_functions.__all__
-__all__ += _sorting_functions.__all__
-__all__ += _statistical_functions.__all__
-__all__ += _utility_functions.__all__
+__all__ = ["__version__"]
+__all__ += _array_api.__all__
 
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation

@@ -29,9 +29,9 @@ from jax import Device
 from jax.experimental import array_api
 from quax import Value
 
-from ._dispatch import dispatcher
-from ._types import DType
-from ._utils import quaxify
+from array_api_jax_compat._dispatch import dispatcher
+from array_api_jax_compat._types import DType
+from array_api_jax_compat._utils import quaxify
 
 T = TypeVar("T")
 

@@ -4,8 +4,8 @@ __all__ = ["max", "mean", "min", "prod", "std", "sum", "var"]
 from jax.experimental import array_api
 from quax import Value
 
-from ._types import DType
-from ._utils import quaxify
+from array_api_jax_compat._types import DType
+from array_api_jax_compat._utils import quaxify
 
 
 @quaxify

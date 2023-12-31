@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from jax.experimental import array_api
 from quax import Value
 
-from ._utils import quaxify
+from array_api_jax_compat._utils import quaxify
 
 
 @quaxify

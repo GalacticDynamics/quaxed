@@ -24,7 +24,7 @@ from jax import Device
 from jax.experimental.array_api import fft as _jax_fft
 from quax import Value
 
-from ._utils import quaxify
+from array_api_jax_compat._utils import quaxify
 
 
 @quaxify
