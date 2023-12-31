@@ -257,11 +257,11 @@ def _complex_p(x: MyArray, y: MyArray) -> MyArray:
 
 @register(lax.concatenate_p)
 def _concatenate_p(
-    operand0: MyArray, *operands: MyArray | DenseArrayValue, dimension: Any
+    operand0: MyArray, *operands: MyArray | DenseArrayValue, dimension: Any,
 ) -> MyArray:
     return MyArray(
         lax.concatenate(
-            [operand0.array] + [op.array for op in operands], dimension=dimension
+            [operand0.array] + [op.array for op in operands], dimension=dimension,
         ),
     )
 

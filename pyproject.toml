@@ -127,23 +127,24 @@ src = ["src"]
 [tool.ruff.lint]
 extend-select = ["ALL"]
 ignore = [
-  "A001",  # Variable is shadowing a Python builtin
-  "A002",  # Argument is shadowing a Python builtin
+  "A001",    # Variable is shadowing a Python builtin
+  "A002",    # Argument is shadowing a Python builtin
   "ANN101",  # Missing type annotation for self in method
   "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed  # TODO
   "ARG001",  # Unused function argument
-  "D103",  # Missing docstring in public function  # TODO
-  "D203",  # one-blank-line-before-class
-  "D213",  # Multi-line docstring summary should start at the second line
+  "D103",    # Missing docstring in public function  # TODO
+  "D203",    # one-blank-line-before-class
+  "D213",    # Multi-line docstring summary should start at the second line
   "ERA001",  # Found commented-out code
   "FIX002",  # Line contains TODO, consider resolving the issue
+  "PD011",   # Pandas
   "PYI041",  # Use `float` instead of `int | float`
-  "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
-  "TD003",  # Missing issue link on the line following this TODO
+  "TD002",   # Missing author in TODO; try: `# TODO(<author_name>): .
+  "TD003",   # Missing issue link on the line following this TODO
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["ANN", "INP001", "S101", "T20"]
+"tests/**" = ["ANN", "INP001", "PLR0913", "S101", "T20"]
 "__init__.py" = ["F403"]
 "noxfile.py" = ["T20"]
 "docs/conf.py" = ["INP001"]
