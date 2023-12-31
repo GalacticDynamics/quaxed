@@ -29,9 +29,7 @@ def iinfo(type: DType | Value, /) -> IInfo:
     return array_api.iinfo(type)
 
 
-@quaxify
-def isdtype(dtype: DType, kind: DType | str | tuple[DType | str, ...]) -> bool:
-    return array_api.isdtype(dtype, kind)
+isdtype = quaxify(array_api.isdtype)
 
 
 @quaxify

@@ -140,7 +140,7 @@ def full(
 def full_like(
     x: jax.Array | jax.core.Tracer | Value,
     /,
-    fill_value: bool | int | float | complex,
+    fill_value: bool | int | float | complex | jax.Array | Value,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
@@ -214,7 +214,7 @@ def ones_like(
 # @partial(jax.jit, static_argnames=("k",))
 @quaxify
 def tril(x: Value, /, *, k: int = 0) -> Value:
-    return jnp.tril(x, k=k)
+    return array_api.tril(x, k=k)
 
 
 # =============================================================================
@@ -223,7 +223,7 @@ def tril(x: Value, /, *, k: int = 0) -> Value:
 # @partial(jax.jit, static_argnames=("k",))
 @quaxify
 def triu(x: Value, /, *, k: int = 0) -> Value:
-    return jnp.triu(x, k=k)
+    return array_api.triu(x, k=k)
 
 
 # =============================================================================
