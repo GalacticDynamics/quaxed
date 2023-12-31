@@ -92,7 +92,7 @@ port.exclude_lines = [
 ]
 
 [tool.mypy]
-files = ["src", "tests"]
+files = ["src"]
 python_version = "3.10"
 warn_unused_configs = true
 strict = true

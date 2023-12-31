@@ -23,9 +23,11 @@ class MyArray(ArrayValue):
     array: jax.Array = eqx.field(converter=jax_xp.asarray)
 
     def materialise(self) -> jax.Array:
+        """Convert to a JAX array."""
         raise NotImplementedError
 
     def aval(self) -> jax.core.ShapedArray:
+        """Return the ShapedArray."""
         return jax.core.get_aval(self.array)
 
 

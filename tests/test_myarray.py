@@ -1,6 +1,5 @@
 """Test with :class:`quax.DenseArrayValue` inputs."""
 
-import jax.experimental.array_api as jax_xp
 from myarray import MyArray
 
 import array_api_jax_compat as xp
@@ -44,7 +43,7 @@ def test_arange():
     """Test `arange`."""
     # TODO: test the start, stop, step, dtype, device arguments
     got = xp.arange(MyArray(3))
-    expected = MyArray(jax_xp.arange(3))
+    # expected = MyArray(jax_xp.arange(3))
 
     assert isinstance(got, MyArray)
     # assert jnp.array_equal(got, expected)

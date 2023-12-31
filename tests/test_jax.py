@@ -1,7 +1,6 @@
 """Test with JAX inputs."""
 
 
-import jax.numpy as jnp
 from jax.experimental import array_api as jax_xp
 
 import array_api_jax_compat as xp
