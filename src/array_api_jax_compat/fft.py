@@ -21,7 +21,7 @@ from collections.abc import Sequence
 from typing import Literal
 
 from jax import Device
-from jax.experimental import array_api
+from jax.experimental.array_api import fft as _jax_fft
 from quax import Value
 
 from ._utils import quaxify
@@ -36,7 +36,7 @@ def fft(
     axis: int = -1,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.fft(x, n=n, axis=axis, norm=norm)
+    return _jax_fft.fft(x, n=n, axis=axis, norm=norm)
 
 
 @quaxify
@@ -48,7 +48,7 @@ def ifft(
     axis: int = -1,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.ifft(x, n=n, axis=axis, norm=norm)
+    return _jax_fft.ifft(x, n=n, axis=axis, norm=norm)
 
 
 @quaxify
@@ -60,7 +60,7 @@ def fftn(
     axes: Sequence[int] | None = None,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.fftn(x, s=s, axes=axes, norm=norm)
+    return _jax_fft.fftn(x, s=s, axes=axes, norm=norm)
 
 
 @quaxify
@@ -72,7 +72,7 @@ def ifftn(
     axes: Sequence[int] | None = None,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.ifftn(x, s=s, axes=axes, norm=norm)
+    return _jax_fft.ifftn(x, s=s, axes=axes, norm=norm)
 
 
 @quaxify
@@ -84,7 +84,7 @@ def rfft(
     axis: int = -1,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.rfft(x, n=n, axis=axis, norm=norm)
+    return _jax_fft.rfft(x, n=n, axis=axis, norm=norm)
 
 
 @quaxify
@@ -96,7 +96,7 @@ def irfft(
     axis: int = -1,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.irfft(x, n=n, axis=axis, norm=norm)
+    return _jax_fft.irfft(x, n=n, axis=axis, norm=norm)
 
 
 @quaxify
@@ -108,7 +108,7 @@ def rfftn(
     axes: Sequence[int] | None = None,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.rfftn(x, s=s, axes=axes, norm=norm)
+    return _jax_fft.rfftn(x, s=s, axes=axes, norm=norm)
 
 
 @quaxify
@@ -120,7 +120,7 @@ def irfftn(
     axes: Sequence[int] | None = None,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.irfftn(x, s=s, axes=axes, norm=norm)
+    return _jax_fft.irfftn(x, s=s, axes=axes, norm=norm)
 
 
 @quaxify
@@ -132,7 +132,7 @@ def hfft(
     axis: int = -1,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.hfft(x, n=n, axis=axis, norm=norm)
+    return _jax_fft.hfft(x, n=n, axis=axis, norm=norm)
 
 
 @quaxify
@@ -144,24 +144,24 @@ def ihfft(
     axis: int = -1,
     norm: Literal["backward", "ortho", "forward"] = "backward",
 ) -> Value:
-    return array_api.fft.ihfft(x, n=n, axis=axis, norm=norm)
+    return _jax_fft.ihfft(x, n=n, axis=axis, norm=norm)
 
 
 @quaxify
 def fftfreq(n: int, /, *, d: float = 1.0, device: Device | None = None) -> Value:
-    return array_api.fft.fftfreq(n, d=d, device=device)
+    return _jax_fft.fftfreq(n, d=d, device=device)
 
 
 @quaxify
 def rfftfreq(n: int, /, *, d: float = 1.0, device: Device | None = None) -> Value:
-    return array_api.fft.rfftfreq(n, d=d, device=device)
+    return _jax_fft.rfftfreq(n, d=d, device=device)
 
 
 @quaxify
 def fftshift(x: Value, /, *, axes: int | Sequence[int] | None = None) -> Value:
-    return array_api.fft.fftshift(x, axes=axes)
+    return _jax_fft.fftshift(x, axes=axes)
 
 
 @quaxify
 def ifftshift(x: Value, /, *, axes: int | Sequence[int] | None = None) -> Value:
-    return array_api.fft.ifftshift(x, axes=axes)
+    return _jax_fft.ifftshift(x, axes=axes)

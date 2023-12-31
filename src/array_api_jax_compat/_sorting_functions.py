@@ -1,3 +1,5 @@
+"""Sorting functions."""
+
 __all__ = ["argsort", "sort"]
 
 
