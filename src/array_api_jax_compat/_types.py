@@ -18,6 +18,7 @@ class DType(Protocol):
     dtype: np.dtype[Any]
 
 
+@runtime_checkable  # TODO: need actual implementation
 class SupportsBufferProtocol(Protocol):
     """Supports the buffer protocol."""
 
@@ -25,6 +26,7 @@ class SupportsBufferProtocol(Protocol):
 _T_co = TypeVar("_T_co", covariant=True)
 
 
+@runtime_checkable
 class NestedSequence(Protocol[_T_co]):
     """A nested sequence."""
 

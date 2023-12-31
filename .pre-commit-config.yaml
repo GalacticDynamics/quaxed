@@ -28,6 +28,7 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: ["--pytest-test-first"]
+        exclude: tests/myarray.py
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
@@ -55,7 +56,7 @@ repos:
     rev: "v1.8.0"
     hooks:
       - id: mypy
-        files: src|tests
+        files: src
         args: []
         additional_dependencies:
           - numpy

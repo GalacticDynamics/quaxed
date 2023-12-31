@@ -2,7 +2,7 @@
 
 __all__ = ["all", "any"]
 
-import jax.numpy as jnp
+from jax.experimental import array_api
 from quax import Value
 
 from ._utils import quaxify
@@ -16,7 +16,7 @@ def all(
     axis: int | tuple[int, ...] | None = None,
     keepdims: bool = False,
 ) -> Value:
-    return jnp.all(x, axis=axis, keepdims=keepdims)
+    return array_api.all(x, axis=axis, keepdims=keepdims)
 
 
 @quaxify
@@ -27,4 +27,4 @@ def any(
     axis: int | tuple[int, ...] | None = None,
     keepdims: bool = False,
 ) -> Value:
-    return jnp.any(x, axis=axis, keepdims=keepdims)
+    return array_api.any(x, axis=axis, keepdims=keepdims)

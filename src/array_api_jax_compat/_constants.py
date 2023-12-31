@@ -2,4 +2,4 @@
 
 __all__ = ["e", "inf", "nan", "newaxis", "pi"]
 
-from jax.numpy import e, inf, nan, newaxis, pi
+from jax.experimental.array_api import e, inf, nan, newaxis, pi
