@@ -7,10 +7,15 @@ from typing import Any
 import equinox as eqx
 import jax
 import jax.experimental.array_api as jax_xp
-from jax import lax
+from jax import Device, lax
+from jax._src.lax.lax import DotDimensionNumbers, PrecisionLike
+from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
+from jax._src.typing import DTypeLike, Shape
 from quax import ArrayValue, DenseArrayValue, register
+from quax.zero import Zero
 
 from array_api_jax_compat._dispatch import dispatcher
+from array_api_jax_compat._types import DType
 
 
 class MyArray(ArrayValue):
@@ -44,7 +49,7 @@ def _abs_p(x: MyArray) -> MyArray:
 
 @register(lax.acos_p)
 def _acos_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.acos(x))
+    return replace(x, array=lax.acos(x.array))
 
 
 # ==============================================================================
@@ -52,14 +57,14 @@ def _acos_p(x: MyArray) -> MyArray:
 
 @register(lax.acosh_p)
 def _acosh_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.acosh(x))
+    return replace(x, array=lax.acosh(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.add_p)
-def _add_p_qq(x: MyArray, y: MyArray) -> MyArray:
+def _add_p_qq(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
     return MyArray(lax.add(x.array, y.array))
 
 
@@ -251,9 +256,13 @@ def _complex_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.concatenate_p)
-def _concatenate_p(*operands: MyArray, dimension: Any) -> MyArray:
+def _concatenate_p(
+    operand0: MyArray, *operands: MyArray | DenseArrayValue, dimension: Any
+) -> MyArray:
     return MyArray(
-        lax.concatenate([op.array for op in operands], dimension=dimension),
+        lax.concatenate(
+            [operand0.array] + [op.array for op in operands], dimension=dimension
+        ),
     )
 
 
@@ -395,7 +404,7 @@ def _digamma_p(x: MyArray) -> MyArray:
 
 
 @register(lax.div_p)
-def _div_p(x: MyArray, y: MyArray) -> MyArray:
+def _div_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
     return MyArray(lax.div(x.array, y.array))
 
 
@@ -403,8 +412,23 @@ def _div_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.dot_general_p)  # TODO: implement
-def _dot_general_p() -> MyArray:
-    raise NotImplementedError
+def _dot_general_p(
+    lhs: MyArray,
+    rhs: MyArray,
+    *,
+    dimension_numbers: DotDimensionNumbers,
+    precision: PrecisionLike = None,
+    preferred_element_type: DTypeLike | None = None,
+) -> MyArray:
+    return MyArray(
+        lax.dot_general_p.bind(
+            lhs.array,
+            rhs.array,
+            dimension_numbers=dimension_numbers,
+            precision=precision,
+            preferred_element_type=preferred_element_type,
+        ),
+    )
 
 
 # ==============================================================================
@@ -433,7 +457,7 @@ def _dynamic_update_slice_p() -> MyArray:
 
 
 @register(lax.eq_p)
-def _eq_p(x: MyArray, y: MyArray) -> MyArray:
+def _eq_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
     return MyArray(lax.eq(x.array, y.array))
 
 
@@ -513,8 +537,29 @@ def _floor_p(x: MyArray) -> MyArray:
 
 
 @register(lax.gather_p)
-def _gather_p() -> MyArray:
-    raise NotImplementedError
+def _gather_p(
+    operand: MyArray,
+    start_indices: DenseArrayValue | MyArray,
+    *,
+    dimension_numbers: GatherDimensionNumbers,
+    slice_sizes: Shape,
+    unique_indices: bool,
+    indices_are_sorted: bool,
+    mode: str | GatherScatterMode | None = None,
+    fill_value: Any = None,
+) -> MyArray:
+    return MyArray(
+        lax.gather(
+            operand.array,
+            start_indices.array,
+            dimension_numbers=dimension_numbers,
+            slice_sizes=slice_sizes,
+            unique_indices=unique_indices,
+            indices_are_sorted=indices_are_sorted,
+            mode=mode,
+            fill_value=fill_value,
+        ),
+    )
 
 
 # ==============================================================================
@@ -657,7 +702,7 @@ def _logistic_p(x: MyArray) -> MyArray:
 
 
 @register(lax.lt_p)
-def _lt_p(x: MyArray, y: MyArray) -> MyArray:
+def _lt_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
     return MyArray(lax.lt(x.array, y.array))
 
 
@@ -674,6 +719,16 @@ def _lt_to_p() -> MyArray:
 
 @register(lax.max_p)
 def _max_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.max(x.array, y.array))
+
+
+@register(lax.max_p)
+def _max_p_d1(x: DenseArrayValue, y: MyArray) -> MyArray:
+    return MyArray(lax.max(x.array, y.array))
+
+
+@register(lax.max_p)
+def _max_p_d2(x: MyArray, y: DenseArrayValue) -> MyArray:
     return MyArray(lax.max(x.array, y.array))
 
 
@@ -695,6 +750,11 @@ def _mul_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 # ==============================================================================
+
+
+@register(lax.ne_p)
+def _ne_p(x: MyArray, y: DenseArrayValue) -> MyArray:
+    return MyArray(lax.ne(x.array, y.materialise()))
 
 
 @register(lax.ne_p)
@@ -722,16 +782,16 @@ def _nextafter_p() -> MyArray:
 
 
 @register(lax.not_p)
-def _not_p() -> MyArray:
-    raise NotImplementedError
+def _not_p(x: MyArray) -> MyArray:
+    return replace(x, array=lax.bitwise_not(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.or_p)
-def _or_p() -> MyArray:
-    raise NotImplementedError
+def _or_p(x: MyArray, y: MyArray) -> MyArray:
+    return replace(x, array=lax.bitwise_or(x.array, y.array))
 
 
 # ==============================================================================
@@ -886,8 +946,8 @@ def _reduce_prod_p() -> MyArray:
 
 
 @register(lax.reduce_sum_p)
-def _reduce_sum_p() -> MyArray:
-    raise NotImplementedError
+def _reduce_sum_p(operand: MyArray, *, axes: tuple[int, ...]) -> MyArray:
+    return MyArray(lax.reduce_sum_p.bind(operand.array, axes=axes))
 
 
 # ==============================================================================
@@ -943,6 +1003,16 @@ def _regularized_incomplete_beta_p() -> MyArray:
 
 @register(lax.rem_p)
 def _rem_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.rem(x.array, y.array))
+
+
+@register(lax.rem_p)
+def _rem_p_d1(x: DenseArrayValue, y: MyArray) -> MyArray:
+    return MyArray(lax.rem(x.array, y.array))
+
+
+@register(lax.rem_p)
+def _rem_p_d1(x: MyArray, y: DenseArrayValue) -> MyArray:
     return MyArray(lax.rem(x.array, y.array))
 
 
@@ -1006,8 +1076,59 @@ def _scan_p() -> MyArray:
 
 
 @register(lax.scatter_add_p)
-def _scatter_add_p() -> MyArray:
-    raise NotImplementedError
+def _scatter_add_p(
+    operand: MyArray,
+    scatter_indices: MyArray | DenseArrayValue,
+    updates: MyArray | DenseArrayValue,
+    *,
+    update_jaxpr: Any,
+    update_consts: Any,
+    dimension_numbers: Any,
+    indices_are_sorted: bool,
+    unique_indices: bool,
+    mode: str | GatherScatterMode | None = None,
+) -> MyArray:
+    return MyArray(
+        lax.scatter_add_p.bind(
+            operand.array,
+            scatter_indices.array,
+            updates.array,
+            update_jaxpr=update_jaxpr,
+            update_consts=update_consts,
+            dimension_numbers=dimension_numbers,
+            indices_are_sorted=indices_are_sorted,
+            unique_indices=unique_indices,
+            mode=mode,
+        ),
+    )
+
+
+@register(lax.scatter_add_p)
+def _scatter_add_p(
+    operand: Zero,
+    scatter_indices: MyArray | DenseArrayValue,
+    updates: MyArray | DenseArrayValue,
+    *,
+    update_jaxpr: Any,
+    update_consts: Any,
+    dimension_numbers: Any,
+    indices_are_sorted: bool,
+    unique_indices: bool,
+    mode: str | GatherScatterMode | None = None,
+) -> MyArray:
+    return MyArray(
+        lax.scatter_add_p.bind(
+            jax_xp.zeros_like(operand),
+            scatter_indices.array,
+            updates.array,
+            update_jaxpr=update_jaxpr,
+            update_consts=update_consts,
+            dimension_numbers=dimension_numbers,
+            indices_are_sorted=indices_are_sorted,
+            unique_indices=unique_indices,
+            mode=mode,
+        ),
+    )
 
 
 # ==============================================================================
@@ -1070,8 +1191,17 @@ def _select_and_scatter_p() -> MyArray:
 
 
 @register(lax.select_n_p)
-def _select_n_p(which: MyArray, *cases: MyArray) -> MyArray:
-    return MyArray(lax.select_n(which.array, *(case.array for case in cases)))
+def _select_n_p(which: DenseArrayValue | MyArray, *cases: Zero | MyArray) -> MyArray:
+    if not any(isinstance(case, MyArray) for case in cases):
+        msg = "At least one case must be a MyArray."
+        raise ValueError(msg)
+
+    # Process the cases, replacing Zero and MyArray with a materialised array.
+    cases_ = (
+        case.array if isinstance(case, MyArray) else case.materialise()
+        for case in cases
+    )
+    return MyArray(lax.select_n(which.array, *cases_))
 
 
 # ==============================================================================
@@ -1086,16 +1216,16 @@ def _sharding_constraint_p() -> MyArray:
 
 
 @register(lax.shift_left_p)
-def _shift_left_p() -> MyArray:
-    raise NotImplementedError
+def _shift_left_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.shift_left(x.array, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.shift_right_arithmetic_p)
-def _shift_right_arithmetic_p() -> MyArray:
-    raise NotImplementedError
+def _shift_right_arithmetic_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.shift_right_arithmetic(x.array, y.array))
 
 
 # ==============================================================================
@@ -1189,7 +1319,7 @@ def _stop_gradient_p(x: MyArray) -> MyArray:
 
 
 @register(lax.sub_p)
-def _sub_p(x: MyArray, y: MyArray) -> MyArray:
+def _sub_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
     return MyArray(lax.sub(x.array, y.array))
 
 
@@ -1213,8 +1343,8 @@ def _tanh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.top_k_p)
-def _top_k_p() -> MyArray:
-    raise NotImplementedError
+def _top_k_p(operand: MyArray, k: int) -> MyArray:
+    raise replace(operand, array=lax.top_k(operand.array, k))
 
 
 # ==============================================================================
@@ -1237,8 +1367,8 @@ def _while_p() -> MyArray:
 
 
 @register(lax.xor_p)
-def _xor_p() -> MyArray:
-    raise NotImplementedError
+def _xor_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+    return MyArray(lax.bitwise_xor(x.array, y.array))
 
 
 # ==============================================================================
@@ -1270,3 +1400,70 @@ def arange(
             device=device,
         ),
     )
+
+
+@dispatcher  # type: ignore[misc]
+def empty_like(
+    x: MyArray,
+    /,
+    *,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> MyArray:
+    return MyArray(jax_xp.empty_like(x.array, dtype=dtype, device=device))
+
+
+@dispatcher
+def full_like(
+    x: MyArray,
+    /,
+    fill_value: bool | int | float | complex | MyArray,
+    *,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> MyArray:
+    return MyArray(
+        jax_xp.full_like(x.array, fill_value, dtype=dtype, device=device),
+    )
+
+
+@dispatcher
+def linspace(
+    start: MyArray,
+    stop: MyArray,
+    num: int,
+    *,
+    dtype: DType | None = None,
+    device: Device | None = None,
+    endpoint: bool = True,
+) -> MyArray:
+    return MyArray(
+        jax_xp.linspace(
+            start.array,
+            stop.array,
+            num=num,
+            dtype=dtype,
+            device=device,
+            endpoint=endpoint,
+        ),
+    )
+
+
+@dispatcher
+def ones_like(
+    x: MyArray,
+    /,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> MyArray:
+    return MyArray(jax_xp.ones_like(x.array, dtype=dtype, device=device))
+
+
+@dispatcher
+def zeros_like(
+    x: MyArray,
+    /,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> MyArray:
+    return MyArray(jax_xp.zeros_like(x.array, dtype=dtype, device=device))
