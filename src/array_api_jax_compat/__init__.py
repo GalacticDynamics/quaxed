@@ -13,12 +13,14 @@ from typing import Any
 from jaxtyping import install_import_hook
 
 with install_import_hook("array_api_jax_compat", None):
-    from . import _array_api
+    from . import _array_api, _grad
     from ._array_api import *
+    from ._grad import *
     from ._version import version as __version__
 
 __all__ = ["__version__"]
 __all__ += _array_api.__all__
+__all__ += _grad.__all__
 
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation
