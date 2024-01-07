@@ -40,10 +40,10 @@ T = TypeVar("T")
 
 @dispatcher  # type: ignore[misc]
 def arange(
-    start: jax.Array | jax.core.Tracer,
+    start: jax.Array | jax.core.Tracer | float | int,
     /,
-    stop: jax.Array | None = None,
-    step: jax.Array | int = 1,
+    stop: jax.Array | float | int | None = None,
+    step: jax.Array | float | int = 1,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
