@@ -1,6 +1,8 @@
 """Test with JAX inputs."""
 
 
+import jax.numpy as jnp
+import pytest
 from jax.experimental import array_api as jax_xp
 
 import array_api_jax_compat as xp
@@ -38,14 +40,35 @@ def test_pi():
 # Creation functions
 
 
-# def test_arange():
-#     """Test `arange`."""
-#     # TODO: test the start, stop, step, dtype, device arguments
-#     got = xp.arange(3)
-#     expected = jax_xp.arange(3)
+@pytest.mark.parametrize(
+    ("start", "stop", "step"),
+    [
+        # int
+        (3, None, 1),
+        (3, 1, 1),
+        (4, None, 2),
+        (3, 1, 2),
+        # float
+        (3.0, None, 1),
+        (3.0, 1.0, 1),
+        (4.0, None, 2.0),
+        (3.0, 1.0, 2.0),
+        # Array
+        (jnp.array(3), None, 1),
+        (jnp.array(3), jnp.array(1), 1),
+        (jnp.array(4), None, jnp.array(2)),
+        (jnp.array(3), jnp.array(1), jnp.array(2)),
+        # TODO: mixed
+    ],
+)
+def test_arange(start, stop, step):
+    """Test `arange`."""
+    # TODO: test the start, stop, step, dtype, device arguments
+    got = xp.arange(start, stop, step)
+    expected = jax_xp.arange(start, stop, step)
 
-#     assert isinstance(got, jnp.ndarray)
-#     assert jnp.array_equal(got, expected)
+    assert isinstance(got, jnp.ndarray)
+    assert jnp.array_equal(got, expected)
 
 
 # def test_asarray():
