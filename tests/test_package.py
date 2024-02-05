@@ -1,6 +1,5 @@
 """Test the package itself."""
 
-
 import importlib.metadata
 
 import array_api_jax_compat as m
