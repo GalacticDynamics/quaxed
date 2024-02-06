@@ -10,8 +10,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import plum
 from jax.experimental.array_api import __array_api_version__
-from jaxtyping import install_import_hook
+from jaxtyping import ArrayLike, install_import_hook
 
 with install_import_hook("array_api_jax_compat", None):
     from . import (
@@ -57,6 +58,11 @@ __all__ += _set_functions.__all__
 __all__ += _sorting_functions.__all__
 __all__ += _statistical_functions.__all__
 __all__ += _utility_functions.__all__
+
+
+# Simplify the display of ArrayLike
+plum.activate_union_aliases()
+plum.set_union_alias(ArrayLike, "ArrayLike")
 
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation

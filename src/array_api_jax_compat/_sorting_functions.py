@@ -4,6 +4,7 @@ __all__ = ["argsort", "sort"]
 
 
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._utils import quaxify
@@ -11,7 +12,7 @@ from ._utils import quaxify
 
 @quaxify
 def argsort(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int = -1,
@@ -23,7 +24,7 @@ def argsort(
 
 @quaxify
 def sort(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int = -1,

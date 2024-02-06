@@ -2,6 +2,7 @@ __all__ = ["max", "mean", "min", "prod", "std", "sum", "var"]
 
 
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._types import DType
@@ -10,7 +11,7 @@ from ._utils import quaxify
 
 @quaxify
 def max(  # pylint: disable=redefined-builtin
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -21,7 +22,7 @@ def max(  # pylint: disable=redefined-builtin
 
 @quaxify
 def mean(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -32,7 +33,7 @@ def mean(
 
 @quaxify
 def min(  # pylint: disable=redefined-builtin
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -43,7 +44,7 @@ def min(  # pylint: disable=redefined-builtin
 
 @quaxify
 def prod(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -55,7 +56,7 @@ def prod(
 
 @quaxify
 def std(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -67,7 +68,7 @@ def std(
 
 @quaxify
 def sum(  # pylint: disable=redefined-builtin
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -79,7 +80,7 @@ def sum(  # pylint: disable=redefined-builtin
 
 @quaxify
 def var(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,

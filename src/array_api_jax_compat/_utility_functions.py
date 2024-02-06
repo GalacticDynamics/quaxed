@@ -3,6 +3,7 @@
 __all__ = ["all", "any"]
 
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._utils import quaxify
@@ -10,7 +11,7 @@ from ._utils import quaxify
 
 @quaxify
 def all(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,
@@ -21,7 +22,7 @@ def all(
 
 @quaxify
 def any(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     axis: int | tuple[int, ...] | None = None,

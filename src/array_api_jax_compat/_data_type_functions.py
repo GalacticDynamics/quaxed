@@ -3,6 +3,7 @@ __all__ = ["astype", "can_cast", "finfo", "iinfo", "isdtype", "result_type"]
 
 from jax.experimental import array_api
 from jax.experimental.array_api._data_type_functions import FInfo, IInfo
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._types import DType
@@ -10,7 +11,7 @@ from ._utils import quaxify
 
 
 @quaxify
-def astype(x: Value, dtype: DType, /, *, copy: bool = True) -> Value:
+def astype(x: ArrayLike, dtype: DType, /, *, copy: bool = True) -> Value:
     return array_api.astype(x, dtype, copy=copy)
 
 
@@ -33,5 +34,5 @@ isdtype = quaxify(array_api.isdtype)
 
 
 @quaxify
-def result_type(*arrays_and_dtypes: Value | DType) -> DType:
+def result_type(*arrays_and_dtypes: ArrayLike | DType) -> DType:
     return array_api.result_type(*arrays_and_dtypes)

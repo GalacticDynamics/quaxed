@@ -12,18 +12,19 @@ __all__ = [
 ]
 
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._utils import quaxify
 
 
 @quaxify
-def broadcast_arrays(*arrays: Value) -> list[Value]:
+def broadcast_arrays(*arrays: ArrayLike) -> list[Value]:
     return array_api.broadcast_arrays(*arrays)
 
 
 @quaxify
-def broadcast_to(x: Value, /, shape: tuple[int, ...]) -> Value:
+def broadcast_to(x: ArrayLike, /, shape: tuple[int, ...]) -> Value:
     return array_api.broadcast_to(x, shape)
 
 
@@ -38,28 +39,34 @@ def concat(
 
 
 @quaxify
-def expand_dims(x: Value, /, *, axis: int = 0) -> Value:
+def expand_dims(x: ArrayLike, /, *, axis: int = 0) -> Value:
     return array_api.expand_dims(x, axis=axis)
 
 
 @quaxify
-def flip(x: Value, /, *, axis: int | tuple[int, ...] | None = None) -> Value:
+def flip(x: ArrayLike, /, *, axis: int | tuple[int, ...] | None = None) -> Value:
     return array_api.flip(x, axis=axis)
 
 
 @quaxify
-def permute_dims(x: Value, /, axes: tuple[int, ...]) -> Value:
+def permute_dims(x: ArrayLike, /, axes: tuple[int, ...]) -> Value:
     return array_api.permute_dims(x, axes=axes)
 
 
 @quaxify
-def reshape(x: Value, /, shape: tuple[int, ...], *, copy: bool | None = None) -> Value:
+def reshape(
+    x: ArrayLike,
+    /,
+    shape: tuple[int, ...],
+    *,
+    copy: bool | None = None,
+) -> Value:
     return array_api.reshape(x, shape, copy=copy)
 
 
 @quaxify
 def roll(
-    x: Value,
+    x: ArrayLike,
     /,
     shift: int | tuple[int],
     *,
@@ -69,7 +76,7 @@ def roll(
 
 
 @quaxify
-def squeeze(x: Value, /, axis: int | tuple[int, ...]) -> Value:
+def squeeze(x: ArrayLike, /, axis: int | tuple[int, ...]) -> Value:
     return array_api.squeeze(x, axis=axis)
 
 

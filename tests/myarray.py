@@ -1,4 +1,4 @@
-"""Test with :class:`quax.DenseArrayValue` inputs."""
+"""Test with :class:`MyArray` inputs."""
 
 from collections.abc import Sequence
 from dataclasses import replace
@@ -11,8 +11,8 @@ from jax import Device, lax
 from jax._src.lax.lax import DotDimensionNumbers, PrecisionLike
 from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import DTypeLike, Shape
-from quax import ArrayValue, DenseArrayValue, register
-from quax.zero import Zero
+from jaxtyping import ArrayLike
+from quax import ArrayValue, register
 
 from array_api_jax_compat._dispatch import dispatcher
 from array_api_jax_compat._types import DType
@@ -64,7 +64,12 @@ def _acosh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.add_p)
-def _add_p_qq(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+def _add_p_qq(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.add(x.array, y))
+
+
+@register(lax.add_p)
+def _add_p_qq(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.add(x.array, y.array))
 
 
@@ -258,7 +263,7 @@ def _complex_p(x: MyArray, y: MyArray) -> MyArray:
 @register(lax.concatenate_p)
 def _concatenate_p(
     operand0: MyArray,
-    *operands: MyArray | DenseArrayValue,
+    *operands: MyArray,
     dimension: Any,
 ) -> MyArray:
     return MyArray(
@@ -407,8 +412,13 @@ def _digamma_p(x: MyArray) -> MyArray:
 
 
 @register(lax.div_p)
-def _div_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+def _div_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.div(x.array, y.array))
+
+
+@register(lax.div_p)
+def _div_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.div(x.array, y))
 
 
 # ==============================================================================
@@ -440,8 +450,8 @@ def _dot_general_p(
 @register(lax.dynamic_slice_p)
 def _dynamic_slice_p(
     operand: MyArray,
-    start_indices: DenseArrayValue,
-    dynamic_sizes: DenseArrayValue,
+    start_indices: ArrayLike,
+    dynamic_sizes: ArrayLike,
     *,
     slice_sizes: Any,
 ) -> MyArray:
@@ -460,8 +470,13 @@ def _dynamic_update_slice_p() -> MyArray:
 
 
 @register(lax.eq_p)
-def _eq_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+def _eq_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.eq(x.array, y.array))
+
+
+@register(lax.eq_p)
+def _eq_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.eq(x.array, y))
 
 
 # ==============================================================================
@@ -542,7 +557,7 @@ def _floor_p(x: MyArray) -> MyArray:
 @register(lax.gather_p)
 def _gather_p(
     operand: MyArray,
-    start_indices: DenseArrayValue | MyArray,
+    start_indices: MyArray,
     *,
     dimension_numbers: GatherDimensionNumbers,
     slice_sizes: Shape,
@@ -555,6 +570,32 @@ def _gather_p(
         lax.gather(
             operand.array,
             start_indices.array,
+            dimension_numbers=dimension_numbers,
+            slice_sizes=slice_sizes,
+            unique_indices=unique_indices,
+            indices_are_sorted=indices_are_sorted,
+            mode=mode,
+            fill_value=fill_value,
+        ),
+    )
+
+
+@register(lax.gather_p)
+def _gather_p(
+    operand: MyArray,
+    start_indices: ArrayLike,
+    *,
+    dimension_numbers: GatherDimensionNumbers,
+    slice_sizes: Shape,
+    unique_indices: bool,
+    indices_are_sorted: bool,
+    mode: str | GatherScatterMode | None = None,
+    fill_value: Any = None,
+) -> MyArray:
+    return MyArray(
+        lax.gather(
+            operand.array,
+            start_indices,
             dimension_numbers=dimension_numbers,
             slice_sizes=slice_sizes,
             unique_indices=unique_indices,
@@ -705,8 +746,13 @@ def _logistic_p(x: MyArray) -> MyArray:
 
 
 @register(lax.lt_p)
-def _lt_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+def _lt_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.lt(x.array, y.array))
+
+
+@register(lax.lt_p)
+def _lt_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.lt(x.array, y))
 
 
 # ==============================================================================
@@ -726,13 +772,13 @@ def _max_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.max_p)
-def _max_p_d1(x: DenseArrayValue, y: MyArray) -> MyArray:
-    return MyArray(lax.max(x.array, y.array))
+def _max_p_d1(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.max(x, y.array))
 
 
 @register(lax.max_p)
-def _max_p_d2(x: MyArray, y: DenseArrayValue) -> MyArray:
-    return MyArray(lax.max(x.array, y.array))
+def _max_p_d2(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.max(x.array, y))
 
 
 # ==============================================================================
@@ -756,8 +802,8 @@ def _mul_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.ne_p)
-def _ne_p(x: MyArray, y: DenseArrayValue) -> MyArray:
-    return MyArray(lax.ne(x.array, y.materialise()))
+def _ne_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.ne(x.array, y))
 
 
 @register(lax.ne_p)
@@ -1010,13 +1056,13 @@ def _rem_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.rem_p)
-def _rem_p_d1(x: DenseArrayValue, y: MyArray) -> MyArray:
-    return MyArray(lax.rem(x.array, y.array))
+def _rem_p_d1(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.rem(x, y.array))
 
 
 @register(lax.rem_p)
-def _rem_p_d1(x: MyArray, y: DenseArrayValue) -> MyArray:
-    return MyArray(lax.rem(x.array, y.array))
+def _rem_p_d1(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.rem(x.array, y))
 
 
 # ==============================================================================
@@ -1081,8 +1127,8 @@ def _scan_p() -> MyArray:
 @register(lax.scatter_add_p)
 def _scatter_add_p(
     operand: MyArray,
-    scatter_indices: MyArray | DenseArrayValue,
-    updates: MyArray | DenseArrayValue,
+    scatter_indices: MyArray,
+    updates: MyArray,
     *,
     update_jaxpr: Any,
     update_consts: Any,
@@ -1108,9 +1154,9 @@ def _scatter_add_p(
 
 @register(lax.scatter_add_p)
 def _scatter_add_p(
-    operand: Zero,
-    scatter_indices: MyArray | DenseArrayValue,
-    updates: MyArray | DenseArrayValue,
+    operand: MyArray,
+    scatter_indices: ArrayLike,
+    updates: ArrayLike,
     *,
     update_jaxpr: Any,
     update_consts: Any,
@@ -1121,9 +1167,9 @@ def _scatter_add_p(
 ) -> MyArray:
     return MyArray(
         lax.scatter_add_p.bind(
-            jax_xp.zeros_like(operand),
-            scatter_indices.array,
-            updates.array,
+            operand.array,
+            scatter_indices,
+            updates,
             update_jaxpr=update_jaxpr,
             update_consts=update_consts,
             dimension_numbers=dimension_numbers,
@@ -1132,6 +1178,62 @@ def _scatter_add_p(
             mode=mode,
         ),
     )
+
+
+@register(lax.scatter_add_p)
+def _scatter_add_p(
+    operand: ArrayLike,
+    scatter_indices: MyArray,
+    updates: ArrayLike,
+    *,
+    update_jaxpr: Any,
+    update_consts: Any,
+    dimension_numbers: Any,
+    indices_are_sorted: bool,
+    unique_indices: bool,
+    mode: str | GatherScatterMode | None = None,
+) -> MyArray:
+    return MyArray(
+        lax.scatter_add_p.bind(
+            operand,
+            scatter_indices.array,
+            updates,
+            update_jaxpr=update_jaxpr,
+            update_consts=update_consts,
+            dimension_numbers=dimension_numbers,
+            indices_are_sorted=indices_are_sorted,
+            unique_indices=unique_indices,
+            mode=mode,
+        ),
+    )
+
+
+# @register(lax.scatter_add_p)
+# def _scatter_add_p(
+#     operand: Zero,
+#     scatter_indices: MyArray,
+#     updates: MyArray,
+#     *,
+#     update_jaxpr: Any,
+#     update_consts: Any,
+#     dimension_numbers: Any,
+#     indices_are_sorted: bool,
+#     unique_indices: bool,
+#     mode: str | GatherScatterMode | None = None,
+# ) -> MyArray:
+#     return MyArray(
+#         lax.scatter_add_p.bind(
+#             jax_xp.zeros_like(operand),
+#             scatter_indices.array,
+#             updates.array,
+#             update_jaxpr=update_jaxpr,
+#             update_consts=update_consts,
+#             dimension_numbers=dimension_numbers,
+#             indices_are_sorted=indices_are_sorted,
+#             unique_indices=unique_indices,
+#             mode=mode,
+#         ),
+#     )
 
 
 # ==============================================================================
@@ -1194,17 +1296,19 @@ def _select_and_scatter_p() -> MyArray:
 
 
 @register(lax.select_n_p)
-def _select_n_p(which: DenseArrayValue | MyArray, *cases: Zero | MyArray) -> MyArray:
-    if not any(isinstance(case, MyArray) for case in cases):
-        msg = "At least one case must be a MyArray."
-        raise ValueError(msg)
-
+def _select_n_p(which: MyArray, *cases: MyArray) -> MyArray:
     # Process the cases, replacing Zero and MyArray with a materialised array.
-    cases_ = (
-        case.array if isinstance(case, MyArray) else case.materialise()
-        for case in cases
-    )
-    return MyArray(lax.select_n(which.array, *cases_))
+    return MyArray(lax.select_n(which.array, *(case.array for case in cases)))
+
+
+@register(lax.select_n_p)
+def _select_n_p(which: ArrayLike, case0: ArrayLike, case1: MyArray) -> MyArray:
+    return MyArray(lax.select_n(which, case0, case1.array))
+
+
+@register(lax.select_n_p)
+def _select_n_p(which: ArrayLike, case0: MyArray, case1: ArrayLike) -> MyArray:
+    return MyArray(lax.select_n(which, case0.array, case1))
 
 
 # ==============================================================================
@@ -1322,8 +1426,13 @@ def _stop_gradient_p(x: MyArray) -> MyArray:
 
 
 @register(lax.sub_p)
-def _sub_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+def _sub_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.sub(x.array, y.array))
+
+
+@register(lax.sub_p)
+def _sub_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.sub(x.array, y))
 
 
 # ==============================================================================
@@ -1370,8 +1479,13 @@ def _while_p() -> MyArray:
 
 
 @register(lax.xor_p)
-def _xor_p(x: MyArray, y: DenseArrayValue | MyArray) -> MyArray:
+def _xor_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.bitwise_xor(x.array, y.array))
+
+
+@register(lax.xor_p)
+def _xor_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.bitwise_xor(x.array, y))
 
 
 # ==============================================================================

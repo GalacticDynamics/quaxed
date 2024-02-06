@@ -1,4 +1,4 @@
-"""Test with :class:`quax.DenseArrayValue` inputs."""
+"""Test with :class:`MyArray` inputs."""
 
 import jax.experimental.array_api as jax_xp
 import jax.numpy as jnp
@@ -72,7 +72,6 @@ def test_asarray():
 @pytest.mark.xfail(reason="returns a jax.Array")
 def test_empty():
     """Test `empty`."""
-    # TODO: test the dtype, device arguments
     got = xp.empty((2, 3))
     assert isinstance(got, MyArray)
 
