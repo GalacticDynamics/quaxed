@@ -39,7 +39,7 @@ T = TypeVar("T")
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def arange(
     start: ArrayLike,
     /,
@@ -52,7 +52,7 @@ def arange(
     return array_api.arange(start, stop, step, dtype=dtype, device=device)
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
     stop: ArrayLike | None = None,
@@ -65,7 +65,7 @@ def arange(
     return arange(start, stop, step, dtype=dtype, device=device)
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
     *,
@@ -78,7 +78,7 @@ def arange(
     return arange(start, stop, step, dtype=dtype, device=device)
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def arange(
     *,
     start: ArrayLike,
@@ -151,7 +151,7 @@ def from_dlpack(x: object, /) -> jax.Array:
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def full(
     shape: tuple[int, ...],
     fill_value: ArrayLike,
@@ -162,7 +162,7 @@ def full(
     return array_api.full(shape, fill_value, dtype=dtype, device=device)
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def full(
     shape: tuple[int, ...],
     *,
@@ -176,7 +176,7 @@ def full(
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def full_like(
     x: ArrayLike,
     /,
@@ -188,7 +188,7 @@ def full_like(
     return array_api.full_like(x, fill_value, dtype=dtype, device=device)
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def full_like(
     x: ArrayLike,
     *,
@@ -205,7 +205,7 @@ def full_like(
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
@@ -226,7 +226,7 @@ def linspace(  # noqa: PLR0913
     )
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
@@ -241,7 +241,7 @@ def linspace(  # noqa: PLR0913
     return linspace(start, stop, num, dtype=dtype, device=device, endpoint=endpoint)
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher  # type: ignore[no-redef]
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
