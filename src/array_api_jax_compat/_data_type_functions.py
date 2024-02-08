@@ -4,29 +4,28 @@ __all__ = ["astype", "can_cast", "finfo", "iinfo", "isdtype", "result_type"]
 from jax.experimental import array_api
 from jax.experimental.array_api._data_type_functions import FInfo, IInfo
 from jaxtyping import ArrayLike
-from quax import Value
 
 from ._types import DType
 from ._utils import quaxify
 
 
 @quaxify
-def astype(x: ArrayLike, dtype: DType, /, *, copy: bool = True) -> Value:
+def astype(x: ArrayLike, dtype: DType, /, *, copy: bool = True) -> ArrayLike:
     return array_api.astype(x, dtype, copy=copy)
 
 
 @quaxify
-def can_cast(from_: DType | Value, to: DType, /) -> bool:
+def can_cast(from_: DType | ArrayLike, to: DType, /) -> bool:
     return array_api.can_cast(from_, to)
 
 
 @quaxify
-def finfo(type: DType | Value, /) -> FInfo:
+def finfo(type: DType | ArrayLike, /) -> FInfo:
     return array_api.finfo(type)
 
 
 @quaxify
-def iinfo(type: DType | Value, /) -> IInfo:
+def iinfo(type: DType | ArrayLike, /) -> IInfo:
     return array_api.iinfo(type)
 
 

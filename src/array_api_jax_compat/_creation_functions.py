@@ -44,7 +44,7 @@ def arange(
     start: ArrayLike,
     /,
     stop: ArrayLike | None = None,
-    step: ArrayLike = 1,
+    step: ArrayLike | None = None,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
@@ -57,7 +57,7 @@ def arange(
     start: ArrayLike,
     stop: ArrayLike | None = None,
     *,
-    step: ArrayLike = 1,
+    step: ArrayLike | None = None,
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> ArrayLike:
@@ -70,10 +70,23 @@ def arange(
     start: ArrayLike,
     *,
     stop: ArrayLike | None = None,
-    step: ArrayLike = 1,
+    step: ArrayLike | None = None,
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> ArrayLike:
+    # dispatch on `start`, `stop`, and `step`
+    return arange(start, stop, step, dtype=dtype, device=device)
+
+
+@dispatcher  # type: ignore[misc]
+def arange(
+    *,
+    start: ArrayLike,
+    stop: ArrayLike | None = None,
+    step: ArrayLike | None = None,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> ArrayLike | Value:
     # dispatch on `start`, `stop`, and `step`
     return arange(start, stop, step, dtype=dtype, device=device)
 
