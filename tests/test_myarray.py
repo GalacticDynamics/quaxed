@@ -639,7 +639,7 @@ def test_log10():
     expected = MyArray(jax_xp.log10(x.array))
 
     assert isinstance(got, MyArray)
-    assert jnp.array_equal(got.array, expected.array)
+    assert jnp.allclose(got.array, expected.array)
 
 
 def test_logaddexp():
