@@ -1,6 +1,5 @@
 """Test with JAX inputs."""
 
-
 import jax.numpy as jnp
 import pytest
 from jax.experimental import array_api as jax_xp
