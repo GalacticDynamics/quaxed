@@ -6,50 +6,38 @@ build-backend = "hatchling.build"
 [project]
 name = "array-api-jax-compat"
 authors = [
-  { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
+    { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
 ]
 description = "Array-API JAX compatibility"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
-  "Development Status :: 1 - Planning",
-  "Intended Audience :: Science/Research",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: BSD License",
-  "Operating System :: OS Independent",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Scientific/Engineering",
-  "Typing :: Typed",
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = [
-  "jax",
-  "jaxlib",
-  "numpy",
-  "plum-dispatch",
-  "quax>=0.0.3",
-]
+dependencies = ["jax", "jaxlib", "plum-dispatch", "quax>=0.0.3"]
 
 [project.optional-dependencies]
-test = [
-  "pytest >=6",
-  "pytest-cov >=3",
-]
-dev = [
-  "pytest >=6",
-  "pytest-cov >=3",
-]
+test = ["pytest >=6", "pytest-cov >=3"]
+dev = ["pytest >=6", "pytest-cov >=3"]
 docs = [
-  "sphinx>=7.0",
-  "myst_parser>=0.13",
-  "sphinx_copybutton",
-  "sphinx_autodoc_typehints",
-  "furo>=2023.08.17",
+    "sphinx>=7.0",
+    "myst_parser>=0.13",
+    "sphinx_copybutton",
+    "sphinx_autodoc_typehints",
+    "furo>=2023.08.17",
 ]
 
 [project.urls]
@@ -73,23 +61,22 @@ minversion = "6.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
 xfail_strict = true
 filterwarnings = [
-  "error",
-  # jaxtyping
-  "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
+    "error",
+    # jaxtyping
+    "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
 ]
 log_cli_level = "INFO"
-testpaths = [
-  "tests",
-]
+testpaths = ["tests"]
+
+[tool.codespell]
+ignore-words-list = """
+    fro,
+"""
 
 
 [tool.coverage]
 run.source = ["array_api_jax_compat"]
-port.exclude_lines = [
-  'pragma: no cover',
-  '\.\.\.',
-  'if typing.TYPE_CHECKING:',
-]
+port.exclude_lines = ['pragma: no cover', '\.\.\.', 'if typing.TYPE_CHECKING:']
 
 [tool.mypy]
 files = ["src"]
@@ -101,24 +88,15 @@ warn_unreachable = true
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
 warn_return_any = false
-plugins = [
-  "numpy.typing.mypy_plugin",
-]
 
-  [[tool.mypy.overrides]]
-  module = "array_api_jax_compat.*"
-  disallow_untyped_defs = true
-  disallow_incomplete_defs = true
+[[tool.mypy.overrides]]
+module = "array_api_jax_compat.*"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
 
-  [[tool.mypy.overrides]]
-  module = [
-    "jax.*",
-    "jaxtyping.*",
-    "plum.*",
-    "quax.*",
-  ]
-  ignore_missing_imports = true
-
+[[tool.mypy.overrides]]
+module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
+ignore_missing_imports = true
 
 
 [tool.ruff]
@@ -127,22 +105,22 @@ src = ["src"]
 [tool.ruff.lint]
 extend-select = ["ALL"]
 ignore = [
-  "A001",    # Variable is shadowing a Python builtin
-  "A002",    # Argument is shadowing a Python builtin
-  "ANN101",  # Missing type annotation for self in method
-  "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed  # TODO
-  "ARG001",  # Unused function argument
-  "COM812",  # Missing trailing comma
-  "D103",    # Missing docstring in public function  # TODO
-  "D203",    # one-blank-line-before-class
-  "D213",    # Multi-line docstring summary should start at the second line
-  "ERA001",  # Found commented-out code
-  "F811",    # Redefinition of unused variable  <- plum
-  "FIX002",  # Line contains TODO, consider resolving the issue
-  "PD011",   # Pandas
-  "PYI041",  # Use `float` instead of `int | float`
-  "TD002",   # Missing author in TODO; try: `# TODO(<author_name>): .
-  "TD003",   # Missing issue link on the line following this TODO
+    "A001",   # Variable is shadowing a Python builtin
+    "A002",   # Argument is shadowing a Python builtin
+    "ANN101", # Missing type annotation for self in method
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed  # TODO
+    "ARG001", # Unused function argument
+    "COM812", # Missing trailing comma
+    "D103",   # Missing docstring in public function  # TODO
+    "D203",   # one-blank-line-before-class
+    "D213",   # Multi-line docstring summary should start at the second line
+    "ERA001", # Found commented-out code
+    "F811",   # Redefinition of unused variable  <- plum
+    "FIX002", # Line contains TODO, consider resolving the issue
+    "PD011",  # Pandas
+    "PYI041", # Use `float` instead of `int | float`
+    "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
+    "TD003",  # Missing issue link on the line following this TODO
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -159,11 +137,11 @@ ignore-paths = [".*/_version.py"]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [
-  "design",
-  "fixme",
-  "line-too-long",
-  "missing-function-docstring",  # TODO: reinstate.
-  "missing-module-docstring",
-  "redefined-builtin",
-  "wrong-import-position",
+    "design",
+    "fixme",
+    "line-too-long",
+    "missing-function-docstring", # TODO: reinstate.
+    "missing-module-docstring",
+    "redefined-builtin",
+    "wrong-import-position",
 ]
