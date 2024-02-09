@@ -31,7 +31,8 @@ jobs:
   test-publish:
     needs: [dist]
     name: Publish to TestPyPI
-    environment: pypi
+    environment:
+      name: testpypi
     permissions:
       id-token: write
     runs-on: ubuntu-latest
