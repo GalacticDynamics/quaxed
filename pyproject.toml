@@ -32,7 +32,7 @@ dependencies = [
   "jaxlib",
   "numpy",
   "plum-dispatch",
-  "quax",
+  "quax>=0.0.3",
 ]
 
 [project.optional-dependencies]
@@ -132,10 +132,12 @@ ignore = [
   "ANN101",  # Missing type annotation for self in method
   "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed  # TODO
   "ARG001",  # Unused function argument
+  "COM812",  # Missing trailing comma
   "D103",    # Missing docstring in public function  # TODO
   "D203",    # one-blank-line-before-class
   "D213",    # Multi-line docstring summary should start at the second line
   "ERA001",  # Found commented-out code
+  "F811",    # Redefinition of unused variable  <- plum
   "FIX002",  # Line contains TODO, consider resolving the issue
   "PD011",   # Pandas
   "PYI041",  # Use `float` instead of `int | float`

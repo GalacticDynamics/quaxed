@@ -62,301 +62,302 @@ __all__ = [
 
 
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._utils import quaxify
 
 
 @quaxify
-def abs(x: Value, /) -> Value:
+def abs(x: ArrayLike, /) -> Value:
     return array_api.abs(x)
 
 
 @quaxify
-def acos(x: Value, /) -> Value:
+def acos(x: ArrayLike, /) -> Value:
     return array_api.acos(x)
 
 
 @quaxify
-def acosh(x: Value, /) -> Value:
+def acosh(x: ArrayLike, /) -> Value:
     return array_api.acosh(x)
 
 
 @quaxify
-def add(x1: Value, x2: Value, /) -> Value:
+def add(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.add(x1, x2)
 
 
 @quaxify
-def asin(x: Value, /) -> Value:
+def asin(x: ArrayLike, /) -> Value:
     return array_api.asin(x)
 
 
 @quaxify
-def asinh(x: Value, /) -> Value:
+def asinh(x: ArrayLike, /) -> Value:
     return array_api.asinh(x)
 
 
 @quaxify
-def atan(x: Value, /) -> Value:
+def atan(x: ArrayLike, /) -> Value:
     return array_api.atan(x)
 
 
 @quaxify
-def atan2(x1: Value, x2: Value, /) -> Value:
+def atan2(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.atan2(x1, x2)
 
 
 @quaxify
-def atanh(x: Value, /) -> Value:
+def atanh(x: ArrayLike, /) -> Value:
     return array_api.atanh(x)
 
 
 @quaxify
-def bitwise_and(x1: Value, x2: Value, /) -> Value:
+def bitwise_and(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.bitwise_and(x1, x2)
 
 
 @quaxify
-def bitwise_left_shift(x1: Value, x2: Value, /) -> Value:
+def bitwise_left_shift(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.bitwise_left_shift(x1, x2)
 
 
 @quaxify
-def bitwise_invert(x: Value, /) -> Value:
+def bitwise_invert(x: ArrayLike, /) -> Value:
     return array_api.bitwise_invert(x)
 
 
 @quaxify
-def bitwise_or(x1: Value, x2: Value, /) -> Value:
+def bitwise_or(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.bitwise_or(x1, x2)
 
 
 @quaxify
-def bitwise_right_shift(x1: Value, x2: Value, /) -> Value:
+def bitwise_right_shift(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.bitwise_right_shift(x1, x2)
 
 
 @quaxify
-def bitwise_xor(x1: Value, x2: Value, /) -> Value:
+def bitwise_xor(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.bitwise_xor(x1, x2)
 
 
 @quaxify
-def ceil(x: Value, /) -> Value:
+def ceil(x: ArrayLike, /) -> Value:
     return array_api.ceil(x)
 
 
 @quaxify
-def conj(x: Value, /) -> Value:
+def conj(x: ArrayLike, /) -> Value:
     return array_api.conj(x)
 
 
 @quaxify
-def cos(x: Value, /) -> Value:
+def cos(x: ArrayLike, /) -> Value:
     return array_api.cos(x)
 
 
 @quaxify
-def cosh(x: Value, /) -> Value:
+def cosh(x: ArrayLike, /) -> Value:
     return array_api.cosh(x)
 
 
 @quaxify
-def divide(x1: Value, x2: Value, /) -> Value:
+def divide(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.divide(x1, x2)
 
 
 @quaxify
-def equal(x1: Value, x2: Value, /) -> Value:
+def equal(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.equal(x1, x2)
 
 
 @quaxify
-def exp(x: Value, /) -> Value:
+def exp(x: ArrayLike, /) -> Value:
     return array_api.exp(x)
 
 
 @quaxify
-def expm1(x: Value, /) -> Value:
+def expm1(x: ArrayLike, /) -> Value:
     return array_api.expm1(x)
 
 
 @quaxify
-def floor(x: Value, /) -> Value:
+def floor(x: ArrayLike, /) -> Value:
     return array_api.floor(x)
 
 
 @quaxify
-def floor_divide(x1: Value, x2: Value, /) -> Value:
+def floor_divide(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.floor_divide(x1, x2)
 
 
 @quaxify
-def greater(x1: Value, x2: Value, /) -> Value:
+def greater(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.greater(x1, x2)
 
 
 @quaxify
-def greater_equal(x1: Value, x2: Value, /) -> Value:
+def greater_equal(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.greater_equal(x1, x2)
 
 
 @quaxify
-def imag(x: Value, /) -> Value:
+def imag(x: ArrayLike, /) -> Value:
     return array_api.imag(x)
 
 
 @quaxify
-def isfinite(x: Value, /) -> Value:
+def isfinite(x: ArrayLike, /) -> Value:
     return array_api.isfinite(x)
 
 
 @quaxify
-def isinf(x: Value, /) -> Value:
+def isinf(x: ArrayLike, /) -> Value:
     return array_api.isinf(x)
 
 
 @quaxify
-def isnan(x: Value, /) -> Value:
+def isnan(x: ArrayLike, /) -> Value:
     return array_api.isnan(x)
 
 
 @quaxify
-def less(x1: Value, x2: Value, /) -> Value:
+def less(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.less(x1, x2)
 
 
 @quaxify
-def less_equal(x1: Value, x2: Value, /) -> Value:
+def less_equal(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.less_equal(x1, x2)
 
 
 @quaxify
-def log(x: Value, /) -> Value:
+def log(x: ArrayLike, /) -> Value:
     return array_api.log(x)
 
 
 @quaxify
-def log1p(x: Value, /) -> Value:
+def log1p(x: ArrayLike, /) -> Value:
     return array_api.log1p(x)
 
 
 @quaxify
-def log2(x: Value, /) -> Value:
+def log2(x: ArrayLike, /) -> Value:
     return array_api.log2(x)
 
 
 @quaxify
-def log10(x: Value, /) -> Value:
+def log10(x: ArrayLike, /) -> Value:
     return array_api.log10(x)
 
 
 @quaxify
-def logaddexp(x1: Value, x2: Value, /) -> Value:
+def logaddexp(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.logaddexp(x1, x2)
 
 
 @quaxify
-def logical_and(x1: Value, x2: Value, /) -> Value:
+def logical_and(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.logical_and(x1, x2)
 
 
 @quaxify
-def logical_not(x: Value, /) -> Value:
+def logical_not(x: ArrayLike, /) -> Value:
     return array_api.logical_not(x)
 
 
 @quaxify
-def logical_or(x1: Value, x2: Value, /) -> Value:
+def logical_or(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.logical_or(x1, x2)
 
 
 @quaxify
-def logical_xor(x1: Value, x2: Value, /) -> Value:
+def logical_xor(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.logical_xor(x1, x2)
 
 
 @quaxify
-def multiply(x1: Value, x2: Value, /) -> Value:
+def multiply(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.multiply(x1, x2)
 
 
 @quaxify
-def negative(x: Value, /) -> Value:
+def negative(x: ArrayLike, /) -> Value:
     return array_api.negative(x)
 
 
 @quaxify
-def not_equal(x1: Value, x2: Value, /) -> Value:
+def not_equal(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.not_equal(x1, x2)
 
 
 @quaxify
-def positive(x: Value, /) -> Value:
+def positive(x: ArrayLike, /) -> Value:
     return array_api.positive(x)
 
 
 @quaxify
-def pow(x1: Value, x2: Value, /) -> Value:
+def pow(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.pow(x1, x2)
 
 
 @quaxify
-def real(x: Value, /) -> Value:
+def real(x: ArrayLike, /) -> Value:
     return array_api.real(x)
 
 
 @quaxify
-def remainder(x1: Value, x2: Value, /) -> Value:
+def remainder(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.remainder(x1, x2)
 
 
 @quaxify
-def round(x: Value, /) -> Value:
+def round(x: ArrayLike, /) -> Value:
     return array_api.round(x)
 
 
 @quaxify
-def sign(x: Value, /) -> Value:
+def sign(x: ArrayLike, /) -> Value:
     return array_api.sign(x)
 
 
 @quaxify
-def sin(x: Value, /) -> Value:
+def sin(x: ArrayLike, /) -> Value:
     return array_api.sin(x)
 
 
 @quaxify
-def sinh(x: Value, /) -> Value:
+def sinh(x: ArrayLike, /) -> Value:
     return array_api.sinh(x)
 
 
 @quaxify
-def square(x: Value, /) -> Value:
+def square(x: ArrayLike, /) -> Value:
     return array_api.square(x)
 
 
 @quaxify
-def sqrt(x: Value, /) -> Value:
+def sqrt(x: ArrayLike, /) -> Value:
     return array_api.sqrt(x)
 
 
 @quaxify
-def subtract(x1: Value, x2: Value, /) -> Value:
+def subtract(x1: ArrayLike, x2: ArrayLike, /) -> Value:
     return array_api.subtract(x1, x2)
 
 
 @quaxify
-def tan(x: Value, /) -> Value:
+def tan(x: ArrayLike, /) -> Value:
     return array_api.tan(x)
 
 
 @quaxify
-def tanh(x: Value, /) -> Value:
+def tanh(x: ArrayLike, /) -> Value:
     return array_api.tanh(x)
 
 
 @quaxify
-def trunc(x: Value, /) -> Value:
+def trunc(x: ArrayLike, /) -> Value:
     return array_api.trunc(x)

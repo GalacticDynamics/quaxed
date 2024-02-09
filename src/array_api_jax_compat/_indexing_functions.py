@@ -1,11 +1,12 @@
 __all__ = ["take"]
 
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._utils import quaxify
 
 
 @quaxify
-def take(x: Value, indices: Value, /, *, axis: int | None = None) -> Value:
+def take(x: ArrayLike, indices: ArrayLike, /, *, axis: int | None = None) -> Value:
     return array_api.take(x, indices, axis=axis)

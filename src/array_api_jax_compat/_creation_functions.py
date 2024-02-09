@@ -27,6 +27,7 @@ import jax
 import jax.numpy as jnp
 from jax import Device
 from jax.experimental import array_api
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._dispatch import dispatcher
@@ -38,17 +39,56 @@ T = TypeVar("T")
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def arange(
-    start: jax.Array | jax.core.Tracer | float | int,
+    start: ArrayLike,
     /,
-    stop: jax.Array | float | int | None = None,
-    step: jax.Array | float | int = 1,
+    stop: ArrayLike | None = None,
+    step: ArrayLike | None = None,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
-) -> jax.Array | jax.core.Tracer:
+) -> ArrayLike:
     return array_api.arange(start, stop, step, dtype=dtype, device=device)
+
+
+@dispatcher  # type: ignore[no-redef]
+def arange(
+    start: ArrayLike,
+    stop: ArrayLike | None = None,
+    *,
+    step: ArrayLike | None = None,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> ArrayLike:
+    # dispatch on `start`, `stop`, and `step`
+    return arange(start, stop, step, dtype=dtype, device=device)
+
+
+@dispatcher  # type: ignore[no-redef]
+def arange(
+    start: ArrayLike,
+    *,
+    stop: ArrayLike | None = None,
+    step: ArrayLike | None = None,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> ArrayLike:
+    # dispatch on `start`, `stop`, and `step`
+    return arange(start, stop, step, dtype=dtype, device=device)
+
+
+@dispatcher  # type: ignore[no-redef]
+def arange(
+    *,
+    start: ArrayLike,
+    stop: ArrayLike | None = None,
+    step: ArrayLike | None = None,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> ArrayLike | Value:
+    # dispatch on `start`, `stop`, and `step`
+    return arange(start, stop, step, dtype=dtype, device=device)
 
 
 # =============================================================================
@@ -57,7 +97,7 @@ def arange(
 @partial(jax.jit, static_argnames=("dtype", "device", "copy"))
 @quaxify
 def asarray(
-    obj: Value,
+    obj: ArrayLike,
     /,
     *,
     dtype: DType | None = None,
@@ -71,10 +111,7 @@ def asarray(
 
 
 def empty(
-    shape: tuple[int, ...],
-    *,
-    dtype: DType | None = None,
-    device: Device | None = None,
+    shape: tuple[int, ...], *, dtype: DType | None = None, device: Device | None = None
 ) -> jax.Array:
     return array_api.empty(shape, dtype=dtype, device=device)
 
@@ -82,16 +119,10 @@ def empty(
 # =============================================================================
 
 
-# @partial(jax.jit, static_argnames=("dtype", "device"))
-# @quaxify  # TODO: quaxify won't work here because of how the function is defined.
 @dispatcher  # type: ignore[misc]
 def empty_like(
-    x: jax.Array | jax.core.Tracer | Value,
-    /,
-    *,
-    dtype: DType | None = None,
-    device: Device | None = None,
-) -> jax.Array | jax.core.Tracer | Value:
+    x: ArrayLike, /, *, dtype: DType | None = None, device: Device | None = None
+) -> ArrayLike:
     return array_api.empty_like(x, dtype=dtype, device=device)
 
 
@@ -120,41 +151,64 @@ def from_dlpack(x: object, /) -> jax.Array:
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def full(
     shape: tuple[int, ...],
-    fill_value: int | float | complex | bool | jax.Array,
+    fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
-) -> jax.Array | Value:
+) -> ArrayLike:
     return array_api.full(shape, fill_value, dtype=dtype, device=device)
 
 
+@dispatcher  # type: ignore[no-redef]
+def full(
+    shape: tuple[int, ...],
+    *,
+    fill_value: ArrayLike,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> ArrayLike:
+    return full(shape, fill_value, dtype=dtype, device=device)
+
+
 # =============================================================================
 
 
-# @partial(jax.jit, static_argnames=("dtype", "device"))
-# @quaxify  # TODO: quaxify won't work here because of how the function is defined.
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def full_like(
-    x: jax.Array | jax.core.Tracer | Value,
+    x: ArrayLike,
     /,
-    fill_value: bool | int | float | complex | jax.Array | Value,
+    fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
-) -> jax.Array | jax.core.Tracer | Value:
+) -> ArrayLike:
     return array_api.full_like(x, fill_value, dtype=dtype, device=device)
+
+
+@dispatcher  # type: ignore[no-redef]
+def full_like(
+    x: ArrayLike,
+    *,
+    fill_value: ArrayLike,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> ArrayLike:
+    # dispatch on both `x` and `fill_value`
+    return full_like.invoke(type(x), type(fill_value))(
+        x, fill_value, dtype=dtype, device=device
+    )
 
 
 # =============================================================================
 
 
-@dispatcher  # type: ignore[misc]
+@dispatcher
 def linspace(  # noqa: PLR0913
-    start: int | float | complex | jax.Array,
-    stop: int | float | complex | jax.Array,
+    start: ArrayLike,
+    stop: ArrayLike,
     /,
     num: int,
     *,
@@ -172,11 +226,41 @@ def linspace(  # noqa: PLR0913
     )
 
 
+@dispatcher  # type: ignore[no-redef]
+def linspace(  # noqa: PLR0913
+    start: ArrayLike,
+    stop: ArrayLike,
+    /,
+    *,
+    num: int,
+    dtype: DType | None = None,
+    device: Device | None = None,
+    endpoint: bool = True,
+) -> jax.Array | jax.core.Tracer | Value:
+    # dispatch on `start`, `stop`, and `num`
+    return linspace(start, stop, num, dtype=dtype, device=device, endpoint=endpoint)
+
+
+@dispatcher  # type: ignore[no-redef]
+def linspace(  # noqa: PLR0913
+    start: ArrayLike,
+    stop: ArrayLike,
+    /,
+    *,
+    num: int,
+    dtype: DType | None = None,
+    device: Device | None = None,
+    endpoint: bool = True,
+) -> ArrayLike:
+    # dispatch on `start`, `stop`, and `num`
+    return linspace(start, stop, num, dtype=dtype, device=device, endpoint=endpoint)
+
+
 # =============================================================================
 
 
 @quaxify
-def meshgrid(*arrays: Value, indexing: str = "xy") -> list[Value]:
+def meshgrid(*arrays: ArrayLike, indexing: str = "xy") -> list[ArrayLike]:
     return jnp.meshgrid(*arrays, indexing=indexing)
 
 
@@ -195,25 +279,18 @@ def ones(
 # =============================================================================
 
 
-# @partial(jax.jit, static_argnames=("dtype", "device"))
-# @quaxify  # TODO: quaxify won't work here because of how the function is defined.
 @dispatcher  # type: ignore[misc]
 def ones_like(
-    x: jax.Array | jax.core.Tracer | Value,
-    /,
-    *,
-    dtype: DType | None = None,
-    device: Device | None = None,
-) -> jax.Array | jax.core.Tracer | Value:
+    x: ArrayLike, /, *, dtype: DType | None = None, device: Device | None = None
+) -> ArrayLike:
     return array_api.ones_like(x, dtype=dtype, device=device)
 
 
 # =============================================================================
 
 
-# @partial(jax.jit, static_argnames=("k",))
 @quaxify
-def tril(x: Value, /, *, k: int = 0) -> Value:
+def tril(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
     return array_api.tril(x, k=k)
 
 
@@ -222,7 +299,7 @@ def tril(x: Value, /, *, k: int = 0) -> Value:
 
 # @partial(jax.jit, static_argnames=("k",))
 @quaxify
-def triu(x: Value, /, *, k: int = 0) -> Value:
+def triu(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
     return array_api.triu(x, k=k)
 
 
@@ -245,10 +322,10 @@ def zeros(
 # @quaxify
 @dispatcher  # type: ignore[misc]
 def zeros_like(
-    x: jax.Array | jax.core.Tracer | Value,
+    x: ArrayLike,
     /,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
-) -> Value | jax.core.Tracer | jax.Array:
+) -> ArrayLike | jax.Array:
     return array_api.zeros_like(x, dtype=dtype, device=device)

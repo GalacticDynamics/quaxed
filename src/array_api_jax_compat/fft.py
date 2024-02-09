@@ -22,6 +22,7 @@ from typing import Literal
 
 from jax import Device
 from jax.experimental.array_api import fft as _jax_fft
+from jaxtyping import ArrayLike
 from quax import Value
 
 from ._utils import quaxify
@@ -29,7 +30,7 @@ from ._utils import quaxify
 
 @quaxify
 def fft(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     n: int | None = None,
@@ -41,7 +42,7 @@ def fft(
 
 @quaxify
 def ifft(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     n: int | None = None,
@@ -53,7 +54,7 @@ def ifft(
 
 @quaxify
 def fftn(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     s: Sequence[int] | None = None,
@@ -65,7 +66,7 @@ def fftn(
 
 @quaxify
 def ifftn(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     s: Sequence[int] | None = None,
@@ -77,7 +78,7 @@ def ifftn(
 
 @quaxify
 def rfft(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     n: int | None = None,
@@ -89,7 +90,7 @@ def rfft(
 
 @quaxify
 def irfft(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     n: int | None = None,
@@ -101,7 +102,7 @@ def irfft(
 
 @quaxify
 def rfftn(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     s: Sequence[int] | None = None,
@@ -113,7 +114,7 @@ def rfftn(
 
 @quaxify
 def irfftn(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     s: Sequence[int] | None = None,
@@ -125,7 +126,7 @@ def irfftn(
 
 @quaxify
 def hfft(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     n: int | None = None,
@@ -137,7 +138,7 @@ def hfft(
 
 @quaxify
 def ihfft(
-    x: Value,
+    x: ArrayLike,
     /,
     *,
     n: int | None = None,
@@ -158,10 +159,10 @@ def rfftfreq(n: int, /, *, d: float = 1.0, device: Device | None = None) -> Valu
 
 
 @quaxify
-def fftshift(x: Value, /, *, axes: int | Sequence[int] | None = None) -> Value:
+def fftshift(x: ArrayLike, /, *, axes: int | Sequence[int] | None = None) -> Value:
     return _jax_fft.fftshift(x, axes=axes)
 
 
 @quaxify
-def ifftshift(x: Value, /, *, axes: int | Sequence[int] | None = None) -> Value:
+def ifftshift(x: ArrayLike, /, *, axes: int | Sequence[int] | None = None) -> Value:
     return _jax_fft.ifftshift(x, axes=axes)

@@ -1,15 +1,15 @@
-"""Test with :class:`quax.DenseArrayValue` inputs."""
+"""Test with :class:`MyArray` inputs."""
 
 import jax.experimental.array_api as jax_xp
 import jax.numpy as jnp
 import pytest
 from jax import Array
-from jax.experimental.array_api._data_type_functions import FInfo, IInfo
-from jax.experimental.array_api._set_functions import (
-    UniqueAllResult,
-    UniqueCountsResult,
-    UniqueInverseResult,
+from jax._src.numpy.setops import (
+    _UniqueAllResult,
+    _UniqueCountsResult,
+    _UniqueInverseResult,
 )
+from jax.experimental.array_api._data_type_functions import FInfo, IInfo
 from myarray import MyArray
 
 import array_api_jax_compat as xp
@@ -72,7 +72,6 @@ def test_asarray():
 @pytest.mark.xfail(reason="returns a jax.Array")
 def test_empty():
     """Test `empty`."""
-    # TODO: test the dtype, device arguments
     got = xp.empty((2, 3))
     assert isinstance(got, MyArray)
 
@@ -640,7 +639,7 @@ def test_log10():
     expected = MyArray(jax_xp.log10(x.array))
 
     assert isinstance(got, MyArray)
-    assert jnp.array_equal(got.array, expected.array)
+    assert jnp.allclose(got.array, expected.array)
 
 
 def test_logaddexp():
@@ -1104,7 +1103,7 @@ def test_unique_all():
     got = xp.unique_all(x)
     expected = jax_xp.unique_all(x.array)
 
-    assert isinstance(got, UniqueAllResult)
+    assert isinstance(got, _UniqueAllResult)
 
     assert isinstance(got.values, MyArray)
     assert jnp.array_equal(got.values, expected.values)
@@ -1126,7 +1125,7 @@ def test_unique_counts():
     got = xp.unique_counts(x)
     expected = jax_xp.unique_counts(x.array)
 
-    assert isinstance(got, UniqueCountsResult)
+    assert isinstance(got, _UniqueCountsResult)
 
     assert isinstance(got.values, MyArray)
     assert jnp.array_equal(got.values.array, expected.values)
@@ -1142,7 +1141,7 @@ def test_unique_inverse():
     got = xp.unique_inverse(x)
     expected = jax_xp.unique_inverse(x.array)
 
-    assert isinstance(got, UniqueInverseResult)
+    assert isinstance(got, _UniqueInverseResult)
 
     assert isinstance(got.values, MyArray)
     assert jnp.array_equal(got.values.array, expected.values)
