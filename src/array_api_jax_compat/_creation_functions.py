@@ -153,7 +153,7 @@ def from_dlpack(x: object, /) -> jax.Array:
 
 @dispatcher
 def full(
-    shape: tuple[int, ...],
+    shape: tuple[int, ...] | int,
     fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
@@ -164,7 +164,7 @@ def full(
 
 @dispatcher  # type: ignore[no-redef]
 def full(
-    shape: tuple[int, ...],
+    shape: tuple[int, ...] | int,
     *,
     fill_value: ArrayLike,
     dtype: DType | None = None,
