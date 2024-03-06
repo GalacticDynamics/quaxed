@@ -215,7 +215,12 @@ def isfinite(x: ArrayLike, /) -> Value:
 
 @quaxify
 def isinf(x: ArrayLike, /) -> Value:
-    return array_api.isinf(x)
+    # Jax `isinf` makes a numpy array with value `inf` and then compares it with
+    # the input array. If the input array cannot be compared to base numpy
+    # arrays, e.g. a Quantity with units, then Jax's `isinf` will raise an
+    # unwanted error. Instead, we just negate the `isfinite` function, which
+    # should work for all array-like inputs.
+    return ~array_api.isfinite(x)
 
 
 @quaxify
