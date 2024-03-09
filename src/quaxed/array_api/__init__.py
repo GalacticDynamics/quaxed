@@ -37,9 +37,8 @@ with install_import_hook("quaxed", None):
     from ._sorting_functions import *
     from ._statistical_functions import *
     from ._utility_functions import *
-    from ._version import version as __version__
 
-__all__ = ["__version__", "__array_api_version__", "fft", "linalg"]
+__all__ = ["__array_api_version__", "fft", "linalg"]
 __all__ += _constants.__all__
 __all__ += _creation_functions.__all__
 __all__ += _data_type_functions.__all__
