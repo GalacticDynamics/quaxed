@@ -10,9 +10,10 @@ from jax._src.numpy.setops import (
     _UniqueInverseResult,
 )
 from jax.experimental.array_api._data_type_functions import FInfo, IInfo
-from myarray import MyArray
 
-import quaxed as xp
+import quaxed.array_api as xp
+
+from .myarray import MyArray
 
 ###############################################################################
 
