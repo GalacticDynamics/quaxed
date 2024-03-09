@@ -1,4 +1,4 @@
-# array-api-jax-compat
+# quaxed
 
 ```{toctree}
 :maxdepth: 2

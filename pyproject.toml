@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 
 [project]
-name = "array-api-jax-compat"
+name = "quaxed"
 authors = [
     { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
 ]
@@ -41,15 +41,15 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/GalacticDynamics/array-api-jax-compat"
-"Bug Tracker" = "https://github.com/GalacticDynamics/array-api-jax-compat/issues"
-Discussions = "https://github.com/GalacticDynamics/array-api-jax-compat/discussions"
-Changelog = "https://github.com/GalacticDynamics/array-api-jax-compat/releases"
+Homepage = "https://github.com/GalacticDynamics/quaxed"
+"Bug Tracker" = "https://github.com/GalacticDynamics/quaxed/issues"
+Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
+Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "src/array_api_jax_compat/_version.py"
+build.hooks.vcs.version-file = "src/quaxed/_version.py"
 
 [tool.hatch.env.default]
 features = ["test"]
@@ -75,7 +75,7 @@ ignore-words-list = """
 
 
 [tool.coverage]
-run.source = ["array_api_jax_compat"]
+run.source = ["quaxed"]
 port.exclude_lines = ['pragma: no cover', '\.\.\.', 'if typing.TYPE_CHECKING:']
 
 [tool.mypy]
@@ -90,7 +90,7 @@ disallow_incomplete_defs = false
 warn_return_any = false
 
 [[tool.mypy.overrides]]
-module = "array_api_jax_compat.*"
+module = "quaxed.*"
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 

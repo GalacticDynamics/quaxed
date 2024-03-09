@@ -2,10 +2,10 @@
 
 import importlib.metadata
 
-project = "array-api-jax-compat"
+project = "quaxed"
 copyright = "2023, Nathaniel Starkman"
 author = "Nathaniel Starkman"
-version = release = importlib.metadata.version("array_api_jax_compat")
+version = release = importlib.metadata.version("quaxed")
 
 extensions = [
     "myst_parser",

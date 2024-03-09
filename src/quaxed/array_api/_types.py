@@ -1,6 +1,6 @@
 """Copyright (c) 2023 Nathaniel Starkman. All rights reserved.
 
-array-api-jax-compat: Array-API JAX compatibility
+quaxed: Array-API JAX compatibility
 """
 
 __all__: list[str] = []
