@@ -71,7 +71,7 @@ pytest
 Use pytest-cov to generate coverage reports:
 
 ```bash
-pytest --cov=array-api-jax-compat
+pytest --cov=quaxed
 ```
 
 # Building docs

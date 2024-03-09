@@ -12,7 +12,7 @@ from jax._src.numpy.setops import (
 from jax.experimental.array_api._data_type_functions import FInfo, IInfo
 from myarray import MyArray
 
-import array_api_jax_compat as xp
+import quaxed as xp
 
 ###############################################################################
 

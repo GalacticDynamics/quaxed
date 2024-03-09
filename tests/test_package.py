@@ -2,8 +2,8 @@
 
 import importlib.metadata
 
-import array_api_jax_compat as m
+import quaxed as pkg
 
 
 def test_version() -> None:
-    assert importlib.metadata.version("array_api_jax_compat") == m.__version__
+    assert importlib.metadata.version("quaxed") == pkg.__version__

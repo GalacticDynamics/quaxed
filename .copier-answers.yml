@@ -6,7 +6,7 @@ email: nstarman@users.noreply.github.com
 full_name: Nathaniel Starkman
 license: BSD
 org: GalacticDynamics
-project_name: array-api-jax-compat
+project_name: quaxed
 project_short_description: Array-API JAX compatibility
-url: https://github.com/GalacticDynamics/array-api-jax-compat
+url: https://github.com/GalacticDynamics/quaxed
 vcs: true
