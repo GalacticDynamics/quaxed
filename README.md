@@ -25,3 +25,6 @@
 [rtd-link]:                 https://array-api-jax-compat.readthedocs.io/en/latest/?badge=latest
 
 <!-- prettier-ignore-end -->
+
+This package is going to be renamed to `quaxed`. Please use `quaxed.array_api`
+instead of `array-api-jax-compat`.
