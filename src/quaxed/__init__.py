@@ -13,8 +13,11 @@ from typing import Any
 import plum
 from jaxtyping import ArrayLike
 
-from . import array_api
+from . import _jax, array_api
+from ._jax import *
 from ._version import version as __version__
+
+__all__ += _jax.__all__
 
 # Simplify the display of ArrayLike
 plum.activate_union_aliases()
