@@ -54,4 +54,4 @@ def vectorize(
     excluded: Iterable[int] = frozenset(),
     signature: str | None = None,
 ) -> Callable[..., Any]:
-    return quaxify(jnp.vectorize(pyfunc))
+    return quaxify(jnp.vectorize(pyfunc, excluded=excluded, signature=signature))
