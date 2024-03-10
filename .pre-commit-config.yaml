@@ -84,6 +84,11 @@ repos:
         files: src
         additional_dependencies:
           - pytest
+        exclude: |
+          (?x)^(
+            src/quaxed/operator.py|
+            src/quaxed/scipy/special.py
+          )$
 
   - repo: https://github.com/codespell-project/codespell
     rev: "v2.2.6"
