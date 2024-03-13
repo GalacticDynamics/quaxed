@@ -124,7 +124,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["ANN", "INP001", "PLR0913", "S101", "T20"]
+"tests/**" = ["ANN", "INP001", "PLR0913", "S101", "T20", "TID252"]
 "__init__.py" = ["F403"]
 "noxfile.py" = ["T20"]
 "docs/conf.py" = ["INP001"]

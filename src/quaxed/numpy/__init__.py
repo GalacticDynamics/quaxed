@@ -5,8 +5,8 @@
 from jaxtyping import install_import_hook
 
 with install_import_hook("quaxed", None):
-    from . import core
-    from .core import *
+    from . import _core
+    from ._core import *
 
 __all__: list[str] = []
-__all__ += core.__all__
+__all__ += _core.__all__
