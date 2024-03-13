@@ -13,7 +13,7 @@ from jax.experimental.array_api._data_type_functions import FInfo, IInfo
 
 import quaxed.array_api as xp
 
-from .myarray import MyArray
+from ..myarray import MyArray
 
 ###############################################################################
 
