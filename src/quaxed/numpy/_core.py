@@ -9,6 +9,7 @@ __all__ = [
     "exp2",
     "greater",
     "hypot",
+    "isclose",
     "matmul",
     "moveaxis",
     "trace",
@@ -46,6 +47,7 @@ equal = quaxify(jnp.equal)
 exp2 = quaxify(jnp.exp2)
 greater = quaxify(jnp.greater)
 hypot = quaxify(jnp.hypot)
+isclose = quaxify(jnp.isclose)
 matmul = quaxify(jnp.matmul)
 moveaxis = quaxify(jnp.moveaxis)
 trace = quaxify(jnp.trace)
