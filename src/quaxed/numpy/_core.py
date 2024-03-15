@@ -11,6 +11,7 @@ __all__ = [
     "hypot",
     "matmul",
     "moveaxis",
+    "trace",
     "vectorize",
 ]
 
@@ -47,6 +48,7 @@ greater = quaxify(jnp.greater)
 hypot = quaxify(jnp.hypot)
 matmul = quaxify(jnp.matmul)
 moveaxis = quaxify(jnp.moveaxis)
+trace = quaxify(jnp.trace)
 
 
 @_doc(jnp.vectorize)
