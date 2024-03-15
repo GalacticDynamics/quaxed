@@ -13,6 +13,7 @@ __all__ = [
     "isclose",
     "matmul",
     "moveaxis",
+    "squeeze",
     "trace",
     "vectorize",
 ]
@@ -57,6 +58,7 @@ hypot = quaxify(jnp.hypot)
 isclose = quaxify(jnp.isclose)
 matmul = quaxify(jnp.matmul)
 moveaxis = quaxify(jnp.moveaxis)
+squeeze = quaxify(jnp.squeeze)
 trace = quaxify(jnp.trace)
 
 
