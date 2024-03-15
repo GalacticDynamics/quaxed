@@ -3,6 +3,7 @@
 __all__ = [
     "allclose",
     "array_equal",
+    "asarray",
     "cbrt",
     "copy",
     "equal",
@@ -25,6 +26,10 @@ from quax import quaxify
 T = TypeVar("T")
 
 
+# ============================================================================
+# Helper functions
+
+
 def _doc(jax_func: Callable[..., Any]) -> Callable[[T], T]:
     """Copy docstrings from JAX functions."""
 
@@ -37,10 +42,12 @@ def _doc(jax_func: Callable[..., Any]) -> Callable[[T], T]:
 
 
 ##############################################################################
+# Quaxified `jax.numpy` namespace
 
 
 allclose = quaxify(jnp.allclose)
 array_equal = quaxify(jnp.array_equal)
+asarray = quaxify(jnp.asarray)
 cbrt = quaxify(jnp.cbrt)
 copy = quaxify(jnp.copy)
 equal = quaxify(jnp.equal)
