@@ -8,6 +8,7 @@ __all__ = [
     "copy",
     "equal",
     "exp2",
+    "expand_dims",
     "greater",
     "hypot",
     "isclose",
@@ -53,6 +54,7 @@ cbrt = quaxify(jnp.cbrt)
 copy = quaxify(jnp.copy)
 equal = quaxify(jnp.equal)
 exp2 = quaxify(jnp.exp2)
+expand_dims = quaxify(jnp.expand_dims)
 greater = quaxify(jnp.greater)
 hypot = quaxify(jnp.hypot)
 isclose = quaxify(jnp.isclose)
