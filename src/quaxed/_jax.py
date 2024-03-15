@@ -42,6 +42,17 @@ def grad(  # noqa: PLR0913
     )
 
 
+def hessian(
+    fun: Callable[..., Any],
+    argnums: int | Sequence[int] = 0,
+    *,
+    has_aux: bool = False,
+    holomorphic: bool = False,
+) -> Callable[..., Any]:
+    """Quaxed version of :func:`jax.hessian`."""
+    return quaxify(jax.hessian(fun, argnums, holomorphic=holomorphic, has_aux=has_aux))
+
+
 def jacfwd(
     fun: Callable[..., Any],
     argnums: int | Sequence[int] = 0,
