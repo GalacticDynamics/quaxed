@@ -3,6 +3,7 @@
 __all__ = [
     "device_put",
     "grad",
+    "jacfwd",
 ]
 
 from collections.abc import Callable, Hashable, Sequence
@@ -39,3 +40,14 @@ def grad(  # noqa: PLR0913
             reduce_axes=reduce_axes,
         )
     )
+
+
+def jacfwd(
+    fun: Callable[..., Any],
+    argnums: int | Sequence[int] = 0,
+    *,
+    has_aux: bool = False,
+    holomorphic: bool = False,
+) -> Callable[..., Any]:
+    """Quaxed version of :func:`jax.jacfwd`."""
+    return quaxify(jax.jacfwd(fun, argnums, holomorphic=holomorphic, has_aux=has_aux))
