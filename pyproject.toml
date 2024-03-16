@@ -130,6 +130,9 @@ ignore = [
 "docs/conf.py" = ["INP001"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
 
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
 
 [tool.pylint]
 py-version = "3.10"

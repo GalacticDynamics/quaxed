@@ -28,6 +28,7 @@ def grad(  # noqa: PLR0913
     holomorphic: bool = False,
     allow_int: bool = False,
     reduce_axes: Sequence[AxisName] = (),
+    filter_spec: Any = True,
 ) -> Callable[..., Any]:
     """Quaxed version of :func:`jax.grad`."""
     return quaxify(
@@ -38,7 +39,8 @@ def grad(  # noqa: PLR0913
             holomorphic=holomorphic,
             allow_int=allow_int,
             reduce_axes=reduce_axes,
-        )
+        ),
+        filter_spec=filter_spec,
     )
 
 
@@ -48,9 +50,13 @@ def hessian(
     *,
     has_aux: bool = False,
     holomorphic: bool = False,
+    filter_spec: Any = True,
 ) -> Callable[..., Any]:
     """Quaxed version of :func:`jax.hessian`."""
-    return quaxify(jax.hessian(fun, argnums, holomorphic=holomorphic, has_aux=has_aux))
+    return quaxify(
+        jax.hessian(fun, argnums, holomorphic=holomorphic, has_aux=has_aux),
+        filter_spec=filter_spec,
+    )
 
 
 def jacfwd(
@@ -59,6 +65,10 @@ def jacfwd(
     *,
     has_aux: bool = False,
     holomorphic: bool = False,
+    filter_spec: Any = True,
 ) -> Callable[..., Any]:
     """Quaxed version of :func:`jax.jacfwd`."""
-    return quaxify(jax.jacfwd(fun, argnums, holomorphic=holomorphic, has_aux=has_aux))
+    return quaxify(
+        jax.jacfwd(fun, argnums, holomorphic=holomorphic, has_aux=has_aux),
+        filter_spec=filter_spec,
+    )
