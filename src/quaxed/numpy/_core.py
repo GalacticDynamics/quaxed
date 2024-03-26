@@ -6,6 +6,7 @@ __all__ = [
     "asarray",
     "cbrt",
     "copy",
+    "cross",
     "equal",
     "exp2",
     "expand_dims",
@@ -61,6 +62,7 @@ array_equal = quaxify(jnp.array_equal)
 asarray = quaxify(jnp.asarray)
 cbrt = quaxify(jnp.cbrt)
 copy = quaxify(jnp.copy)
+cross = quaxify(jnp.cross)
 equal = quaxify(jnp.equal)
 exp2 = quaxify(jnp.exp2)
 expand_dims = quaxify(jnp.expand_dims)
