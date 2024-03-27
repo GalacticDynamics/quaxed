@@ -4,6 +4,7 @@ __all__ = [
     "allclose",
     "array_equal",
     "asarray",
+    "arctan2",
     "cbrt",
     "copy",
     "cross",
@@ -60,6 +61,7 @@ def _doc(jax_func: Callable[..., Any]) -> Callable[[T], T]:
 allclose = quaxify(jnp.allclose)
 array_equal = quaxify(jnp.array_equal)
 asarray = quaxify(jnp.asarray)
+arctan2 = quaxify(jnp.arctan2)
 cbrt = quaxify(jnp.cbrt)
 copy = quaxify(jnp.copy)
 cross = quaxify(jnp.cross)
