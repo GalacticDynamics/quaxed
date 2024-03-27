@@ -14,6 +14,8 @@ __all__ = [
     "greater",
     "hypot",
     "isclose",
+    "log",
+    "log10",
     "matmul",
     "moveaxis",
     "power",
@@ -71,6 +73,8 @@ expand_dims = quaxify(jnp.expand_dims)
 greater = quaxify(jnp.greater)
 hypot = quaxify(jnp.hypot)
 isclose = quaxify(jnp.isclose)
+log = quaxify(jnp.log)
+log10 = quaxify(jnp.log10)
 matmul = quaxify(jnp.matmul)
 moveaxis = quaxify(jnp.moveaxis)
 power = quaxify(jnp.power)
