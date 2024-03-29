@@ -15,7 +15,7 @@ from jax.experimental import array_api
 from jaxtyping import ArrayLike
 from quax import Value
 
-from ._utils import quaxify
+from quaxed._utils import quaxify
 
 
 @quaxify

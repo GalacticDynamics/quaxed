@@ -3,30 +3,23 @@
 __all__ = [
     "arange",
     "asarray",
-    "empty",
     "empty_like",
-    "eye",
-    "from_dlpack",
     "full",
     "full_like",
     "linspace",
     "meshgrid",
-    "ones",
     "ones_like",
     "tril",
     "triu",
-    "zeros",
     "zeros_like",
 ]
 
 
 from functools import partial
-from typing import TypeVar
+from typing import Literal, TypeVar
 
 import jax
 import jax.numpy as jnp
-from jax import Device
-from jax.experimental import array_api
 from jaxtyping import ArrayLike
 from quax import Value
 
@@ -48,9 +41,8 @@ def arange(
     step: ArrayLike | None = None,
     *,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike:
-    return array_api.arange(start, stop, step, dtype=dtype, device=device)
+    return jnp.arange(start, stop, step, dtype=dtype)
 
 
 @dispatcher  # type: ignore[no-redef]
@@ -60,10 +52,9 @@ def arange(
     *,
     step: ArrayLike | None = None,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike:
     # dispatch on `start`, `stop`, and `step`
-    return arange(start, stop, step, dtype=dtype, device=device)
+    return arange(start, stop, step, dtype=dtype)
 
 
 @dispatcher  # type: ignore[no-redef]
@@ -73,10 +64,9 @@ def arange(
     stop: ArrayLike | None = None,
     step: ArrayLike | None = None,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike:
     # dispatch on `start`, `stop`, and `step`
-    return arange(start, stop, step, dtype=dtype, device=device)
+    return arange(start, stop, step, dtype=dtype)
 
 
 @dispatcher  # type: ignore[no-redef]
@@ -86,35 +76,24 @@ def arange(
     stop: ArrayLike | None = None,
     step: ArrayLike | None = None,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike | Value:
     # dispatch on `start`, `stop`, and `step`
-    return arange(start, stop, step, dtype=dtype, device=device)
+    return arange(start, stop, step, dtype=dtype)
 
 
 # =============================================================================
 
 
-@partial(jax.jit, static_argnames=("dtype", "device", "copy"))
+@partial(jax.jit, static_argnames=("dtype", "order"))
 @quaxify
 def asarray(
     obj: ArrayLike,
     /,
     *,
     dtype: DType | None = None,
-    device: Device | None = None,
-    copy: bool | None = None,
+    order: Literal["C", "F", "A", "K"] | None = None,
 ) -> Value:
-    return array_api.asarray(obj, dtype=dtype, device=device, copy=copy)
-
-
-# =============================================================================
-
-
-def empty(
-    shape: tuple[int, ...], *, dtype: DType | None = None, device: Device | None = None
-) -> jax.Array:
-    return array_api.empty(shape, dtype=dtype, device=device)
+    return jnp.asarray(obj, dtype=dtype, order=order)
 
 
 # =============================================================================
@@ -122,31 +101,13 @@ def empty(
 
 @dispatcher  # type: ignore[misc]
 def empty_like(
-    x: ArrayLike, /, *, dtype: DType | None = None, device: Device | None = None
-) -> ArrayLike:
-    return array_api.empty_like(x, dtype=dtype, device=device)
-
-
-# =============================================================================
-
-
-def eye(
-    n_rows: int,
-    n_cols: int | None = None,
+    prototype: ArrayLike,
     /,
     *,
-    k: int = 0,
     dtype: DType | None = None,
-    device: Device | None = None,
-) -> jax.Array:
-    return array_api.eye(n_rows, n_cols, k=k, dtype=dtype, device=device)
-
-
-# =============================================================================
-
-
-def from_dlpack(x: object, /) -> jax.Array:
-    return array_api.from_dlpack(x)
+    shape: tuple[int, ...] | None = None,
+) -> ArrayLike:
+    return jnp.empty_like(prototype, dtype=dtype, shape=shape)
 
 
 # =============================================================================
@@ -158,9 +119,8 @@ def full(
     fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike:
-    return array_api.full(shape, fill_value, dtype=dtype, device=device)
+    return jnp.full(shape, fill_value, dtype=dtype)
 
 
 @dispatcher  # type: ignore[no-redef]
@@ -169,9 +129,8 @@ def full(
     *,
     fill_value: ArrayLike,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike:
-    return full(shape, fill_value, dtype=dtype, device=device)
+    return full(shape, fill_value, dtype=dtype)
 
 
 # =============================================================================
@@ -184,9 +143,9 @@ def full_like(
     fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
-    device: Device | None = None,
+    shape: tuple[int, ...] | None = None,
 ) -> ArrayLike:
-    return array_api.full_like(x, fill_value, dtype=dtype, device=device)
+    return jnp.full_like(x, fill_value, dtype=dtype, shape=shape)
 
 
 @dispatcher  # type: ignore[no-redef]
@@ -195,11 +154,11 @@ def full_like(
     *,
     fill_value: ArrayLike,
     dtype: DType | None = None,
-    device: Device | None = None,
+    shape: tuple[int, ...] | None = None,
 ) -> ArrayLike:
     # dispatch on both `x` and `fill_value`
     return full_like.invoke(type(x), type(fill_value))(
-        x, fill_value, dtype=dtype, device=device
+        x, fill_value, dtype=dtype, shape=shape
     )
 
 
@@ -213,17 +172,13 @@ def linspace(  # noqa: PLR0913
     /,
     num: int,
     *,
-    dtype: DType | None = None,
-    device: Device | None = None,
     endpoint: bool = True,
+    retstep: bool = False,
+    dtype: DType | None = None,
+    axis: int = 0,
 ) -> jax.Array | jax.core.Tracer | Value:
-    return array_api.linspace(
-        start,
-        stop,
-        num,
-        dtype=dtype,
-        device=device,
-        endpoint=endpoint,
+    return jnp.linspace(
+        start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
     )
 
 
@@ -234,47 +189,25 @@ def linspace(  # noqa: PLR0913
     /,
     *,
     num: int,
-    dtype: DType | None = None,
-    device: Device | None = None,
     endpoint: bool = True,
+    retstep: bool = False,
+    dtype: DType | None = None,
+    axis: int = 0,
 ) -> jax.Array | jax.core.Tracer | Value:
     # dispatch on `start`, `stop`, and `num`
-    return linspace(start, stop, num, dtype=dtype, device=device, endpoint=endpoint)
-
-
-@dispatcher  # type: ignore[no-redef]
-def linspace(  # noqa: PLR0913
-    start: ArrayLike,
-    stop: ArrayLike,
-    /,
-    *,
-    num: int,
-    dtype: DType | None = None,
-    device: Device | None = None,
-    endpoint: bool = True,
-) -> ArrayLike:
-    # dispatch on `start`, `stop`, and `num`
-    return linspace(start, stop, num, dtype=dtype, device=device, endpoint=endpoint)
+    return linspace(
+        start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
+    )
 
 
 # =============================================================================
 
 
 @quaxify
-def meshgrid(*arrays: ArrayLike, indexing: str = "xy") -> list[ArrayLike]:
-    return jnp.meshgrid(*arrays, indexing=indexing)
-
-
-# =============================================================================
-
-
-def ones(
-    shape: tuple[int, ...],
-    *,
-    dtype: DType | None = None,
-    device: Device | None = None,
-) -> jax.Array:
-    return array_api.ones(shape, dtype=dtype, device=device)
+def meshgrid(
+    *arrays: ArrayLike, copy: bool = True, sparse: bool = False, indexing: str = "xy"
+) -> list[ArrayLike]:
+    return jnp.meshgrid(*arrays, copy=copy, sparse=sparse, indexing=indexing)
 
 
 # =============================================================================
@@ -282,9 +215,9 @@ def ones(
 
 @dispatcher  # type: ignore[misc]
 def ones_like(
-    x: ArrayLike, /, *, dtype: DType | None = None, device: Device | None = None
+    x: ArrayLike, /, *, dtype: DType | None = None, shape: tuple[int, ...] | None = None
 ) -> ArrayLike:
-    return array_api.ones_like(x, dtype=dtype, device=device)
+    return jnp.ones_like(x, dtype=dtype, shape=shape)
 
 
 # =============================================================================
@@ -292,7 +225,7 @@ def ones_like(
 
 @quaxify
 def tril(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
-    return array_api.tril(x, k=k)
+    return jnp.tril(x, k=k)
 
 
 # =============================================================================
@@ -301,19 +234,7 @@ def tril(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
 # @partial(jax.jit, static_argnames=("k",))
 @quaxify
 def triu(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
-    return array_api.triu(x, k=k)
-
-
-# =============================================================================
-
-
-def zeros(
-    shape: tuple[int, ...],
-    *,
-    dtype: DType | None = None,
-    device: Device | None = None,
-) -> jax.Array:
-    return array_api.zeros(shape, dtype=dtype, device=device)
+    return jnp.triu(x, k=k)
 
 
 # =============================================================================
@@ -327,6 +248,5 @@ def zeros_like(
     /,
     *,
     dtype: DType | None = None,
-    device: Device | None = None,
 ) -> ArrayLike | jax.Array:
-    return array_api.zeros_like(x, dtype=dtype, device=device)
+    return jnp.zeros_like(x, dtype=dtype)

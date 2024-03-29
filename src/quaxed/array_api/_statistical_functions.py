@@ -5,8 +5,8 @@ from jax.experimental import array_api
 from jaxtyping import ArrayLike
 from quax import Value
 
-from ._types import DType
-from ._utils import quaxify
+from quaxed._types import DType
+from quaxed._utils import quaxify
 
 
 @quaxify

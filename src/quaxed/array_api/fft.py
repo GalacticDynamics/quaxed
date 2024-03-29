@@ -25,7 +25,7 @@ from jax.experimental.array_api import fft as _jax_fft
 from jaxtyping import ArrayLike
 from quax import Value
 
-from ._utils import quaxify
+from quaxed._utils import quaxify
 
 
 @quaxify

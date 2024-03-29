@@ -1,258 +1,531 @@
+# ruff: noqa: E0603, F822
 """Quaxed :mod:`jax.numpy`."""
 
 __all__ = [
+    # modules
+    "fft",
+    "linalg",
+    # contents
+    "abs",
+    "absolute",
+    "acos",
+    "acosh",
+    "add",
+    "all",
     "allclose",
-    "array_equal",
-    "asarray",
+    "amax",
+    "amin",
+    "angle",
+    "any",
+    "append",
+    "apply_along_axis",
+    "apply_over_axes",
+    # "arange",  # in _creation_functions
+    "arccos",
+    "arccosh",
+    "arcsin",
+    "arcsinh",
+    "arctan",
     "arctan2",
+    "arctanh",
+    "argmax",
+    "argmin",
+    "argpartition",
+    "argsort",
+    "argwhere",
+    "around",
+    "array",
+    "array_equal",
+    "array_equiv",
+    "array_repr",
+    "array_split",
+    # "array_str",  # TODO:  why is this erroring?
+    # "asarray",  # in _creation_functions
+    "asin",
+    "asinh",
+    "astype",
+    "atan",
+    "atan2",
+    "atanh",
+    "atleast_1d",
+    "atleast_2d",
+    "atleast_3d",
+    "average",
+    "bartlett",
+    "bfloat16",
+    "bincount",
+    "bitwise_and",
+    "bitwise_count",
+    "bitwise_invert",
+    "bitwise_left_shift",
+    "bitwise_not",
+    "bitwise_or",
+    "bitwise_right_shift",
+    "bitwise_xor",
+    "blackman",
+    "block",
+    "bool",
+    "bool_",
+    "broadcast_arrays",
+    "broadcast_shapes",
+    "broadcast_to",
+    "c_",  # not subscriptable
+    "can_cast",
     "cbrt",
+    "cdouble",
+    "ceil",
+    "character",
+    "choose",
+    "clip",
+    "column_stack",
+    "complex128",
+    "complex64",
+    "complex_",
+    "complexfloating",
+    "compress",
+    "concat",
+    "concatenate",
+    "conj",
+    "conjugate",
+    "convolve",
     "copy",
+    "copysign",
+    "corrcoef",
+    "correlate",
+    "cos",
+    "cosh",
+    "count_nonzero",
+    "cov",
     "cross",
+    "csingle",
+    "cumprod",
+    "cumsum",
+    "deg2rad",
+    "degrees",
+    "delete",
+    "diag",
+    "diag_indices",
+    "diag_indices_from",
+    "diagflat",
+    "diagonal",
+    "diff",
+    "digitize",
+    "divide",
+    "divmod",
+    "dot",
+    "double",
+    "dsplit",
+    "dstack",
+    "dtype",
+    "e",
+    "ediff1d",
+    "einsum",
+    "einsum_path",
+    "empty",
+    "empty_like",
     "equal",
+    "euler_gamma",
+    "exp",
     "exp2",
     "expand_dims",
+    "expm1",
+    "extract",
+    "eye",
+    "fabs",
+    "fill_diagonal",
+    "finfo",
+    "fix",
+    "flatnonzero",
+    "flexible",
+    "flip",
+    "fliplr",
+    "flipud",
+    "float16",
+    "float32",
+    "float64",
+    "float8_e4m3b11fnuz",
+    "float8_e4m3fn",
+    "float8_e4m3fnuz",
+    "float8_e5m2",
+    "float8_e5m2fnuz",
+    "float_",
+    "float_power",
+    "floating",
+    "floor",
+    "floor_divide",
+    "fmax",
+    "fmin",
+    "fmod",
+    "frexp",
+    "from_dlpack",
+    "frombuffer",
+    # "fromfile",
+    "fromfunction",
+    "fromiter",
+    "frompyfunc",
+    "fromstring",
+    "full",
+    "full_like",
+    "gcd",
+    "generic",
+    "geomspace",
+    "get_printoptions",
+    "gradient",
     "greater",
+    "greater_equal",
+    "hamming",
+    "hanning",
+    "heaviside",
+    "histogram",
+    "histogram2d",
+    "histogram_bin_edges",
+    "histogramdd",
+    "hsplit",
+    "hstack",
     "hypot",
+    "i0",
+    "identity",
+    "iinfo",
+    "imag",
+    "index_exp",
+    "indices",
+    "inexact",
+    "inf",
+    "inner",
+    "insert",
+    "int16",
+    "int32",
+    "int4",
+    "int64",
+    "int8",
+    "int_",
+    "integer",
+    "interp",
+    "intersect1d",
+    "invert",
     "isclose",
+    "iscomplex",
+    "iscomplexobj",
+    "isdtype",
+    "isfinite",
+    "isin",
+    "isinf",
+    "isnan",
+    "isneginf",
+    "isposinf",
+    "isreal",
+    "isrealobj",
+    "isscalar",
+    "issubdtype",
+    "iterable",
+    "ix_",
+    "kaiser",
+    "kron",
+    "lcm",
+    "ldexp",
+    "left_shift",
+    "less",
+    "less_equal",
+    "lexsort",
+    "linspace",
+    "load",
     "log",
     "log10",
+    "log1p",
+    "log2",
+    "logaddexp",
+    "logaddexp2",
+    "logical_and",
+    "logical_not",
+    "logical_or",
+    "logical_xor",
+    "logspace",
+    "mask_indices",
     "matmul",
+    "matrix_transpose",
+    "max",
+    "maximum",
+    "mean",
+    "median",
+    "meshgrid",
+    "mgrid",
+    "min",
+    "minimum",
+    "mod",
+    "modf",
     "moveaxis",
+    "multiply",
+    "nan",
+    "nan_to_num",
+    "nanargmax",
+    "nanargmin",
+    "nancumprod",
+    "nancumsum",
+    "nanmax",
+    "nanmean",
+    "nanmedian",
+    "nanmin",
+    "nanpercentile",
+    "nanprod",
+    "nanquantile",
+    "nanstd",
+    "nansum",
+    "nanvar",
+    "ndarray",
+    "ndim",
+    "negative",
+    "newaxis",
+    "nextafter",
+    "nonzero",
+    "not_equal",
+    "number",
+    "object_",
+    "ogrid",
+    "ones",
+    "ones_like",
+    "outer",
+    "packbits",
+    "pad",
+    "partition",
+    "percentile",
+    "permute_dims",
+    "pi",
+    "piecewise",
+    "place",
+    "poly",
+    "polyadd",
+    "polyder",
+    "polydiv",
+    "polyfit",
+    "polyint",
+    "polymul",
+    "polysub",
+    "polyval",
+    "positive",
+    "pow",
     "power",
+    "printoptions",
+    "prod",
+    "promote_types",
+    "ptp",
+    "put",
+    "quantile",
+    "r_",  # not subscriptable
+    "rad2deg",
+    "radians",
+    "ravel",
+    "ravel_multi_index",
+    "real",
+    "reciprocal",
+    "remainder",
+    "repeat",
+    "reshape",
+    "resize",
+    "result_type",
+    "right_shift",
+    "rint",
+    "roll",
+    "rollaxis",
+    "roots",
+    "rot90",
+    "round",
+    "round_",
+    "s_",  # not subscriptable
+    "save",
+    "savez",
+    "searchsorted",
+    "select",
+    "set_printoptions",
+    "setdiff1d",
+    "setxor1d",
+    "shape",
+    "sign",
+    "signbit",
+    "signedinteger",
+    "sin",
+    "sinc",
+    "single",
+    "sinh",
+    "size",
+    "sort",
+    "sort_complex",
+    "split",
+    "sqrt",
+    "square",
     "squeeze",
+    "stack",
+    "std",
+    "subtract",
+    "sum",
+    "swapaxes",
+    "take",
+    "take_along_axis",
     "tan",
+    "tanh",
+    "tensordot",
+    "tile",
     "trace",
-    "vectorize",
+    "transpose",
+    "tri",
+    "tril",
+    "tril_indices",
+    "tril_indices_from",
+    "trim_zeros",
+    "triu",
+    "triu_indices",
+    "triu_indices_from",
+    "true_divide",
+    "trunc",
+    # "ufunc",  # higher-order function
+    "uint",
+    "uint16",
+    "uint32",
+    "uint4",
+    "uint64",
+    "uint8",
+    "union1d",
+    "unique",
+    "unique_all",
+    "unique_counts",
+    "unique_inverse",
+    "unique_values",
+    "unpackbits",
+    "unravel_index",
+    "unsignedinteger",
+    "unwrap",
+    "vander",
+    "var",
+    "vdot",
+    "vecdot",
+    # "vectorize",
+    "vsplit",
+    "vstack",
+    "where",
+    "zeros",
+    "zeros_like",
 ]
 
-import functools
-from collections.abc import Callable, Collection
-from typing import Any, TypeVar
+import sys
+from collections.abc import Callable
+from typing import Any, Literal
 
-import jax
 import jax.numpy as jnp
-from jax._src.numpy.vectorize import (
-    _apply_excluded,
-    _check_output_dims,
-    _parse_gufunc_signature,
-    _parse_input_dimensions,
+from jaxtyping import ArrayLike
+
+from quaxed._types import DType
+from quaxed._utils import quaxify
+
+from . import fft, linalg
+
+# =============================================================================
+# Explicit constructions
+# TODO: not need to do these by specifying a `.pyi` file.
+#       but right now, `_higher_order.py` needs this for mypy to pass.
+
+
+@quaxify
+def asarray(
+    a: ArrayLike,
+    dtype: DType | None = None,
+    order: Literal["C", "F", "A", "K"] | None = None,
+) -> ArrayLike:
+    return jnp.asarray(a, dtype=dtype, order=order)
+
+
+@quaxify
+def expand_dims(a: ArrayLike, axis: int | tuple[int, ...]) -> ArrayLike:
+    return jnp.expand_dims(a, axis=axis)
+
+
+@quaxify
+def squeeze(a: ArrayLike, axis: int | tuple[int, ...] | None = None) -> ArrayLike:
+    return jnp.squeeze(a, axis=axis)
+
+
+# =============================================================================
+
+
+def __dir__() -> list[str]:
+    """Return the list of names in the module."""
+    return sorted(__all__)
+
+
+# =============================================================================
+# Automated lazy construction
+
+# Direct transfers
+_DIRECT_TRANSFER: frozenset[str] = frozenset(
+    (
+        "character",
+        "e",
+        "euler_gamma",
+        "flexible",
+        "floating",
+        "generic",
+        "index_exp",
+        "indices",
+        "inexact",
+        "inf",
+        "int16",
+        "int32",
+        "int4",
+        "int64",
+        "int8",
+        "int_",
+        "integer",
+        "mask_indices",
+        "mgrid",
+        "nan",
+        "ndarray",
+        "newaxis",
+        "number",
+        "object_",
+        "ogrid",
+        "pi",
+        "printoptions",
+        "promote_types",
+        "r_",
+        "s_",
+        "set_printoptions",
+        "signedinteger",
+        "single",
+        "tri",
+        "tril_indices",
+        "triu_indices",
+        "uint",
+        "uint16",
+        "uint32",
+        "uint4",
+        "uint64",
+        "uint8",
+        "unsignedinteger",
+    )
 )
-from quax import quaxify
-
-T = TypeVar("T")
 
 
-# ============================================================================
-# Helper functions
+_FILTER_SPEC: dict[str, tuple[bool, ...]] = {
+    "kaiser": (False, True, True),
+    "swapaxes": (True, False, False),
+}
 
 
-def _doc(jax_func: Callable[..., Any]) -> Callable[[T], T]:
-    """Copy docstrings from JAX functions."""
+def __getattr__(name: str) -> Callable[..., Any]:  # TODO: better type hint
+    """Get the object from the `jax.numpy` module."""
+    if name not in __all__:
+        msg = f"module {__name__!r} has no attribute {name!r}"
+        raise AttributeError(msg)
 
-    def transfer_doc(func: T) -> T:
-        """Copy docstrings from JAX functions."""
-        func.__doc__ = jax_func.__doc__
-        return func
+    # Get the object
+    jnp_obj = getattr(jnp, name)
 
-    return transfer_doc
+    # Quaxify?
+    out = (
+        jnp_obj
+        if name in _DIRECT_TRANSFER
+        else quaxify(jnp_obj, filter_spec=_FILTER_SPEC.get(name, True))
+    )
 
+    # Cache the function in this module
+    setattr(sys.modules[__name__], name, out)
 
-##############################################################################
-# Quaxified `jax.numpy` namespace
-
-
-allclose = quaxify(jnp.allclose)
-array_equal = quaxify(jnp.array_equal)
-asarray = quaxify(jnp.asarray)
-arctan2 = quaxify(jnp.arctan2)
-cbrt = quaxify(jnp.cbrt)
-copy = quaxify(jnp.copy)
-cross = quaxify(jnp.cross)
-equal = quaxify(jnp.equal)
-exp2 = quaxify(jnp.exp2)
-expand_dims = quaxify(jnp.expand_dims)
-greater = quaxify(jnp.greater)
-hypot = quaxify(jnp.hypot)
-isclose = quaxify(jnp.isclose)
-log = quaxify(jnp.log)
-log10 = quaxify(jnp.log10)
-matmul = quaxify(jnp.matmul)
-moveaxis = quaxify(jnp.moveaxis)
-power = quaxify(jnp.power)
-squeeze = quaxify(jnp.squeeze)
-tan = quaxify(jnp.tan)
-trace = quaxify(jnp.trace)
-
-
-# =====================================
-# `jax.numpy.vectorize`
-
-
-def vectorize(  # noqa: C901
-    pyfunc: Callable[..., Any],
-    *,
-    excluded: Collection[int | str] = frozenset(),
-    signature: str | None = None,
-) -> Callable[..., Any]:
-    """Define a vectorized function with broadcasting.
-
-    This is a copy-paste from :func:`jax.numpy.vectorize`, but the internals are
-    all replaced with their :mod:`quaxed` counterparts to allow quax-friendly
-    objects to pass through. The only thing that isn't quaxed is `jax.vmap`,
-    which allows any array-like object to pass through without converting it.
-    Note that this behaviour is DIFFERENT than doing ``quaxify(jnp.vectorize)``
-    since `quaxify` makes objects look like arrays, not their actual type,
-    which can be problematic. This function passes through the objects
-    unchanged (so long as they are amenable to the reshapes and ``vamap``).
-
-    Arguments:
-    ---------
-    pyfunc: callable
-        function to vectorize.
-    excluded: Collection[int | str], optional
-        optional set of integers representing positional arguments for which the
-        function will not be vectorized. These will be passed directly to
-        ``pyfunc`` unmodified.
-    signature: str | None
-        optional generalized universal function signature, e.g.,
-        ``(m,n),(n)->(m)`` for vectorized matrix-vector multiplication. If
-        provided, ``pyfunc`` will be called with (and expected to return) arrays
-        with shapes given by the size of corresponding core dimensions. By
-        default, pyfunc is assumed to take scalars arrays as input and output.
-
-    Returns
-    -------
-    callable
-        Vectorized version of the given function.
-
-    Here are a few examples of how one could write vectorized linear algebra
-    routines using :func:`vectorize`:
-
-    >>> from functools import partial
-
-    >>> @partial(jnp.vectorize, signature='(k),(k)->(k)')
-    ... def cross_product(a, b):
-    ...   assert a.shape == b.shape and a.ndim == b.ndim == 1
-    ...   return jnp.array([a[1] * b[2] - a[2] * b[1],
-    ...                     a[2] * b[0] - a[0] * b[2],
-    ...                     a[0] * b[1] - a[1] * b[0]])
-
-    >>> @partial(jnp.vectorize, signature='(n,m),(m)->(n)')
-    ... def matrix_vector_product(matrix, vector):
-    ...   assert matrix.ndim == 2 and matrix.shape[1:] == vector.shape
-    ...   return matrix @ vector
-
-    These functions are only written to handle 1D or 2D arrays (the ``assert``
-    statements will never be violated), but with vectorize they support
-    arbitrary dimensional inputs with NumPy style broadcasting, e.g.,
-
-    >>> cross_product(jnp.ones(3), jnp.ones(3)).shape
-    (3,)
-    >>> cross_product(jnp.ones((2, 3)), jnp.ones(3)).shape
-    (2, 3)
-    >>> cross_product(jnp.ones((1, 2, 3)), jnp.ones((2, 1, 3))).shape
-    (2, 2, 3)
-    >>> matrix_vector_product(jnp.ones(3), jnp.ones(3))  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    ValueError: input with shape (3,) does not have enough dimensions for all
-    core dimensions ('n', 'k') on vectorized function with excluded=frozenset()
-    and signature='(n,k),(k)->(k)'
-    >>> matrix_vector_product(jnp.ones((2, 3)), jnp.ones(3)).shape
-    (2,)
-    >>> matrix_vector_product(jnp.ones((2, 3)), jnp.ones((4, 3))).shape
-    (4, 2)
-
-    Note that this has different semantics than `jnp.matmul`:
-
-    >>> jnp.matmul(jnp.ones((2, 3)), jnp.ones((4, 3)))  # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    TypeError: dot_general requires contracting dimensions to have the same shape, got [3] and [4].
-    """  # noqa: E501
-    if any(not isinstance(exclude, str | int) for exclude in excluded):
-        msg = (
-            "jax.numpy.vectorize can only exclude integer or string arguments, "
-            f"but excluded={excluded!r}"
-        )
-        raise TypeError(msg)
-
-    if any(isinstance(e, int) and e < 0 for e in excluded):
-        msg = f"excluded={excluded!r} contains negative numbers"
-        raise ValueError(msg)
-
-    @functools.wraps(pyfunc)
-    def wrapped(*args: Any, **kwargs: Any) -> Any:
-        error_context = (
-            f"on vectorized function with excluded={excluded!r} and "
-            f"signature={signature!r}"
-        )
-        excluded_func, args, kwargs = _apply_excluded(pyfunc, excluded, args, kwargs)
-
-        if signature is not None:
-            input_core_dims, output_core_dims = _parse_gufunc_signature(signature)
-        else:
-            input_core_dims = [()] * len(args)
-            output_core_dims = None
-
-        none_args = {i for i, arg in enumerate(args) if arg is None}
-        if any(none_args):
-            if any(input_core_dims[i] != () for i in none_args):
-                msg = f"Cannot pass None at locations {none_args} with {signature=}"
-                raise ValueError(msg)
-            excluded_func, args, _ = _apply_excluded(excluded_func, none_args, args, {})
-            input_core_dims = [
-                dim for i, dim in enumerate(input_core_dims) if i not in none_args
-            ]
-
-        args = tuple(map(asarray, args))
-
-        broadcast_shape, dim_sizes = _parse_input_dimensions(
-            args, input_core_dims, error_context
-        )
-
-        checked_func = _check_output_dims(
-            excluded_func, dim_sizes, output_core_dims, error_context
-        )
-
-        # Rather than broadcasting all arguments to full broadcast shapes, prefer
-        # expanding dimensions using vmap. By pushing broadcasting
-        # into vmap, we can make use of more efficient batching rules for
-        # primitives where only some arguments are batched (e.g., for
-        # lax_linalg.triangular_solve), and avoid instantiating large broadcasted
-        # arrays.
-
-        squeezed_args = []
-        rev_filled_shapes = []
-
-        for arg, core_dims in zip(args, input_core_dims, strict=True):
-            noncore_shape = arg.shape[: arg.ndim - len(core_dims)]
-
-            pad_ndim = len(broadcast_shape) - len(noncore_shape)
-            filled_shape = pad_ndim * (1,) + noncore_shape
-            rev_filled_shapes.append(filled_shape[::-1])
-
-            squeeze_indices = tuple(
-                i for i, size in enumerate(noncore_shape) if size == 1
-            )
-            squeezed_arg = squeeze(arg, axis=squeeze_indices)
-            squeezed_args.append(squeezed_arg)
-
-        vectorized_func = checked_func
-        dims_to_expand = []
-        for negdim, axis_sizes in enumerate(zip(*rev_filled_shapes, strict=True)):
-            in_axes = tuple(None if size == 1 else 0 for size in axis_sizes)
-            if all(axis is None for axis in in_axes):
-                dims_to_expand.append(len(broadcast_shape) - 1 - negdim)
-            else:
-                vectorized_func = jax.vmap(vectorized_func, in_axes)
-        result = vectorized_func(*squeezed_args)
-
-        if not dims_to_expand:
-            out = result
-        elif isinstance(result, tuple):
-            out = tuple(expand_dims(r, axis=dims_to_expand) for r in result)
-        else:
-            out = expand_dims(result, axis=dims_to_expand)
-
-        return out
-
-    return wrapped
+    return out
