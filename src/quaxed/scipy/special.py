@@ -1,6 +1,6 @@
 """Quaxed :mod:`jax.scipy.special`."""
 
-__all__ = [  # noqa: F822
+__all__ = [
     "bernoulli",
     "betainc",
     "betaln",
