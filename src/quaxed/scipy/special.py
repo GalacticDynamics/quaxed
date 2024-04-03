@@ -1,3 +1,5 @@
+# ruff:noqa: F822
+
 """Quaxed :mod:`jax.scipy.special`."""
 
 __all__ = [
