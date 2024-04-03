@@ -5,7 +5,6 @@ quaxed: Array-API JAX compatibility
 
 # pylint: disable=redefined-builtin
 
-
 __all__ = ["__version__", "array_api"]
 
 from typing import Any
