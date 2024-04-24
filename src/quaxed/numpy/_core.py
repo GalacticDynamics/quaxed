@@ -20,6 +20,7 @@ __all__ = [
     "moveaxis",
     "power",
     "squeeze",
+    "tan",
     "trace",
     "vectorize",
 ]
@@ -79,6 +80,7 @@ matmul = quaxify(jnp.matmul)
 moveaxis = quaxify(jnp.moveaxis)
 power = quaxify(jnp.power)
 squeeze = quaxify(jnp.squeeze)
+tan = quaxify(jnp.tan)
 trace = quaxify(jnp.trace)
 
 
