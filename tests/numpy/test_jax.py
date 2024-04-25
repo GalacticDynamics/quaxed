@@ -926,7 +926,7 @@ def test_gcd():
 
 def test_geomspace():
     """Test `quaxed.numpy.geomspace`."""
-    assert jnp.all(qnp.geomspace(0.0, 100.0) == jnp.geomspace(0.0, 100.0))
+    assert jnp.array_equal(qnp.geomspace(1.0, 100.0), jnp.geomspace(1.0, 100.0))
 
 
 def test_get_printoptions():
