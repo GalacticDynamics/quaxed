@@ -13,6 +13,7 @@ with install_import_hook("quaxed", None):
         _constants,
         _creation_functions,
         _data_type_functions,
+        _dispatch,
         _elementwise_functions,
         _indexing_functions,
         _linear_algebra_functions,
@@ -28,6 +29,7 @@ with install_import_hook("quaxed", None):
     from ._constants import *
     from ._creation_functions import *
     from ._data_type_functions import *
+    from ._dispatch import *
     from ._elementwise_functions import *
     from ._indexing_functions import *
     from ._linear_algebra_functions import *
@@ -51,3 +53,4 @@ __all__ += _set_functions.__all__
 __all__ += _sorting_functions.__all__
 __all__ += _statistical_functions.__all__
 __all__ += _utility_functions.__all__
+__all__ += _dispatch.__all__

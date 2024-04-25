@@ -5,8 +5,8 @@ from jax.experimental import array_api
 from jax.experimental.array_api._data_type_functions import FInfo, IInfo
 from jaxtyping import ArrayLike
 
-from ._types import DType
-from ._utils import quaxify
+from quaxed._types import DType
+from quaxed._utils import quaxify
 
 
 @quaxify

@@ -114,6 +114,7 @@ ignore = [
     "D103",   # Missing docstring in public function  # TODO
     "D203",   # one-blank-line-before-class
     "D213",   # Multi-line docstring summary should start at the second line
+    "ISC001", # handled by formatter
     "ERA001", # Found commented-out code
     "F811",   # Redefinition of unused variable  <- plum
     "FIX002", # Line contains TODO, consider resolving the issue

@@ -1,4 +1,4 @@
-""":mod:`jax.experimental.array_api` Dispatching."""
+""":mod:`jax.numpy`Dispatching."""
 
 __all__ = ["dispatcher"]
 
