@@ -14,8 +14,8 @@ from jax._src.typing import DTypeLike, Shape
 from jaxtyping import ArrayLike
 from quax import ArrayValue, register
 
+from quaxed._types import DType
 from quaxed.array_api._dispatch import dispatcher
-from quaxed.array_api._types import DType
 
 
 class MyArray(ArrayValue):
