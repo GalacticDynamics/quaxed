@@ -78,6 +78,7 @@ ignore-words-list = """
 run.source = ["quaxed"]
 port.exclude_lines = ['pragma: no cover', '\.\.\.', 'if typing.TYPE_CHECKING:']
 
+
 [tool.mypy]
 files = ["src"]
 python_version = "3.10"

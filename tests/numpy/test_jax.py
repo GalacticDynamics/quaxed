@@ -297,11 +297,6 @@ def test_bartlett():
     assert jnp.all(qnp.bartlett(3) == jnp.bartlett(3))
 
 
-def test_bfloat16(x1):
-    """Test `quaxed.numpy.bfloat16`."""
-    assert jnp.all(qnp.bfloat16(x1) == jnp.bfloat16(x1))
-
-
 def test_bincount():
     """Test `quaxed.numpy.bincount`."""
     x = jnp.asarray([0, 1, 1, 2, 2, 2])

@@ -456,6 +456,7 @@ def __dir__() -> list[str]:
 # Direct transfers
 _DIRECT_TRANSFER: frozenset[str] = frozenset(
     (
+        "bfloat16",
         "character",
         "e",
         "euler_gamma",
