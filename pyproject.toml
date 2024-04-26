@@ -78,6 +78,7 @@ ignore-words-list = """
 run.source = ["quaxed"]
 port.exclude_lines = ['pragma: no cover', '\.\.\.', 'if typing.TYPE_CHECKING:']
 
+
 [tool.mypy]
 files = ["src"]
 python_version = "3.10"
@@ -147,5 +148,6 @@ messages_control.disable = [
     "missing-function-docstring", # TODO: reinstate.
     "missing-module-docstring",
     "redefined-builtin",
+    "useless-import-alias",  # handled by ruff
     "wrong-import-position",
 ]

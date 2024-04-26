@@ -122,7 +122,7 @@ __all__ = [
     "einsum",
     "einsum_path",
     "empty",
-    "empty_like",
+    # "empty_like",  # in _creation_functions
     "equal",
     "euler_gamma",
     "exp",
@@ -164,8 +164,8 @@ __all__ = [
     "fromiter",
     "frompyfunc",
     "fromstring",
-    "full",
-    "full_like",
+    # "full",  # in _creation_functions
+    # "full_like",  # in _creation_functions
     "gcd",
     "generic",
     "geomspace",
@@ -227,7 +227,7 @@ __all__ = [
     "less",
     "less_equal",
     "lexsort",
-    "linspace",
+    # "linspace",  # in _creation_functions
     "load",
     "log",
     "log10",
@@ -247,7 +247,7 @@ __all__ = [
     "maximum",
     "mean",
     "median",
-    "meshgrid",
+    # "meshgrid",  # in _creation_functions
     "mgrid",
     "min",
     "minimum",
@@ -282,7 +282,7 @@ __all__ = [
     "object_",
     "ogrid",
     "ones",
-    "ones_like",
+    # "ones_like",  # in _creation_functions
     "outer",
     "packbits",
     "pad",
@@ -367,11 +367,11 @@ __all__ = [
     "trace",
     "transpose",
     "tri",
-    "tril",
+    # "tril",  # in _creation_functions
     "tril_indices",
     "tril_indices_from",
     "trim_zeros",
-    "triu",
+    # "triu",  # in _creation_functions
     "triu_indices",
     "triu_indices_from",
     "true_divide",
@@ -402,7 +402,7 @@ __all__ = [
     "vstack",
     "where",
     "zeros",
-    "zeros_like",
+    # "zeros_like",  # in _creation_functions
 ]
 
 import sys
@@ -456,6 +456,7 @@ def __dir__() -> list[str]:
 # Direct transfers
 _DIRECT_TRANSFER: frozenset[str] = frozenset(
     (
+        "bfloat16",
         "character",
         "e",
         "euler_gamma",
