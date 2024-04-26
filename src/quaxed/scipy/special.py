@@ -54,12 +54,16 @@ from jax.scipy import special as jsp
 from quax import quaxify
 
 
-# TODO: better return type annotation
-def __getattr__(name: str) -> Callable[..., Any]:
-    func = quaxify(getattr(jsp, name))
-    setattr(sys.modules[__name__], name, func)
-    return func
-
-
 def __dir__() -> list[str]:
     return sorted(__all__)
+
+
+# TODO: better return type annotation
+def __getattr__(name: str) -> Callable[..., Any]:
+    # Quaxify the func
+    func = quaxify(getattr(jsp, name))
+
+    # Cache the function in this module
+    setattr(sys.modules[__name__], name, func)
+
+    return func
