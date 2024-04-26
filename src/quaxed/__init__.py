@@ -7,6 +7,7 @@ quaxed: Array-API JAX compatibility
 
 __all__ = ["__version__", "array_api"]
 
+import sys
 from typing import Any
 
 import plum
@@ -31,4 +32,9 @@ def __getattr__(name: str) -> Any:  # TODO: fuller annotation
     # TODO: detect if the attribute is a function or a module.
     # If it is a function, quaxify it. If it is a module, return a proxy object
     # that quaxifies all of its attributes.
-    return quaxify(getattr(jax, name))
+    out = quaxify(getattr(jax, name))
+
+    # Cache the function in this module
+    setattr(sys.modules[__name__], name, out)
+
+    return out
