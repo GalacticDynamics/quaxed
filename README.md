@@ -32,7 +32,7 @@
 <!-- prettier-ignore-end -->
 
 `Quaxed` wraps [jax](https://jax.readthedocs.io/en/latest/) libraries (using
-[`quax`](https://docs.kidger.site/quax/)) to enable using those libaries with
+[`quax`](https://docs.kidger.site/quax/)) to enable using those libraries with
 custom array-ish objects, not only jax arrays.
 
 To understand how `quax` works it's magic, see
@@ -42,7 +42,6 @@ To understand how `quax` works it's magic, see
 To use this library, it's as simple as:
 
 ```python
-
 # Import pre-quaxified library
 >>> import quaxed.numpy as qnp  # this is quaxify(jax.numpy)
 
