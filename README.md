@@ -41,7 +41,7 @@ To understand how `quax` works it's magic, see
 
 To use this library, it's as simple as:
 
-```python
+```pycon
 # Import pre-quaxified library
 >>> import quaxed.numpy as qnp  # this is quaxify(jax.numpy)
 
