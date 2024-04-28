@@ -31,9 +31,13 @@
 
 <!-- prettier-ignore-end -->
 
-`Quaxed` wraps [jax](https://jax.readthedocs.io/en/latest/) libraries (using [`quax`](https://docs.kidger.site/quax/)) to enable using those libaries with custom array-ish objects, not only jax arrays.
+`Quaxed` wraps [jax](https://jax.readthedocs.io/en/latest/) libraries (using
+[`quax`](https://docs.kidger.site/quax/)) to enable using those libaries with
+custom array-ish objects, not only jax arrays.
 
-To understand how `quax` works it's magic, see [`quax.quaxify`](https://docs.kidger.site/quax/api/quax/#quax.quaxify) and the [tutorials](https://docs.kidger.site/quax/examples/custom_rules/).
+To understand how `quax` works it's magic, see
+[`quax.quaxify`](https://docs.kidger.site/quax/api/quax/#quax.quaxify) and the
+[tutorials](https://docs.kidger.site/quax/examples/custom_rules/).
 
 To use this library, it's as simple as:
 
