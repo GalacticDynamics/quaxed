@@ -235,7 +235,7 @@ def test_iinfo():
     expected = jax_xp.iinfo(jnp.int32)
 
     assert isinstance(got, IInfo)
-    for attr in IInfo.__slots__:
+    for attr in ("kind", "bits", "min", "max", "dtype"):
         assert getattr(got, attr) == getattr(expected, attr)
 
 
