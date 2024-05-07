@@ -2,11 +2,16 @@ __all__ = ["astype", "can_cast", "finfo", "iinfo", "isdtype", "result_type"]
 
 
 from jax.experimental import array_api
-from jax.experimental.array_api._data_type_functions import FInfo, IInfo
+from jax.experimental.array_api._data_type_functions import FInfo
 from jaxtyping import ArrayLike
 
 from quaxed._types import DType
-from quaxed._utils import quaxify
+from quaxed._utils import JAX_VERSION, quaxify
+
+if JAX_VERSION < (0, 4, 27):
+    from jax.experimental.array_api._data_type_functions import IInfo
+else:
+    from jax.experimental.array_api import iinfo as IInfo  # noqa: N812
 
 
 @quaxify
