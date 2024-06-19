@@ -396,8 +396,8 @@ def _cumsum_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
 
 
 @register(lax.device_put_p)
-def _device_put_p(x: MyArray, *, device: Any, src: Any) -> MyArray:
-    return replace(x, array=jax.device_put(x.array, device=device, src=src))
+def _device_put_p(x: MyArray, **kwargs: Any) -> MyArray:
+    return replace(x, array=jax.device_put(x.array, **kwargs))
 
 
 # ==============================================================================
