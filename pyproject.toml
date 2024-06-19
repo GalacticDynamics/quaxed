@@ -41,8 +41,6 @@ test = [
 ]
 dev = [
     "quaxed[test]",
-    # temporary
-    "numpy < 2.0",
 ]
 docs = [
     "sphinx>=7.0",
