@@ -28,7 +28,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "jax",
+    "jax != 0.4.30",
     "jaxlib != 0.4.30",
     "plum-dispatch",
     "quax>=0.0.3",
