@@ -30,7 +30,7 @@ dynamic = ["version"]
 dependencies = [
     "jax != 0.4.30",
     "jaxlib != 0.4.30",
-    "plum-dispatch",
+    "plum-dispatch != 2.4.2",
     "quax>=0.0.3",
 ]
 
@@ -78,8 +78,6 @@ filterwarnings = [
     "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
     # jax
     "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
-    # plum
-    "ignore::plum.resolver.MethodRedefinitionWarning"
 ]
 log_cli_level = "INFO"
 testpaths = ["tests"]
