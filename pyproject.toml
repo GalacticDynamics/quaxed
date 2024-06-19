@@ -64,6 +64,7 @@ filterwarnings = [
     "error",
     # jaxtyping
     "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
+    "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
 ]
 log_cli_level = "INFO"
 testpaths = ["tests"]
