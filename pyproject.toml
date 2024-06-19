@@ -27,11 +27,23 @@ classifiers = [
     "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = ["jax", "jaxlib", "plum-dispatch", "quax>=0.0.3"]
+dependencies = [
+    "jax != 0.4.30",
+    "jaxlib != 0.4.30",
+    "plum-dispatch != 2.4.2",
+    "quax>=0.0.3",
+]
 
 [project.optional-dependencies]
-test = ["pytest >=6", "pytest-cov >=3"]
-dev = ["pytest >=6", "pytest-cov >=3"]
+test = [
+    "pytest >=6",
+    "pytest-cov >=3",
+]
+dev = [
+    "quaxed[test]",
+    # temporary
+    "numpy < 2.0",
+]
 docs = [
     "sphinx>=7.0",
     "myst_parser>=0.13",
@@ -64,6 +76,8 @@ filterwarnings = [
     "error",
     # jaxtyping
     "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
+    # jax
+    "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
 ]
 log_cli_level = "INFO"
 testpaths = ["tests"]
