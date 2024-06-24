@@ -36,9 +36,9 @@ T = TypeVar("T")
 @dispatcher
 def arange(
     start: ArrayLike,
+    stop: ArrayLike | None,
+    step: ArrayLike | None,
     /,
-    stop: ArrayLike | None = None,
-    step: ArrayLike | None = None,
     *,
     dtype: DType | None = None,
 ) -> ArrayLike:
@@ -48,7 +48,8 @@ def arange(
 @dispatcher  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
-    stop: ArrayLike | None = None,
+    stop: ArrayLike | None,
+    /,
     *,
     step: ArrayLike | None = None,
     dtype: DType | None = None,
@@ -60,6 +61,7 @@ def arange(
 @dispatcher  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
+    /,
     *,
     stop: ArrayLike | None = None,
     step: ArrayLike | None = None,
