@@ -43,9 +43,9 @@ T = TypeVar("T")
 @dispatcher
 def arange(
     start: ArrayLike,
+    stop: ArrayLike | None,
+    step: ArrayLike | None,
     /,
-    stop: ArrayLike | None = None,
-    step: ArrayLike | None = None,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
@@ -56,13 +56,13 @@ def arange(
 @dispatcher  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
-    stop: ArrayLike | None = None,
+    stop: ArrayLike | None,
     *,
     step: ArrayLike | None = None,
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> ArrayLike:
-    # dispatch on `start`, `stop`, and `step`
+    # re-dispatch on `start`, `stop`, and `step`
     return arange(start, stop, step, dtype=dtype, device=device)
 
 
@@ -75,7 +75,7 @@ def arange(
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> ArrayLike:
-    # dispatch on `start`, `stop`, and `step`
+    # re- dispatch on `start`, `stop`, and `step`
     return arange(start, stop, step, dtype=dtype, device=device)
 
 
@@ -88,7 +88,7 @@ def arange(
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> ArrayLike | Value:
-    # dispatch on `start`, `stop`, and `step`
+    # re-dispatch on `start`, `stop`, and `step`
     return arange(start, stop, step, dtype=dtype, device=device)
 
 
@@ -210,8 +210,8 @@ def full_like(
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
-    /,
     num: int,
+    /,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
@@ -225,21 +225,6 @@ def linspace(  # noqa: PLR0913
         device=device,
         endpoint=endpoint,
     )
-
-
-@dispatcher  # type: ignore[no-redef]
-def linspace(  # noqa: PLR0913
-    start: ArrayLike,
-    stop: ArrayLike,
-    /,
-    *,
-    num: int,
-    dtype: DType | None = None,
-    device: Device | None = None,
-    endpoint: bool = True,
-) -> jax.Array | jax.core.Tracer | Value:
-    # dispatch on `start`, `stop`, and `num`
-    return linspace(start, stop, num, dtype=dtype, device=device, endpoint=endpoint)
 
 
 @dispatcher  # type: ignore[no-redef]
