@@ -38,9 +38,11 @@ dependencies = [
 test = [
     "pytest >=6",
     "pytest-cov >=3",
+    "pytest-github-actions-annotate-failures",  # only applies to GH Actions
 ]
 dev = [
     "quaxed[test]",
+    "quaxed[docs]",
 ]
 docs = [
     "sphinx>=7.0",
