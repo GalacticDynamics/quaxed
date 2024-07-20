@@ -171,8 +171,8 @@ def full_like(
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
-    /,
     num: int,
+    /,
     *,
     endpoint: bool = True,
     retstep: bool = False,
