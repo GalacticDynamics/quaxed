@@ -264,14 +264,16 @@ def _complex_p(x: MyArray, y: MyArray) -> MyArray:
 def _concatenate_p(
     operand0: MyArray,
     *operands: MyArray,
-    dimension: Any,
+    **kwargs: Any,
 ) -> MyArray:
     return MyArray(
-        lax.concatenate(
-            [operand0.array] + [op.array for op in operands],
-            dimension=dimension,
-        ),
+        lax.concatenate([operand0.array] + [op.array for op in operands], **kwargs)
     )
+
+
+@register(lax.concatenate_p)
+def _concatenate_p(operand0: ArrayLike, operand1: MyArray, /, **kwargs: Any) -> MyArray:
+    return MyArray(lax.concatenate_p.bind(operand0, operand1.array, **kwargs))
 
 
 # ==============================================================================

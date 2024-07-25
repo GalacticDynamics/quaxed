@@ -1,4 +1,4 @@
-__all__ = ["max", "mean", "min", "prod", "std", "sum", "var"]
+__all__ = ["cumulative_sum", "max", "mean", "min", "prod", "std", "sum", "var"]
 
 
 from jax.experimental import array_api
@@ -7,6 +7,20 @@ from quax import Value
 
 from quaxed._types import DType
 from quaxed._utils import quaxify
+
+
+@quaxify
+def cumulative_sum(
+    x: ArrayLike,
+    /,
+    *,
+    axis: int | None = None,
+    dtype: DType | None = None,
+    include_initial: bool = False,
+) -> Value:
+    return array_api.cumulative_sum(
+        x, axis=axis, dtype=dtype, include_initial=include_initial
+    )
 
 
 @quaxify
