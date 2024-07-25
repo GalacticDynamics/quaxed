@@ -1180,6 +1180,42 @@ def test_sort():
 # Statistical functions
 
 
+def test_cumulative_sum():
+    """Test `cumulative_sum`."""
+    x = MyArray(xp.asarray([1, 2, 3], dtype=float))
+
+    # No arguments
+    got = xp.cumulative_sum(x)
+    expected = MyArray(xp.asarray([1, 3, 6], dtype=float))
+
+    assert isinstance(got, MyArray)
+    assert jnp.array_equal(got.array, expected.array)
+
+    # axis
+    got = xp.cumulative_sum(x, axis=0)
+    expected = MyArray(xp.asarray([1, 3, 6], dtype=float))
+
+    assert isinstance(got, MyArray)
+    assert jnp.array_equal(got.array, expected.array)
+
+    with pytest.raises(ValueError, match="axis 1"):
+        _ = xp.cumulative_sum(x, axis=1)
+
+    # dtype
+    got = xp.cumulative_sum(x, dtype=int)
+    expected = MyArray(xp.asarray([1, 3, 6], dtype=int))
+
+    assert isinstance(got, MyArray)
+    assert jnp.array_equal(got.array, expected.array)
+
+    # initial
+    got = xp.cumulative_sum(x, include_initial=True)
+    expected = MyArray(xp.asarray([0, 1, 3, 6]))
+
+    assert isinstance(got, MyArray)
+    assert jnp.array_equal(got.array, expected.array)
+
+
 @pytest.mark.skip("TODO")
 def test_max():
     """Test `max`."""
