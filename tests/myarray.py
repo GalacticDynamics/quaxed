@@ -305,14 +305,11 @@ def _conv_general_dilated_p() -> MyArray:
 
 
 @register(lax.convert_element_type_p)
-def _convert_element_type_p(
-    operand: MyArray,
-    *,
-    new_dtype: Any,
-    weak_type: Any,
-) -> MyArray:
-    del weak_type
-    return replace(operand, array=lax.convert_element_type(operand.array, new_dtype))
+def _convert_element_type_p(operand: MyArray, **kwargs: Any) -> MyArray:
+    return replace(
+        operand,
+        array=lax.convert_element_type_p.bind(operand.array, **kwargs),
+    )
 
 
 # ==============================================================================
