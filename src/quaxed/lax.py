@@ -13,6 +13,7 @@ __all__ = [
     "erfc",
     "erf_inv",
     "eq",
+    "igamma",
     "select",
 ]
 
@@ -32,4 +33,5 @@ erf = quaxify(lax.erf)
 erfc = quaxify(lax.erfc)
 erf_inv = quaxify(lax.erf_inv)
 eq = quaxify(lax.eq)
+igamma = quaxify(lax.igamma)
 select = quaxify(lax.select)
