@@ -1,7 +1,5 @@
 """Quaxed :mod:`jax.scipy`."""
 
-__all__ = [
-    "special",
-]
+__all__ = ["linalg", "special"]
 
-from . import special
+from . import linalg, special
