@@ -9,6 +9,7 @@ __all__ = [
     "cumprod",
     "cumsum",
     "digamma",
+    "dot",
     "erf",
     "erfc",
     "erf_inv",
@@ -29,6 +30,7 @@ cummin = quaxify(lax.cummin)
 cumprod = quaxify(lax.cumprod)
 cumsum = quaxify(lax.cumsum)
 digamma = quaxify(lax.digamma)
+dot = quaxify(lax.dot)
 erf = quaxify(lax.erf)
 erfc = quaxify(lax.erfc)
 erf_inv = quaxify(lax.erf_inv)
