@@ -86,6 +86,8 @@ repos:
           - pytest
         exclude: |
           (?x)^(
+            src/quaxed/lax/__init__.py|
+            src/quaxed/lax/linalg.py|
             src/quaxed/numpy/__init__.py|
             src/quaxed/operator.py|
             src/quaxed/scipy/special.py

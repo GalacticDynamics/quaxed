@@ -1,4 +1,4 @@
-# ruff: noqa: E0603, F822
+# ruff: noqa: F822
 """Quaxed :mod:`jax.numpy`."""
 
 __all__ = [
