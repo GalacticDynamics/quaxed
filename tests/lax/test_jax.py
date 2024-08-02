@@ -4,16 +4,21 @@ import jax.numpy as jnp
 import pytest
 from jax import lax
 
-import quaxed
 import quaxed.lax as qlax
-
-# ==============================================================================
-# Operators
 
 
 def test_dir():
     """Test the `__dir__` method."""
-    assert set(quaxed.lax.__dir__()) == set(quaxed.lax.__all__)
+    assert set(qlax.__dir__()) == set(qlax.__all__)
+
+
+def test_linalg_dir():
+    """Test the `__dir__` method."""
+    assert set(qlax.linalg.__dir__()) == set(qlax.linalg.__all__)
+
+
+# ==============================================================================
+# Operators
 
 
 def test_abs():
