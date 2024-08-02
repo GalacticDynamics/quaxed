@@ -82,7 +82,6 @@ plugins:
             heading_level: 2
             inherited_members: true # Allow looking up inherited methods
             members_order: source # order methods according to their order of definition in the source code, not alphabetical order
-            # show: "public"
             show_bases: true
             show_if_no_docstring: true
             show_inheritance_diagram: true
@@ -91,7 +90,6 @@ plugins:
             show_signature_annotations: true
             show_signature_return_annotation: true
             show_signature_parameter_types: true
-            show_source: true # include source code
             show_submodules: true
 
 nav:
