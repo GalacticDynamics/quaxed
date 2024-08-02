@@ -17,6 +17,8 @@ pip install quaxed
 Import whatever library you need as a drop-in replacement for its JAX
 counterpart.
 
+To see the API check out the [`quaxed`](./api/quaxed.md) in the left bar.
+
 ```python
 import quaxed.numpy as jnp
 
