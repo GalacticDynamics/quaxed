@@ -30,6 +30,7 @@ dynamic = ["version"]
 dependencies = [
     "jax > 0.4, != 0.4.30",
     "jaxlib > 0.4, != 0.4.30",
+    "jaxtyping",
     "plum-dispatch",
     "quax>=0.0.3",
 ]
