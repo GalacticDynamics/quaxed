@@ -78,6 +78,7 @@ plugins:
 
           options:
             show: "public"
+            show_bases: true
             show_root_heading: true # actually display anything at all...
             show_submodules: true
             show_root_full_path: true # display "diffrax.asdf" not just "asdf"
@@ -89,6 +90,7 @@ plugins:
             members_order: source # order methods according to their order of definition in the source code, not alphabetical order
             heading_level: 4
             inherited_members: true # Allow looking up inherited methods
+            show_inheritance_diagram: true
 
 nav:
   - "index.md"
