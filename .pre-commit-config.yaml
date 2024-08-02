@@ -36,7 +36,6 @@ repos:
       - id: name-tests-test
         args: ["--pytest-test-first"]
         exclude: tests/myarray.py
-      - id: requirements-txt-fixer
       - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/pygrep-hooks
