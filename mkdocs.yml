@@ -76,16 +76,19 @@ plugins:
             - import jaxtyping
             - jaxtyping.set_array_name_format("array")
 
-          selection:
-            inherited_members: true # Allow looking up inherited methods
-          rendering:
+          options:
+            show: "public"
             show_root_heading: true # actually display anything at all...
+            show_submodules: true
             show_root_full_path: true # display "diffrax.asdf" not just "asdf"
             show_if_no_docstring: true
             show_signature_annotations: true
+            show_signature_return_annotation: true
+            show_signature_parameter_types: true
             show_source: false # don't include source code
             members_order: source # order methods according to their order of definition in the source code, not alphabetical order
             heading_level: 4
+            inherited_members: true # Allow looking up inherited methods
 
 nav:
   - "index.md"
