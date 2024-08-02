@@ -1,5 +1,7 @@
 # quaxed
 
+::: quaxed
+
 ::: quaxed.operator
 
 ::: quaxed.array_api
