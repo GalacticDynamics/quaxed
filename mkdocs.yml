@@ -67,6 +67,7 @@ plugins:
         - "_overrides"
   - mknotebooks # Jupyter notebooks
   - mkdocstrings:
+      default_handler: python
       handlers:
         python:
           setup_commands:
