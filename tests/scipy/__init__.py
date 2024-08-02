@@ -1,1 +1,1 @@
-"""Test `quaxed.numpy`."""
+"""Test `quaxed.scipy`."""
