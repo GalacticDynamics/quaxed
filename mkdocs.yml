@@ -86,7 +86,7 @@ plugins:
             show_signature_annotations: true
             show_signature_return_annotation: true
             show_signature_parameter_types: true
-            show_source: false # don't include source code
+            show_source: true # include source code
             members_order: source # order methods according to their order of definition in the source code, not alphabetical order
             heading_level: 4
             inherited_members: true # Allow looking up inherited methods
