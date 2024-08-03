@@ -1,4 +1,11 @@
-"""Quaxed :mod:`operator`."""
+"""Quaxed :external:`operator`.
+
+This module wraps the functions in :external:`operator` with
+:external:`quax.quaxify`. The wrapping happens dynamically through a
+module-level ``__dir__`` and ``__getattr__``. The list of available functions is
+in ``__all__`` and documented in the built-in :external:`operator` library.
+
+"""
 
 import operator
 import sys
@@ -11,13 +18,13 @@ __all__ = operator.__all__
 
 
 def __dir__() -> list[str]:
-    """List the operators."""
+    """List the module contents."""
     return sorted(__all__)
 
 
 # TODO: return type hint signature
 def __getattr__(name: str) -> Callable[..., Any]:
-    """Get the operator."""
+    """Get the :external:`quax.quaxify`'ed function."""
     # Quaxify the operator
     out = quaxify(getattr(operator, name))
 

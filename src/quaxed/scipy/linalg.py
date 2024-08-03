@@ -1,6 +1,14 @@
 # ruff:noqa: F822
 
-"""Quaxed :mod:`jax.scipy.linalg`."""
+"""Quaxed :mod:`jax.scipy.linalg`.
+
+This module wraps the functions in :external:`jax.scipy.linalg` with
+:external:`quax.quaxify`. The wrapping happens dynamically through a
+module-level ``__dir__`` and ``__getattr__``. The list of available functions is
+in ``__all__`` and documented in the built-in :external:`jax.scipy.linalg`
+library.
+
+"""
 
 __all__ = [
     "svd",
@@ -20,6 +28,10 @@ def __dir__() -> list[str]:
 
 # TODO: better return type annotation
 def __getattr__(name: str) -> Callable[..., Any]:
+    if name not in __all__:
+        msg = f"Cannot get {name} from quaxed.scipy.linalg."
+        raise AttributeError(msg)
+
     # Quaxify the func
     func = quaxify(getattr(jax.scipy.linalg, name))
 

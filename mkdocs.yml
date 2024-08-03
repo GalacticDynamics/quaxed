@@ -90,7 +90,8 @@ plugins:
             show_signature_annotations: true
             show_signature_return_annotation: true
             show_signature_parameter_types: true
-            show_submodules: true
+          external:
+            numpy: https://numpy.org/doc/stable/
 
 nav:
   - "index.md"
