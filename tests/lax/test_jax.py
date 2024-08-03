@@ -17,6 +17,16 @@ def test_linalg_dir():
     assert set(qlax.linalg.__dir__()) == set(qlax.linalg.__all__)
 
 
+def test_not_in_lax():
+    with pytest.raises(AttributeError, match="Cannot get"):
+        _ = qlax.for_sure_not_in_lax
+
+
+def test_not_in_lax_linalg():
+    with pytest.raises(AttributeError, match="Cannot get"):
+        _ = qlax.linalg.for_sure_not_in_lax_linalg
+
+
 # ==============================================================================
 # Operators
 
@@ -1409,7 +1419,7 @@ def test_qdwh():
 
 
 def test_qr():
-    """Test `quaxed.lax.qr`."""
+    """Test `quaxed.lax.linalg.qr`."""
     x = jnp.array([[1, 2], [2, 5]], dtype=float)
     got = qlax.linalg.qr(x)
     exp = lax.linalg.qr(x)
@@ -1418,7 +1428,7 @@ def test_qr():
 
 
 def test_schur():
-    """Test `quaxed.lax.schur`."""
+    """Test `quaxed.lax.linalg.schur`."""
     x = jnp.array([[1, 2], [2, 5]], dtype=float)
     got = qlax.linalg.schur(x)
     exp = lax.linalg.schur(x)
