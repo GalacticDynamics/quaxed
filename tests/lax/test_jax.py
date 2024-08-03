@@ -1409,7 +1409,7 @@ def test_qdwh():
 
 
 def test_qr():
-    """Test `quaxed.lax.qr`."""
+    """Test `quaxed.lax.linalg.qr`."""
     x = jnp.array([[1, 2], [2, 5]], dtype=float)
     got = qlax.linalg.qr(x)
     exp = lax.linalg.qr(x)
@@ -1418,7 +1418,7 @@ def test_qr():
 
 
 def test_schur():
-    """Test `quaxed.lax.schur`."""
+    """Test `quaxed.lax.linalg.schur`."""
     x = jnp.array([[1, 2], [2, 5]], dtype=float)
     got = qlax.linalg.schur(x)
     exp = lax.linalg.schur(x)

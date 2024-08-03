@@ -10,7 +10,7 @@ __all__ = [  # noqa: F822
     "householder_product",
     "qdwh",
     "qr",
-    "shur",
+    "schur",
     "svd",
     "triangular_solve",
     "tridiagonal",
@@ -35,7 +35,7 @@ def __dir__() -> list[str]:
 def __getattr__(name: str) -> Callable[..., Any]:
     """Get the :external:`quax.quaxify`'ed function."""
     if name not in __all__:
-        msg = f"Cannot get {name} from quaxed.lax."
+        msg = f"Cannot get {name} from quaxed.lax.linalg"
         raise AttributeError(msg)
 
     # Quaxify the operator
