@@ -53,13 +53,9 @@ If you found this library to be useful and want to support the development and
 maintenance of lower-level utility libraries for the scientific community,
 please consider citing this work.
 
-<!-- SPHINX-START -->
-
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/GalacticDynamics/quaxed/workflows/CI/badge.svg
 [actions-link]:             https://github.com/GalacticDynamics/quaxed/actions
-<!-- [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
-[github-discussions-link]:  https://github.com/GalacticDynamics/quaxed/discussions -->
 [pypi-link]:                https://pypi.org/project/quaxed/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/quaxed
 [pypi-version]:             https://img.shields.io/pypi/v/quaxed
