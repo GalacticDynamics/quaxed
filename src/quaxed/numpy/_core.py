@@ -458,6 +458,7 @@ _DIRECT_TRANSFER: frozenset[str] = frozenset(
     (
         "bfloat16",
         "character",
+        "dtype",
         "e",
         "euler_gamma",
         "flexible",
