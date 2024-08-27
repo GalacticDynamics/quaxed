@@ -8,9 +8,8 @@ import equinox as eqx
 import jax
 import jax.experimental.array_api as jax_xp
 from jax import Device, lax
-from jax._src.lax.lax import DotDimensionNumbers, PrecisionLike
 from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
-from jax._src.typing import DTypeLike, Shape
+from jax._src.typing import Shape
 from jaxtyping import ArrayLike
 from quax import ArrayValue, register
 
@@ -424,23 +423,8 @@ def _div_p(x: MyArray, y: ArrayLike) -> MyArray:
 
 
 @register(lax.dot_general_p)  # TODO: implement
-def _dot_general_p(
-    lhs: MyArray,
-    rhs: MyArray,
-    *,
-    dimension_numbers: DotDimensionNumbers,
-    precision: PrecisionLike = None,
-    preferred_element_type: DTypeLike | None = None,
-) -> MyArray:
-    return MyArray(
-        lax.dot_general_p.bind(
-            lhs.array,
-            rhs.array,
-            dimension_numbers=dimension_numbers,
-            precision=precision,
-            preferred_element_type=preferred_element_type,
-        ),
-    )
+def _dot_general_p(lhs: MyArray, rhs: MyArray, **kwargs: Any) -> MyArray:
+    return MyArray(lax.dot_general_p.bind(lhs.array, rhs.array, **kwargs))
 
 
 # ==============================================================================

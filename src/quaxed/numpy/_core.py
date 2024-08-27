@@ -462,6 +462,8 @@ _DIRECT_TRANSFER: frozenset[str] = frozenset(
         "euler_gamma",
         "flexible",
         "floating",
+        "float32",
+        "float64",
         "generic",
         "index_exp",
         "indices",

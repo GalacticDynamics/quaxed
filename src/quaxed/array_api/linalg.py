@@ -28,7 +28,7 @@ __all__ = [
 
 
 from collections.abc import Sequence
-from typing import Literal
+from typing import Any, Literal
 
 import jax.numpy as jnp
 from jax.experimental import array_api
@@ -167,12 +167,5 @@ def vecdot(x1: ArrayLike, x2: ArrayLike, /, *, axis: int | None = None) -> Value
 
 
 @quaxify
-def vector_norm(
-    x: ArrayLike,
-    /,
-    *,
-    axis: int | tuple[int, ...] | None = None,
-    keepdims: bool = False,
-    ord: int | float = 2,  # pylint: disable=redefined-builtin
-) -> Value:
-    return array_api.linalg.vector_norm(x, axis=axis, keepdims=keepdims, ord=ord)
+def vector_norm(x: ArrayLike, /, **kwargs: Any) -> Value:
+    return array_api.linalg.vector_norm(x, **kwargs)
