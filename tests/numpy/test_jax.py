@@ -11,19 +11,19 @@ import pytest
 import quaxed.numpy as qnp
 
 
-@pytest.fixture()
+@pytest.fixture
 def x1():
     """Test input."""
     return jnp.array([1, 2, 3], dtype=float)
 
 
-@pytest.fixture()
+@pytest.fixture
 def x2():
     """Test input."""
     return jnp.array([4, 5, 6], dtype=float)
 
 
-@pytest.fixture()
+@pytest.fixture
 def xbool():
     """Test input."""
     return jnp.array([True, False, True], dtype=bool)
