@@ -1,7 +1,31 @@
 """Quaxed :mod:`jax.numpy.linalg`."""
 
 __all__ = [  # noqa: F822
+    "cholesky",
+    "cross",
     "det",
+    "diagonal",
+    "eig",
+    "eigh",
+    "eigvalsh",
+    "inv",
+    "matmul",
+    "matrix_norm",
+    "matrix_power",
+    "matrix_rank",
+    "matrix_transpose",
+    "outer",
+    "pinv",
+    "qr",
+    "slogdet",
+    "solve",
+    "svd",
+    "svdvals",
+    "tensordot",
+    "trace",
+    "vecdot",
+    "vector_norm",
+    "norm",
 ]
 
 import sys
