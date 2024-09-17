@@ -5,7 +5,7 @@ quaxed: Array-API JAX compatibility
 
 # pylint: disable=redefined-builtin
 
-__all__ = ["__version__", "array_api", "lax", "scipy"]
+__all__ = ["__version__", "lax", "scipy"]
 
 import sys
 from typing import Any
@@ -13,11 +13,18 @@ from typing import Any
 import plum
 from jaxtyping import ArrayLike
 
-from . import _jax, array_api, lax, scipy
+from . import _jax, lax, scipy
 from ._jax import *
+from ._setup import JAX_VERSION
 from ._version import version as __version__
 
 __all__ += _jax.__all__
+
+if JAX_VERSION < (0, 4, 32):
+    from . import array_api
+
+    __all__ += ["array_api"]
+
 
 # Simplify the display of ArrayLike
 plum.activate_union_aliases()

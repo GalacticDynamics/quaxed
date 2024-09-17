@@ -60,6 +60,7 @@ def vectorize(  # noqa: C901
     routines using :func:`vectorize`:
 
     >>> from functools import partial
+    >>> import quaxed.numpy as jnp
 
     >>> @partial(jnp.vectorize, signature='(k),(k)->(k)')
     ... def cross_product(a, b):

@@ -40,6 +40,7 @@ test = [
     "pytest >=6",
     "pytest-cov >=3",
     "pytest-github-actions-annotate-failures",  # only applies to GH Actions
+    "sybil >= 7.1.0",
 ]
 docs = [
     "griffe < 1.0",  # For Python structure signatures"
@@ -82,6 +83,7 @@ filterwarnings = [
     "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
     # jax
     "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
+    "ignore:jax\\.experimental\\.array_api import is no longer required as of JAX v0\\.4\\.32"
 ]
 log_cli_level = "INFO"
 testpaths = ["tests"]

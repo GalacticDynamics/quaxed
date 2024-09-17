@@ -1,5 +1,6 @@
 # ruff: noqa: F822
 """Quaxed :mod:`jax.numpy`."""
+# pylint: disable=undefined-all-variable
 
 __all__ = [
     # modules
