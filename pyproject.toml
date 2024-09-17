@@ -8,7 +8,7 @@ name = "quaxed"
 authors = [
     { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
 ]
-description = "Array-API JAX compatibility"
+description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [

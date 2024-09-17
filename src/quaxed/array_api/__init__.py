@@ -1,6 +1,6 @@
 """Copyright (c) 2023 Nathaniel Starkman. All rights reserved.
 
-quaxed: Array-API JAX compatibility
+quaxed: Pre-quaxed libraries for multiple dispatch over abstract array types in JAX
 """
 
 # pylint: disable=redefined-builtin
