@@ -1672,7 +1672,8 @@ def test_round(x1):
 
 def test_round_(x1):
     """Test `quaxed.numpy.round_`."""
-    assert jnp.all(qnp.round_(x1) == jnp.round_(x1))
+    with pytest.deprecated_call():
+        assert jnp.all(qnp.round_(x1) == jnp.round_(x1))
 
 
 @pytest.mark.skip("TODO")

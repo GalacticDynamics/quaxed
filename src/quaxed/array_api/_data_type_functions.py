@@ -4,8 +4,9 @@ __all__ = ["astype", "can_cast", "finfo", "iinfo", "isdtype", "result_type"]
 from jax.experimental import array_api
 from jaxtyping import ArrayLike
 
+from quaxed._setup import JAX_VERSION
 from quaxed._types import DType
-from quaxed._utils import JAX_VERSION, quaxify
+from quaxed._utils import quaxify
 
 if JAX_VERSION < (0, 4, 31):
     from jax.experimental.array_api._data_type_functions import FInfo
