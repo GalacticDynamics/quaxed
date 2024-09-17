@@ -7,6 +7,7 @@ full_name: Nathaniel Starkman
 license: BSD
 org: GalacticDynamics
 project_name: quaxed
-project_short_description: Array-API JAX compatibility
+project_short_description:
+  Pre-quaxed libraries for multiple dispatch over abstract array types in JAX
 url: https://github.com/GalacticDynamics/quaxed
 vcs: true
