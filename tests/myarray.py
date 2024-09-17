@@ -1,6 +1,6 @@
 """Test with :class:`MyArray` inputs."""
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import replace
 from typing import Any
 
@@ -11,10 +11,11 @@ from jax import Device, lax
 from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import Shape
 from jaxtyping import ArrayLike
+from plum import Dispatcher, Function, dispatch
 from quax import ArrayValue, register
 
 from quaxed._types import DType
-from quaxed.array_api._dispatch import dispatcher
+from quaxed.array_api._dispatch import dispatcher as ap_dispatcher
 
 
 class MyArray(ArrayValue):
@@ -33,6 +34,20 @@ class MyArray(ArrayValue):
     def aval(self) -> jax.core.ShapedArray:
         """Return the ShapedArray."""
         return jax.core.get_aval(self.array)
+
+
+# ==============================================================================
+
+
+def chain_dispatchers(*dispatchers: Dispatcher) -> Callable[[Any], Function]:
+    """Apply many dispatchers to a function."""
+
+    def decorator(method: Any) -> Function:
+        for dispatcher in dispatchers:
+            f = dispatcher(method)
+        return f
+
+    return decorator
 
 
 # ==============================================================================
@@ -1482,7 +1497,7 @@ def _zeta_p() -> MyArray:
 ###############################################################################
 
 
-@dispatcher
+@chain_dispatchers(dispatch, ap_dispatcher)
 def arange(
     start: MyArray,
     stop: MyArray | None = None,
@@ -1502,7 +1517,7 @@ def arange(
     )
 
 
-@dispatcher  # type: ignore[misc]
+@chain_dispatchers(dispatch, ap_dispatcher)
 def empty_like(
     x: MyArray,
     /,
@@ -1513,7 +1528,7 @@ def empty_like(
     return MyArray(jax_xp.empty_like(x.array, dtype=dtype, device=device))
 
 
-@dispatcher
+@chain_dispatchers(dispatch, ap_dispatcher)
 def full_like(
     x: MyArray,
     /,
@@ -1527,7 +1542,7 @@ def full_like(
     )
 
 
-@dispatcher
+@chain_dispatchers(dispatch, ap_dispatcher)
 def linspace(
     start: MyArray,
     stop: MyArray,
@@ -1549,7 +1564,7 @@ def linspace(
     )
 
 
-@dispatcher
+@chain_dispatchers(dispatch, ap_dispatcher)
 def ones_like(
     x: MyArray,
     /,
@@ -1559,7 +1574,7 @@ def ones_like(
     return MyArray(jax_xp.ones_like(x.array, dtype=dtype, device=device))
 
 
-@dispatcher
+@chain_dispatchers(dispatch, ap_dispatcher)
 def zeros_like(
     x: MyArray,
     /,
