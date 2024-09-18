@@ -15,9 +15,9 @@ __all__ = [
 ]
 
 
-from functools import partial
 from typing import Literal, TypeVar
 
+import equinox as eqx
 import jax
 import jax.numpy as jnp
 from jaxtyping import ArrayLike
@@ -85,7 +85,7 @@ def arange(
 # =============================================================================
 
 
-@partial(jax.jit, static_argnames=("dtype", "order"))
+@eqx.filter_jit  # type: ignore[misc]
 @quaxify
 def asarray(
     obj: ArrayLike,
@@ -232,7 +232,6 @@ def tril(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
 # =============================================================================
 
 
-# @partial(jax.jit, static_argnames=("k",))
 @quaxify
 def triu(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
     return jnp.triu(x, k=k)
@@ -241,8 +240,6 @@ def triu(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
 # =============================================================================
 
 
-# @partial(jax.jit, static_argnames=("dtype", "device"))
-# @quaxify
 @dispatch  # type: ignore[misc]
 def zeros_like(
     x: ArrayLike,
