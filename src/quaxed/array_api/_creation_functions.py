@@ -22,7 +22,6 @@ __all__ = [
 
 from typing import TypeVar
 
-import equinox as eqx
 import jax
 import jax.numpy as jnp
 from jax import Device
@@ -95,7 +94,6 @@ def arange(
 # =============================================================================
 
 
-@eqx.filter_jit  # type: ignore[misc]
 @quaxify
 def asarray(
     obj: ArrayLike,
