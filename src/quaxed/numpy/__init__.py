@@ -5,16 +5,14 @@ from typing import Any
 
 from jaxtyping import install_import_hook
 
-from . import _core, _creation_functions, _dispatch, _higher_order
+from . import _core, _creation_functions, _higher_order
 from ._creation_functions import *
-from ._dispatch import *
 from ._higher_order import *
 
 __all__: list[str] = []
 __all__ += _core.__all__
 __all__ += _higher_order.__all__
 __all__ += _creation_functions.__all__
-__all__ += _dispatch.__all__
 
 
 # TODO: consolidate with ``_core.__getattr__``.
