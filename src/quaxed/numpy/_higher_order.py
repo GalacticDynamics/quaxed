@@ -6,6 +6,7 @@ import functools
 from collections.abc import Callable, Collection
 from typing import Any, TypeVar
 
+import equinox as eqx
 import jax
 from jax._src.numpy.vectorize import (
     _apply_excluded,
@@ -14,9 +15,16 @@ from jax._src.numpy.vectorize import (
     _parse_input_dimensions,
 )
 
-from ._core import asarray, expand_dims, squeeze
+from ._core import asarray, squeeze
+from ._core import expand_dims as _expand_dims
 
 T = TypeVar("T")
+
+
+def expand_dims(a: T, axis: int | tuple[int, ...]) -> T:
+    dynamic, static = eqx.partition(a, eqx.is_array_like)
+    expanded_dynamic = jax.tree.map(lambda x: _expand_dims(x, axis), dynamic)
+    return eqx.combine(expanded_dynamic, static)
 
 
 def vectorize(  # noqa: C901
