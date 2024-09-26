@@ -408,7 +408,7 @@ __all__ = [
 
 import sys
 from collections.abc import Callable
-from typing import Any, Literal
+from typing import Any, Literal, TypeVar
 
 import jax.numpy as jnp
 from jaxtyping import ArrayLike
@@ -423,8 +423,19 @@ from . import fft, linalg
 # TODO: not need to do these by specifying a `.pyi` file.
 #       but right now, `_higher_order.py` needs this for mypy to pass.
 
+_FuncT = TypeVar("_FuncT")
+
+
+def _set_docstring(doc: str | None) -> Callable[[_FuncT], _FuncT]:
+    def decorator(func: _FuncT) -> _FuncT:
+        func.__doc__ = doc
+        return func
+
+    return decorator
+
 
 @quaxify
+@_set_docstring(jnp.asarray.__doc__)
 def asarray(
     a: ArrayLike,
     dtype: DType | None = None,
@@ -434,11 +445,13 @@ def asarray(
 
 
 @quaxify
+@_set_docstring(jnp.expand_dims.__doc__)
 def expand_dims(a: ArrayLike, axis: int | tuple[int, ...]) -> ArrayLike:
     return jnp.expand_dims(a, axis=axis)
 
 
 @quaxify
+@_set_docstring(jnp.squeeze.__doc__)
 def squeeze(a: ArrayLike, axis: int | tuple[int, ...] | None = None) -> ArrayLike:
     return jnp.squeeze(a, axis=axis)
 
