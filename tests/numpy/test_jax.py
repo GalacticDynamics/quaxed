@@ -82,9 +82,7 @@ def test_allclose(x1, x2):
     y = jnp.array([1, 2, 3], dtype=float) + 1e-9
     assert qnp.allclose(x, y) == jnp.allclose(x, y)
 
-
-def test_allclose(x1, x2):
-    """Test `quaxed.numpy.allclose`."""
+    # allclose
     assert qnp.allclose(x1, x2, atol=1e-8) == jnp.allclose(x1, x2, atol=1e-8)
 
 
