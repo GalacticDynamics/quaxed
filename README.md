@@ -7,7 +7,8 @@ custom array-ish objects, not only jax arrays.
 
 ## Installation
 
-[![PyPI version][pypi-version]][pypi-link] [![PyPI platforms][pypi-platforms]][pypi-link]
+[![PyPI version][pypi-version]][pypi-link]
+[![PyPI platforms][pypi-platforms]][pypi-link]
 
 <!-- [![Conda-Forge][conda-badge]][conda-link] -->
 
