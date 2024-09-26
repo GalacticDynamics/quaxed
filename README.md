@@ -1,5 +1,5 @@
 <h1 align='center'> quaxed </h1>
-<h2 align="center">Pre-<code>Quaxify</code>'ed <code>JAX</code></h2>
+<h3 align="center">Pre-<code>Quaxify</code>'ed <code>JAX</code></h3>
 
 `Quaxed` wraps [jax](https://jax.readthedocs.io/en/latest/) libraries (using
 [`quax`](https://docs.kidger.site/quax/)) to enable using those libraries with
@@ -7,8 +7,7 @@ custom array-ish objects, not only jax arrays.
 
 ## Installation
 
-[![PyPI platforms][pypi-platforms]][pypi-link]
-[![PyPI version][pypi-version]][pypi-link]
+[![PyPI version][pypi-version]][pypi-link] [![PyPI platforms][pypi-platforms]][pypi-link]
 
 <!-- [![Conda-Forge][conda-badge]][conda-link] -->
 
@@ -42,6 +41,7 @@ Quantity['area'](Array(4, dtype=int64, weak_type=True), unit='km2')
 ## Development
 
 [![Actions Status][actions-badge]][actions-link]
+[![Codecov][codecov-badge]][codecov-link]
 
 We welcome contributions!
 
@@ -56,6 +56,8 @@ please consider citing this work.
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/GalacticDynamics/quaxed/workflows/CI/badge.svg
 [actions-link]:             https://github.com/GalacticDynamics/quaxed/actions
+[codecov-badge]:            https://codecov.io/gh/GalacticDynamics/quaxed/graph/badge.svg?token=9G19ONVD3U
+[codecov-link]:             https://codecov.io/gh/GalacticDynamics/quaxed
 [pypi-link]:                https://pypi.org/project/quaxed/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/quaxed
 [pypi-version]:             https://img.shields.io/pypi/v/quaxed
