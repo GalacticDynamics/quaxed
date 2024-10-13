@@ -411,6 +411,7 @@ from collections.abc import Callable
 from typing import Any, Literal, TypeVar
 
 import jax.numpy as jnp
+from jax._src.numpy.index_tricks import CClass, RClass
 from jaxtyping import ArrayLike
 
 from quaxed._types import DType
@@ -454,6 +455,47 @@ def expand_dims(a: ArrayLike, axis: int | tuple[int, ...]) -> ArrayLike:
 @_set_docstring(jnp.squeeze.__doc__)
 def squeeze(a: ArrayLike, axis: int | tuple[int, ...] | None = None) -> ArrayLike:
     return jnp.squeeze(a, axis=axis)
+
+
+class QuaxedCClass(CClass):  # type: ignore[misc]
+    """Quaxed version of `jax.numpy.CClass`.
+
+    Examples
+    --------
+    >>> import quaxed.numpy as jnp
+    >>> x = jnp.asarray(jnp.linspace(0, 11, 11), dtype=int)
+    >>> jnp.c_[x, x].T
+    Array([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 11],
+           [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 11]], dtype=int32)
+
+    """
+
+    @quaxify
+    def __getitem__(self, key: Any) -> Any:
+        return super().__getitem__(key)
+
+
+c_ = QuaxedCClass()
+
+
+class QuaxedRClass(RClass):  # type: ignore[misc]
+    """Quaxed version of `jax.numpy.RClass`.
+
+    Examples
+    --------
+    >>> import quaxed.numpy as jnp
+    >>> x = jnp.asarray(jnp.linspace(0, 4, 4), dtype=int)
+    >>> jnp.r_[x, x]
+    Array([0, 1, 2, 4, 0, 1, 2, 4], dtype=int32)
+
+    """
+
+    @quaxify
+    def __getitem__(self, key: Any) -> Any:
+        return super().__getitem__(key)
+
+
+r_ = QuaxedRClass()
 
 
 # =============================================================================
@@ -502,7 +544,6 @@ _DIRECT_TRANSFER: frozenset[str] = frozenset(
         "pi",
         "printoptions",
         "promote_types",
-        "r_",
         "s_",
         "set_printoptions",
         "signedinteger",
