@@ -384,7 +384,6 @@ def test_broadcast_to(x1):
     assert jnp.all(qnp.broadcast_to(x1, (3, 3)) == jnp.broadcast_to(x1, (3, 3)))
 
 
-@pytest.mark.xfail(reason="Not implemented.")
 def test_c_():
     """Test `quaxed.numpy.c_`."""
     assert jnp.all(qnp.c_[1:3, 4:6] == jnp.c_[1:3, 4:6])

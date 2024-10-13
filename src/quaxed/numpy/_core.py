@@ -544,7 +544,6 @@ _DIRECT_TRANSFER: frozenset[str] = frozenset(
         "pi",
         "printoptions",
         "promote_types",
-        "r_",
         "s_",
         "set_printoptions",
         "signedinteger",
