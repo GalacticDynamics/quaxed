@@ -1,16 +1,12 @@
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
-
-
 [project]
 name = "quaxed"
-authors = [
-    { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
-]
+dynamic = ["version"]
 description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [
+    { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
+]
 classifiers = [
     "Development Status :: 1 - Planning",
     "Intended Audience :: Science/Research",
@@ -26,13 +22,12 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Typing :: Typed",
 ]
-dynamic = ["version"]
 dependencies = [
-    "jax > 0.4",
-    "jaxlib > 0.4",
-    "jaxtyping",
-    "plum-dispatch",
-    "quax>=0.0.3",
+    "jax>0.4",
+    "jaxlib>0.4",
+    "jaxtyping>=0.2.34",
+    "plum-dispatch>=2.5.2",
+    "quax>0.0.4",
 ]
 
 [project.optional-dependencies]
@@ -64,29 +59,15 @@ Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
 Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
 
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/quaxed/_version.py"
 
-[tool.hatch.env.default]
-features = ["test"]
-scripts.test = "pytest {args}"
-
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-xfail_strict = true
-filterwarnings = [
-    "error",
-    # jaxtyping
-    "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
-    # jax
-    "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
-    "ignore:jax\\.experimental\\.array_api import is no longer required as of JAX v0\\.4\\.32"
-]
-log_cli_level = "INFO"
-testpaths = ["tests"]
 
 [tool.codespell]
 ignore-words-list = """
@@ -118,6 +99,39 @@ disallow_incomplete_defs = true
 [[tool.mypy.overrides]]
 module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
 ignore_missing_imports = true
+
+
+[tool.pylint]
+py-version = "3.10"
+ignore-paths = [".*/_version.py"]
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+messages_control.disable = [
+    "design",
+    "fixme",
+    "line-too-long",
+    "missing-function-docstring", # TODO: reinstate.
+    "missing-module-docstring",
+    "redefined-builtin",
+    "useless-import-alias",  # handled by ruff
+    "wrong-import-position",
+]
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+xfail_strict = true
+filterwarnings = [
+    "error",
+    # jaxtyping
+    "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
+    # jax
+    "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
+    "ignore:jax\\.experimental\\.array_api import is no longer required as of JAX v0\\.4\\.32"
+]
+log_cli_level = "INFO"
+testpaths = ["tests"]
 
 
 [tool.ruff]
@@ -153,19 +167,8 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-
-[tool.pylint]
-py-version = "3.10"
-ignore-paths = [".*/_version.py"]
-reports.output-format = "colorized"
-similarities.ignore-imports = "yes"
-messages_control.disable = [
-    "design",
-    "fixme",
-    "line-too-long",
-    "missing-function-docstring", # TODO: reinstate.
-    "missing-module-docstring",
-    "redefined-builtin",
-    "useless-import-alias",  # handled by ruff
-    "wrong-import-position",
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.3",
+    "sybil>=8.0.0",
 ]
