@@ -172,6 +172,19 @@ __all__ = [
     "with_sharding_constraint",
     # ----- Linear Algebra Operators -----
     "linalg",
+    # ----- Argument classes -----
+    "ConvDimensionNumbers",
+    "ConvGeneralDilatedDimensionNumbers",
+    "DotAlgorithm",
+    "DotAlgorithmPreset",
+    "FftType",
+    "GatherDimensionNumbers",
+    "GatherScatterMode",
+    "Precision",
+    "PrecisionLike",
+    "RandomAlgorithm",
+    "RoundingMethod",
+    "ScatterDimensionNumbers",
 ]
 
 
@@ -183,6 +196,23 @@ from jax import lax
 from quax import quaxify
 
 from . import linalg
+
+# Explicit imports that don't need to be quaxified
+# isort: split
+from jax.lax import (
+    ConvDimensionNumbers,
+    ConvGeneralDilatedDimensionNumbers,
+    DotAlgorithm,
+    DotAlgorithmPreset,
+    FftType,
+    GatherDimensionNumbers,
+    GatherScatterMode,
+    Precision,
+    PrecisionLike,
+    RandomAlgorithm,
+    RoundingMethod,
+    ScatterDimensionNumbers,
+)
 
 
 def __dir__() -> list[str]:
