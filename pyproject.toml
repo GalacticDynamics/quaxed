@@ -1,13 +1,13 @@
 [project]
-name = "quaxed"
-dynamic = ["version"]
-description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
-readme = "README.md"
-requires-python = ">=3.10"
-authors = [
+  name = "quaxed"
+  dynamic = ["version"]
+  description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
+  readme = "README.md"
+  requires-python = ">=3.10"
+  authors = [
     { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
-]
-classifiers = [
+  ]
+  classifiers = [
     "Development Status :: 1 - Planning",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
@@ -21,23 +21,33 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering",
     "Typing :: Typed",
-]
-dependencies = [
+  ]
+  dependencies = [
     "jax>0.4",
     "jaxlib>0.4",
     "jaxtyping>=0.2.34",
     "plum-dispatch>=2.5.2",
     "quax>0.0.4",
-]
+  ]
 
-[project.optional-dependencies]
-test = [
-    "pytest >=6",
-    "pytest-cov >=3",
-    "pytest-github-actions-annotate-failures",  # only applies to GH Actions
-    "sybil >= 7.1.0",
-]
-docs = [
+  [project.urls]
+    Homepage = "https://github.com/GalacticDynamics/quaxed"
+    "Bug Tracker" = "https://github.com/GalacticDynamics/quaxed/issues"
+    Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
+    Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
+
+
+[build-system]
+  requires = ["hatchling", "hatch-vcs"]
+  build-backend = "hatchling.build"
+
+
+[dependency-groups]
+  dev = [
+    {include-group = "test"},
+    {include-group = "docs"},
+  ]
+  docs = [
     "griffe < 1.0",  # For Python structure signatures"
     "mkdocs==1.6.0",  # Main documentation generator.
     "mkdocs-material==9.5",  # Theme
@@ -49,64 +59,62 @@ docs = [
     "pymdown-extensions==10.2",  # Markdown extensions e.g. to handle LaTeX.
     "pytkdocs_tweaks==0.0.8",  # Tweaks mkdocstrings to improve various aspects
     "jinja2==3.1"
-]
-dev = ["quaxed[test,docs]"]
-
-[project.urls]
-Homepage = "https://github.com/GalacticDynamics/quaxed"
-"Bug Tracker" = "https://github.com/GalacticDynamics/quaxed/issues"
-Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
-Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
-
-
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
+  ]
+  test = [
+    "pytest >=6",
+    "pytest-cov >=3",
+    "pytest-github-actions-annotate-failures",  # only applies to GH Actions
+    "sybil >= 7.1.0",
+  ]
 
 
 [tool.hatch]
-version.source = "vcs"
-build.hooks.vcs.version-file = "src/quaxed/_version.py"
+  version.source = "vcs"
+  build.hooks.vcs.version-file = "src/quaxed/_version.py"
 
 
 [tool.codespell]
-ignore-words-list = """
-    fro,
-"""
+  ignore-words-list = """
+      fro,
+  """
 
 
 [tool.coverage]
-run.source = ["quaxed"]
-port.exclude_lines = ['pragma: no cover', '\.\.\.', 'if typing.TYPE_CHECKING:']
+  run.source = ["quaxed"]
+  port.exclude_lines = [
+    'pragma: no cover',
+    '\.\.\.',
+    'if typing.TYPE_CHECKING:'
+  ]
 
 
 [tool.mypy]
-files = ["src"]
-python_version = "3.10"
-warn_unused_configs = true
-strict = true
-enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-warn_unreachable = true
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-warn_return_any = false
+  files = ["src"]
+  python_version = "3.10"
+  warn_unused_configs = true
+  strict = true
+  enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+  warn_unreachable = true
+  disallow_untyped_defs = false
+  disallow_incomplete_defs = false
+  warn_return_any = false
 
-[[tool.mypy.overrides]]
-module = "quaxed.*"
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
+  [[tool.mypy.overrides]]
+    module = "quaxed.*"
+    disallow_untyped_defs = true
+    disallow_incomplete_defs = true
 
-[[tool.mypy.overrides]]
-module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
-ignore_missing_imports = true
+  [[tool.mypy.overrides]]
+    module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
+    ignore_missing_imports = true
 
 
 [tool.pylint]
-py-version = "3.10"
-ignore-paths = [".*/_version.py"]
-reports.output-format = "colorized"
-similarities.ignore-imports = "yes"
-messages_control.disable = [
+  py-version = "3.10"
+  ignore-paths = [".*/_version.py"]
+  reports.output-format = "colorized"
+  similarities.ignore-imports = "yes"
+  messages_control.disable = [
     "design",
     "fixme",
     "line-too-long",
@@ -115,60 +123,54 @@ messages_control.disable = [
     "redefined-builtin",
     "useless-import-alias",  # handled by ruff
     "wrong-import-position",
-]
+  ]
 
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-xfail_strict = true
-filterwarnings = [
+  minversion = "6.0"
+  addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+  xfail_strict = true
+  filterwarnings = [
     "error",
     # jaxtyping
     "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
     # jax
     "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
     "ignore:jax\\.experimental\\.array_api import is no longer required as of JAX v0\\.4\\.32"
-]
-log_cli_level = "INFO"
-testpaths = ["tests"]
+  ]
+  log_cli_level = "INFO"
+  testpaths = ["tests"]
 
 
 [tool.ruff]
-[tool.ruff.lint]
-extend-select = ["ALL"]
-ignore = [
-    "A001",   # Variable is shadowing a Python builtin
-    "A002",   # Argument is shadowing a Python builtin
-    "ANN101", # Missing type annotation for self in method
-    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed  # TODO
-    "ARG001", # Unused function argument
-    "COM812", # Missing trailing comma
-    "D103",   # Missing docstring in public function  # TODO
-    "D203",   # one-blank-line-before-class
-    "D213",   # Multi-line docstring summary should start at the second line
-    "ISC001", # handled by formatter
-    "ERA001", # Found commented-out code
-    "F811",   # Redefinition of unused variable  <- plum
-    "FIX002", # Line contains TODO, consider resolving the issue
-    "PD011",  # Pandas
-    "PYI041", # Use `float` instead of `int | float`
-    "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
-    "TD003",  # Missing issue link on the line following this TODO
-]
+  [tool.ruff.lint]
+    extend-select = ["ALL"]
+    ignore = [
+        "A001",   # Variable is shadowing a Python builtin
+        "A002",   # Argument is shadowing a Python builtin
+        "ANN101", # Missing type annotation for self in method
+        "ANN401", # Dynamically typed expressions (typing.Any) are disallowed  # TODO
+        "ARG001", # Unused function argument
+        "COM812", # Missing trailing comma
+        "D103",   # Missing docstring in public function  # TODO
+        "D203",   # one-blank-line-before-class
+        "D213",   # Multi-line docstring summary should start at the second line
+        "ISC001", # handled by formatter
+        "ERA001", # Found commented-out code
+        "F811",   # Redefinition of unused variable  <- plum
+        "FIX002", # Line contains TODO, consider resolving the issue
+        "PD011",  # Pandas
+        "PYI041", # Use `float` instead of `int | float`
+        "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
+        "TD003",  # Missing issue link on the line following this TODO
+    ]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/**" = ["ANN", "INP001", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
-"__init__.py" = ["F403"]
-"noxfile.py" = ["T20"]
-"docs/conf.py" = ["INP001"]
-"scratch/**" = ["ANN", "D", "FBT", "INP"]
+  [tool.ruff.lint.per-file-ignores]
+    "tests/**" = ["ANN", "INP001", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
+    "__init__.py" = ["F403"]
+    "noxfile.py" = ["T20"]
+    "docs/conf.py" = ["INP001"]
+    "scratch/**" = ["ANN", "D", "FBT", "INP"]
 
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
-
-[tool.uv]
-dev-dependencies = [
-    "pytest>=8.3.3",
-    "sybil>=8.0.0",
-]
+  [tool.ruff.lint.pydocstyle]
+    convention = "numpy"
