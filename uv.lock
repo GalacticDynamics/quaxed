@@ -1269,7 +1269,7 @@ wheels = [
 
 [[package]]
 name = "quaxed"
-version = "0.6.5.dev2+g058a0af.d20241013"
+version = "0.6.8.dev2+g4e92f0e.d20241203"
 source = { editable = "." }
 dependencies = [
     { name = "jax" },
@@ -1279,7 +1279,7 @@ dependencies = [
     { name = "quax" },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "griffe" },
     { name = "jinja2" },
@@ -1317,55 +1317,51 @@ test = [
     { name = "sybil" },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "sybil" },
-]
-
 [package.metadata]
 requires-dist = [
-    { name = "griffe", marker = "extra == 'dev'", specifier = "<1.0" },
-    { name = "griffe", marker = "extra == 'docs'", specifier = "<1.0" },
     { name = "jax", specifier = ">0.4" },
     { name = "jaxlib", specifier = ">0.4" },
     { name = "jaxtyping", specifier = ">=0.2.34" },
-    { name = "jinja2", marker = "extra == 'dev'", specifier = "==3.1" },
-    { name = "jinja2", marker = "extra == 'docs'", specifier = "==3.1" },
-    { name = "mkdocs", marker = "extra == 'dev'", specifier = "==1.6.0" },
-    { name = "mkdocs", marker = "extra == 'docs'", specifier = "==1.6.0" },
-    { name = "mkdocs-include-exclude-files", marker = "extra == 'dev'", specifier = "==0.0.1" },
-    { name = "mkdocs-include-exclude-files", marker = "extra == 'docs'", specifier = "==0.0.1" },
-    { name = "mkdocs-material", marker = "extra == 'dev'", specifier = "==9.5" },
-    { name = "mkdocs-material", marker = "extra == 'docs'", specifier = "==9.5" },
-    { name = "mkdocstrings", extras = ["python"], marker = "extra == 'dev'", specifier = ">=0.18" },
-    { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.18" },
-    { name = "mknotebooks", marker = "extra == 'dev'", specifier = "==0.8" },
-    { name = "mknotebooks", marker = "extra == 'docs'", specifier = "==0.8" },
-    { name = "nbconvert", marker = "extra == 'dev'", specifier = "==7.16" },
-    { name = "nbconvert", marker = "extra == 'docs'", specifier = "==7.16" },
     { name = "plum-dispatch", specifier = ">=2.5.2" },
-    { name = "pygments", marker = "extra == 'dev'", specifier = "==2.16" },
-    { name = "pygments", marker = "extra == 'docs'", specifier = "==2.16" },
-    { name = "pymdown-extensions", marker = "extra == 'dev'", specifier = "==10.2" },
-    { name = "pymdown-extensions", marker = "extra == 'docs'", specifier = "==10.2" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=6" },
-    { name = "pytest", marker = "extra == 'test'", specifier = ">=6" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=3" },
-    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=3" },
-    { name = "pytest-github-actions-annotate-failures", marker = "extra == 'dev'" },
-    { name = "pytest-github-actions-annotate-failures", marker = "extra == 'test'" },
-    { name = "pytkdocs-tweaks", marker = "extra == 'dev'", specifier = "==0.0.8" },
-    { name = "pytkdocs-tweaks", marker = "extra == 'docs'", specifier = "==0.0.8" },
     { name = "quax", specifier = ">0.0.4" },
-    { name = "sybil", marker = "extra == 'dev'", specifier = ">=7.1.0" },
-    { name = "sybil", marker = "extra == 'test'", specifier = ">=7.1.0" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pytest", specifier = ">=8.3.3" },
-    { name = "sybil", specifier = ">=8.0.0" },
+    { name = "griffe", specifier = "<1.0" },
+    { name = "jinja2", specifier = "==3.1" },
+    { name = "mkdocs", specifier = "==1.6.0" },
+    { name = "mkdocs-include-exclude-files", specifier = "==0.0.1" },
+    { name = "mkdocs-material", specifier = "==9.5" },
+    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.18" },
+    { name = "mknotebooks", specifier = "==0.8" },
+    { name = "nbconvert", specifier = "==7.16" },
+    { name = "pygments", specifier = "==2.16" },
+    { name = "pymdown-extensions", specifier = "==10.2" },
+    { name = "pytest", specifier = ">=8.3" },
+    { name = "pytest-cov", specifier = ">=3" },
+    { name = "pytest-github-actions-annotate-failures" },
+    { name = "pytkdocs-tweaks", specifier = "==0.0.8" },
+    { name = "sybil", specifier = ">=7.1.0" },
+]
+docs = [
+    { name = "griffe", specifier = "<1.0" },
+    { name = "jinja2", specifier = "==3.1" },
+    { name = "mkdocs", specifier = "==1.6.0" },
+    { name = "mkdocs-include-exclude-files", specifier = "==0.0.1" },
+    { name = "mkdocs-material", specifier = "==9.5" },
+    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.18" },
+    { name = "mknotebooks", specifier = "==0.8" },
+    { name = "nbconvert", specifier = "==7.16" },
+    { name = "pygments", specifier = "==2.16" },
+    { name = "pymdown-extensions", specifier = "==10.2" },
+    { name = "pytkdocs-tweaks", specifier = "==0.0.8" },
+]
+test = [
+    { name = "pytest", specifier = ">=8.3" },
+    { name = "pytest-cov", specifier = ">=3" },
+    { name = "pytest-github-actions-annotate-failures" },
+    { name = "sybil", specifier = ">=7.1.0" },
 ]
 
 [[package]]
