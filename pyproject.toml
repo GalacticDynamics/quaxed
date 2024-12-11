@@ -27,7 +27,7 @@
     "jaxlib>=0.4.3",
     "jaxtyping>=0.2.34",
     "plum-dispatch>=2.5.2",
-    "quax>0.0.5",
+    "quax>=0.0.5",
   ]
 
   [project.urls]
