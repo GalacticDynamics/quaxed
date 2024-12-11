@@ -23,11 +23,11 @@
     "Typing :: Typed",
   ]
   dependencies = [
-    "jax>0.4",
-    "jaxlib>0.4",
+    "jax>=0.4.3",
+    "jaxlib>=0.4.3",
     "jaxtyping>=0.2.34",
     "plum-dispatch>=2.5.2",
-    "quax>0.0.4",
+    "quax>0.0.5",
   ]
 
   [project.urls]
@@ -183,4 +183,5 @@ constraint-dependencies = [
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
   "scipy>=1.13",
+  "jax<0.4.36", # TODO: remove when https://github.com/patrick-kidger/quax/pull/37 is merged
 ]
