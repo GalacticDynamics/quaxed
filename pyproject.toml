@@ -181,5 +181,6 @@
 constraint-dependencies = [
   "bleach>6.0",
   "pyparsing>=3.0.0",
+  "pyzmq>=25.0",
   "scipy>=1.13",
 ]
