@@ -513,6 +513,8 @@ def __dir__() -> list[str]:
 _DIRECT_TRANSFER: frozenset[str] = frozenset(
     (
         "bfloat16",
+        "bool",
+        "bool_",
         "character",
         "dtype",
         "e",
