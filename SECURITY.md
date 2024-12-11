@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The lastest released major version is supported. We will consider doing security
+The latest released major version is supported. We will consider doing security
 releases for previous major versions. Contributed PRs would make that more
 likely.
 
