@@ -175,3 +175,9 @@
 
   [tool.ruff.lint.pydocstyle]
     convention = "numpy"
+
+
+[tool.uv]
+constraint-dependencies = [
+  "pyparsing>=3.0.0",
+]
