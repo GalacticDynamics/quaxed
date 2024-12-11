@@ -180,4 +180,5 @@
 [tool.uv]
 constraint-dependencies = [
   "pyparsing>=3.0.0",
+  "bleach>6.0",
 ]
