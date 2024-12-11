@@ -1,8 +1,8 @@
-import sys
 from operator import abs as abs
 from operator import add as add
 from operator import and_ as and_
 from operator import attrgetter as attrgetter
+from operator import call as call
 from operator import concat as concat
 from operator import contains as contains
 from operator import countOf as countOf
@@ -53,6 +53,3 @@ from operator import sub as sub
 from operator import truediv as truediv
 from operator import truth as truth
 from operator import xor as xor
-
-if sys.version_info >= (3, 11):
-    from operator import call as call
