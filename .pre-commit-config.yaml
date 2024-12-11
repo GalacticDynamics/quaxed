@@ -10,11 +10,7 @@ repos:
     rev: v4.0.0
     hooks:
       - id: commitizen
-      - id: commitizen-branch
-        stages: [pre-push]
-        args:
-          - "--"
-          - "--config-file=.czrc"
+        additional_dependencies: [cz-conventional-gitmoji]
 
   - repo: meta
     hooks:
@@ -107,6 +103,7 @@ repos:
     rev: v0.23
     hooks:
       - id: validate-pyproject
+        additional_dependencies: ["validate-pyproject-schema-store[all]"]
 
   - repo: local
     hooks:
