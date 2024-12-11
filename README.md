@@ -8,7 +8,7 @@
     <a href="https://pypi.org/project/quaxed/"> <img alt="quaxed license" src="https://img.shields.io/github/license/GalacticDynamics/quaxed" /> </a>
 </p>
 <p align="center">
-    <a href="https://github.com/GalacticDynamics/quaxed/actions"> <img alt="CI status" src="https://github.com/GalacticDynamics/quaxed/workflows/CI/badge.svg" /> </a>
+    <a href="https://github.com/GalacticDynamics/quaxed/actions/workflows/ci.yml"> <img alt="CI status" src="https://github.com/GalacticDynamics/quaxed/actions/workflows/ci.yml/badge.svg?branch=main" /> </a>
     <a href="https://quaxed.readthedocs.io/en/"> <img alt="ReadTheDocs" src="https://readthedocs.org/projects/quaxed/badge/?version=latest" /> </a>
     <a href="https://codecov.io/gh/GalacticDynamics/quaxed"> <img alt="codecov" src="https://codecov.io/gh/GalacticDynamics/quaxed/graph/badge.svg" /> </a>
     <a href="https://scientific-python.org/specs/spec-0000/"> <img alt="ruff" src="https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038" /> </a>
