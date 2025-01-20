@@ -170,6 +170,10 @@
         "TD003",  # Missing issue link on the line following this TODO
     ]
 
+  [tool.ruff.lint.isort]
+    combine-as-imports = true
+    extra-standard-library = ["typing_extensions"]
+
   [tool.ruff.lint.per-file-ignores]
     "src/quaxed/**" = ["A004"]
     "tests/**" = ["ANN", "INP001", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
