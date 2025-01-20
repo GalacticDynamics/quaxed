@@ -1,6 +1,8 @@
-"""Copyright (c) 2023 Nathaniel Starkman. All rights reserved.
+"""Quaxified `jax.experimental.array_api`.
 
-quaxed: Pre-quaxed libraries for multiple dispatch over abstract array types in JAX
+Note that this module is deprecated in newer versions of JAX and importing
+`quaxed.array_api` may therefore raise an `ImportError`.
+
 """
 
 # pylint: disable=redefined-builtin
