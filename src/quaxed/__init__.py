@@ -1,6 +1,20 @@
-"""Copyright (c) 2023 Nathaniel Starkman. All rights reserved.
+"""Quaxified `jax.scipy`.
 
-quaxed: Pre-quaxed libraries for multiple dispatch over abstract array types in JAX
+This module wraps the functions in `jax.lax` with `quax.quaxify`. The wrapping
+happens dynamically through a module-level ``__dir__`` and ``__getattr__``. The
+list of available functions is in ``__all__`` and documented in the `jax.lax`
+library.
+
+In addition the following modules are supported:
+
+- `quaxed.lax.linalg`
+
+The contents of these modules are likewise dynamically wrapped with
+`quax.quaxify` and their contents is listed in their respective ``__all__`` and
+documented in their respective libraries.
+
+If a function is missing, please file an Issue.
+
 """
 # pylint: disable=C0415,W0621
 

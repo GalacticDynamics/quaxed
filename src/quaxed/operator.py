@@ -1,9 +1,9 @@
-"""Quaxed :external:`operator`.
+"""Quaxed `operator`.
 
-This module wraps the functions in :external:`operator` with
-:external:`quax.quaxify`. The wrapping happens dynamically through a
-module-level ``__dir__`` and ``__getattr__``. The list of available functions is
-in ``__all__`` and documented in the built-in :external:`operator` library.
+This module wraps the functions in `operator` with `quax.quaxify`. The wrapping
+happens dynamically through a module-level ``__dir__`` and ``__getattr__``. The
+list of available functions is in ``__all__`` and documented in the built-in
+`operator` library.
 
 """
 
