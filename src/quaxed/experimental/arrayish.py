@@ -1,4 +1,9 @@
-"""Building blocks for Array-ish objects."""
+"""Building blocks for Array-ish objects.
+
+!!! warning "Experimental"
+    This module is experimental and subject to change. Use with caution.
+
+"""
 
 # fmt: off
 __all__ = [
