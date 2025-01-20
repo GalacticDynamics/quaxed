@@ -81,7 +81,7 @@ repos:
       - id: mypy
         files: src
         additional_dependencies:
-          - pytest
+          - optype
         exclude: |
           (?x)^(
             src/quaxed/lax/__init__.py|

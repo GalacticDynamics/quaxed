@@ -911,6 +911,18 @@ wheels = [
 ]
 
 [[package]]
+name = "optype"
+version = "0.8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/89/42/543e02c72aba7ebe78adb76bbfbed1bc1314eba633ad453984948e5a5f46/optype-0.8.0.tar.gz", hash = "sha256:8cbfd452d6f06c7c70502048f38a0d5451bc601054d3a577dd09c7d6363950e1", size = 85295 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/86/ff/604be975eb0e9fd02358cdacf496f4411db97bffc27279ce260e8f50aba4/optype-0.8.0-py3-none-any.whl", hash = "sha256:90a7760177f2e7feae379a60445fceec37b932b75a00c3d96067497573c5e84d", size = 74228 },
+]
+
+[[package]]
 name = "packaging"
 version = "24.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1230,12 +1242,13 @@ wheels = [
 
 [[package]]
 name = "quaxed"
-version = "0.7.2.dev3+g92326ee.d20250120"
+version = "0.7.2.dev4+g7d8f599.d20250120"
 source = { editable = "." }
 dependencies = [
     { name = "jax" },
     { name = "jaxlib" },
     { name = "jaxtyping" },
+    { name = "optype" },
     { name = "plum-dispatch" },
     { name = "quax" },
 ]
@@ -1284,6 +1297,7 @@ requires-dist = [
     { name = "jax", specifier = ">=0.4.3" },
     { name = "jaxlib", specifier = ">=0.4.3" },
     { name = "jaxtyping", specifier = ">=0.2.34" },
+    { name = "optype", specifier = ">=0.8.0" },
     { name = "plum-dispatch", specifier = ">=2.5.2" },
     { name = "quax", specifier = ">=0.0.5" },
 ]
