@@ -1,43 +1,38 @@
-"""Quaxified `jax.scipy`.
+"""Pre-`quaxify`ed jax and related libraries.
 
-This module wraps the functions in `jax.lax` with `quax.quaxify`. The wrapping
-happens dynamically through a module-level ``__dir__`` and ``__getattr__``. The
-list of available functions is in ``__all__`` and documented in the `jax.lax`
-library.
-
-In addition the following modules are supported:
-
-- `quaxed.lax.linalg`
-
-The contents of these modules are likewise dynamically wrapped with
-`quax.quaxify` and their contents is listed in their respective ``__all__`` and
-documented in their respective libraries.
-
-If a function is missing, please file an Issue.
+`quax` is JAX + multiple dispatch + custom array-ish objects. `quaxed` is a
+drop-in replacement for many JAX and related libraries that applies
+`quax.quaxify` to the original JAX functions, enabling custom array-ish objects
+to be used with those functions, not only jax arrays.
 
 """
-# pylint: disable=C0415,W0621
 
-from __future__ import annotations
+__all__ = [
+    # Modules
+    "lax",
+    "numpy",
+    "scipy",
+    "experimental",
+    # Jax functions
+    "device_put",
+    "grad",
+    "hessian",
+    "jacfwd",
+    "jacrev",
+    "value_and_grad",
+]
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from . import _jax, lax, numpy, scipy
-from ._jax import *
+from . import experimental, lax, numpy, scipy
+from ._jax import device_put, grad, hessian, jacfwd, jacrev, value_and_grad
 from ._setup import JAX_VERSION
 from ._version import version as __version__  # noqa: F401
-
-__all__ = ["lax", "numpy", "scipy"]
-__all__ += _jax.__all__
 
 if JAX_VERSION < (0, 4, 32):
     from . import array_api
 
     __all__ += ["array_api"]
-
-
-if TYPE_CHECKING:
-    from typing import Any
 
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation
@@ -59,4 +54,4 @@ def __getattr__(name: str) -> Any:  # TODO: fuller annotation
 
 
 # Clean up the namespace
-del TYPE_CHECKING
+del TYPE_CHECKING, Any
