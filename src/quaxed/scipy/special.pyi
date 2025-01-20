@@ -1,41 +1,43 @@
-from jax.scipy.special import bernoulli as bernoulli
-from jax.scipy.special import bessel_jn as bessel_jn
-from jax.scipy.special import beta as beta
-from jax.scipy.special import betainc as betainc
-from jax.scipy.special import betaln as betaln
-from jax.scipy.special import digamma as digamma
-from jax.scipy.special import entr as entr
-from jax.scipy.special import erf as erf
-from jax.scipy.special import erfc as erfc
-from jax.scipy.special import erfinv as erfinv
-from jax.scipy.special import exp1 as exp1
-from jax.scipy.special import expi as expi
-from jax.scipy.special import expit as expit
-from jax.scipy.special import expn as expn
-from jax.scipy.special import factorial as factorial
-from jax.scipy.special import gamma as gamma
-from jax.scipy.special import gammainc as gammainc
-from jax.scipy.special import gammaincc as gammaincc
-from jax.scipy.special import gammaln as gammaln
-from jax.scipy.special import hyp1f1 as hyp1f1
-from jax.scipy.special import i0 as i0
-from jax.scipy.special import i0e as i0e
-from jax.scipy.special import i1 as i1
-from jax.scipy.special import i1e as i1e
-from jax.scipy.special import kl_div as kl_div
-from jax.scipy.special import log_ndtr as log_ndtr
-from jax.scipy.special import logit as logit
-from jax.scipy.special import logsumexp as logsumexp
-from jax.scipy.special import lpmn as lpmn
-from jax.scipy.special import lpmn_values as lpmn_values
-from jax.scipy.special import multigammaln as multigammaln
-from jax.scipy.special import ndtr as ndtr
-from jax.scipy.special import ndtri as ndtri
-from jax.scipy.special import poch as poch
-from jax.scipy.special import polygamma as polygamma
-from jax.scipy.special import rel_entr as rel_entr
-from jax.scipy.special import spence as spence
-from jax.scipy.special import sph_harm as sph_harm
-from jax.scipy.special import xlog1py as xlog1py
-from jax.scipy.special import xlogy as xlogy
-from jax.scipy.special import zeta as zeta
+from jax.scipy.special import (
+    bernoulli as bernoulli,
+    bessel_jn as bessel_jn,
+    beta as beta,
+    betainc as betainc,
+    betaln as betaln,
+    digamma as digamma,
+    entr as entr,
+    erf as erf,
+    erfc as erfc,
+    erfinv as erfinv,
+    exp1 as exp1,
+    expi as expi,
+    expit as expit,
+    expn as expn,
+    factorial as factorial,
+    gamma as gamma,
+    gammainc as gammainc,
+    gammaincc as gammaincc,
+    gammaln as gammaln,
+    hyp1f1 as hyp1f1,
+    i0 as i0,
+    i0e as i0e,
+    i1 as i1,
+    i1e as i1e,
+    kl_div as kl_div,
+    log_ndtr as log_ndtr,
+    logit as logit,
+    logsumexp as logsumexp,
+    lpmn as lpmn,
+    lpmn_values as lpmn_values,
+    multigammaln as multigammaln,
+    ndtr as ndtr,
+    ndtri as ndtri,
+    poch as poch,
+    polygamma as polygamma,
+    rel_entr as rel_entr,
+    spence as spence,
+    sph_harm as sph_harm,
+    xlog1py as xlog1py,
+    xlogy as xlogy,
+    zeta as zeta,
+)

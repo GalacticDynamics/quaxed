@@ -15,8 +15,7 @@ from jax._src.numpy.vectorize import (
     _parse_input_dimensions,
 )
 
-from ._core import asarray, squeeze
-from ._core import expand_dims as _expand_dims
+from ._core import asarray, expand_dims as _expand_dims, squeeze
 
 T = TypeVar("T")
 

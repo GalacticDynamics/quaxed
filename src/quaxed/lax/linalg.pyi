@@ -1,13 +1,15 @@
-from jax.lax.linalg import cholesky as cholesky
-from jax.lax.linalg import eig as eig
-from jax.lax.linalg import eigh as eigh
-from jax.lax.linalg import hessenberg as hessenberg
-from jax.lax.linalg import householder_product as householder_product
-from jax.lax.linalg import lu as lu
-from jax.lax.linalg import qdwh as qdwh
-from jax.lax.linalg import qr as qr
-from jax.lax.linalg import shur as shur
-from jax.lax.linalg import svd as svd
-from jax.lax.linalg import triangular_solve as triangular_solve
-from jax.lax.linalg import tridiagonal as tridiagonal
-from jax.lax.linalg import tridiagonal_solve as tridiagonal_solve
+from jax.lax.linalg import (
+    cholesky as cholesky,
+    eig as eig,
+    eigh as eigh,
+    hessenberg as hessenberg,
+    householder_product as householder_product,
+    lu as lu,
+    qdwh as qdwh,
+    qr as qr,
+    shur as shur,
+    svd as svd,
+    triangular_solve as triangular_solve,
+    tridiagonal as tridiagonal,
+    tridiagonal_solve as tridiagonal_solve,
+)
