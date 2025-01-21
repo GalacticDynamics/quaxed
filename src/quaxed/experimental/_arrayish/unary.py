@@ -220,9 +220,11 @@ class NumpyAbsMixin(Generic[R]):
 # Combined Mixins
 
 
-class LaxUnaryMixin(LaxPosMixin, LaxNegMixin, LaxAbsMixin):
+class LaxUnaryMixin(LaxPosMixin, LaxNegMixin[R], LaxAbsMixin[R]):
     """Combined mixin for unary operations using quaxified `jax.lax`."""
 
 
-class NumpyUnaryMixin(NumpyPosMixin, NumpyNegMixin, NumpyAbsMixin, NumpyInvertMixin):
+class NumpyUnaryMixin(
+    NumpyPosMixin, NumpyNegMixin[R], NumpyAbsMixin[R], NumpyInvertMixin[R]
+):
     """Combined mixin for unary operations using quaxified `jax.numpy`."""
