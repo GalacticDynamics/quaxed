@@ -18,8 +18,9 @@ __all__ = [
     "LaxMulMixin", "NumpyMulMixin",  # __mul__
     "LaxRMulMixin", "NumpyRMulMixin",  # __rmul__
     # ---- matmul -----
+    "LaxBothMatMulMixin", "NumpyBothMatMulMixin",
     "LaxMatMulMixin", "NumpyMatMulMixin",  # __matmul__
-    # "LaxRMatMulMixin", "NumpyRMatMulMixin",  # __rmatmul__
+    "LaxRMatMulMixin", "NumpyRMatMulMixin",  # __rmatmul__
     # ----- truediv -----
     "LaxBothTrueDivMixin", "NumpyBothTrueDivMixin",
     "LaxTrueDivMixin", "NumpyTrueDivMixin",  # __truediv__
@@ -514,6 +515,76 @@ class NumpyMatMulMixin(Generic[T, R]):
 
     def __matmul__(self, other: T) -> R:
         return qnp.matmul(self, other)
+
+
+# -------------------------------------
+
+
+class LaxRMatMulMixin(Generic[T, R]):
+    """Mixin for ``__rmatmul__`` method using quaxified `jax.lax.matmul`.
+
+    Examples
+    --------
+    >>> from typing import Any
+    >>> import jax
+    >>> import jax.numpy as jnp
+    >>> from jaxtyping import Array
+    >>> from quax import ArrayValue
+
+    >>> class MyArray(ArrayValue, LaxRMatMulMixin[Any, Array]):
+    ...     value: Array
+    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
+    ...     def materialise(self): return self.value
+
+    >>> x = MyArray(jnp.array([[1, 2], [3, 4]]))
+    >>> y = jnp.array([[5, 6], [7, 8]])
+    >>> y @ x
+    Array([[23, 34],
+           [31, 46]], dtype=int32)
+
+    """  # noqa: E501
+
+    def __rmatmul__(self, other: T) -> R:
+        return qlax.dot(other, self)  # TODO: is this the right operator?
+
+
+class NumpyRMatMulMixin(Generic[T, R]):
+    """Mixin for ``__rmatmul__`` method using quaxified `jax.numpy.matmul`.
+
+    Examples
+    --------
+    >>> from typing import Any
+    >>> import jax
+    >>> import jax.numpy as jnp
+    >>> from jaxtyping import Array
+    >>> from quax import ArrayValue
+
+    >>> class MyArray(ArrayValue, NumpyRMatMulMixin[Any, Array]):
+    ...     value: Array
+    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
+    ...     def materialise(self): return self.value
+
+    >>> x = MyArray(jnp.array([[1, 2], [3, 4]]))
+    >>> y = jnp.array([[5, 6], [7, 8]])
+    >>> y @ x
+    Array([[23, 34],
+           [31, 46]], dtype=int32)
+
+    """  # noqa: E501
+
+    def __rmatmul__(self, other: T) -> R:
+        return qnp.matmul(other, self)
+
+
+# -------------------------------------
+
+
+class LaxBothMatMulMixin(LaxMatMulMixin[T, R], LaxRMatMulMixin[T, R]):
+    pass
+
+
+class NumpyBothMatMulMixin(NumpyMatMulMixin[T, R], NumpyRMatMulMixin[T, R]):
+    pass
 
 
 # ===============================================
@@ -1759,7 +1830,7 @@ class LaxMathMixin(
     LaxBothAddMixin[T, R],  # __add__, __radd__
     LaxBothSubMixin[T, R],  # __sub__, __rsub__
     LaxBothMulMixin[T, R],  # __mul__, __rmul__
-    LaxMatMulMixin[T, R],  # __matmul__
+    LaxBothMatMulMixin[T, R],  # __matmul__, __rmatmul__
     LaxBothTrueDivMixin[T, R],  # __truediv__, __rtruediv__
     LaxBothFloorDivMixin[T, R],  # __floordiv__, __rfloordiv__
     LaxBothModMixin[T, R],  # __mod__, __rmod__
@@ -1773,7 +1844,7 @@ class NumpyMathMixin(
     NumpyBothAddMixin[T, R],  # __add__, __radd__
     NumpyBothSubMixin[T, R],  # __sub__, __rsub__
     NumpyBothMulMixin[T, R],  # __mul__, __rmul__
-    NumpyMatMulMixin[T, R],  # __matmul__
+    NumpyBothMatMulMixin[T, R],  # __matmul__, __rmatmul__
     NumpyBothTrueDivMixin[T, R],  # __truediv__, __rtruediv__
     NumpyBothFloorDivMixin[T, R],  # __floordiv__, __rfloordiv__
     NumpyBothModMixin[T, R],  # __mod__, __rmod__

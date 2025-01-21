@@ -33,8 +33,9 @@ __all__ = [
     "LaxMulMixin", "NumpyMulMixin",  # __mul__
     "LaxRMulMixin", "NumpyRMulMixin",  # __rmul__
     # ---- matmul -----
+    "LaxBothMatMulMixin", "NumpyBothMatMulMixin",
     "LaxMatMulMixin", "NumpyMatMulMixin",  # __matmul__
-    # "LaxRMatMulMixin", "NumpyRMatMulMixin",  # __rmatmul__
+    "LaxRMatMulMixin", "NumpyRMatMulMixin",  # __rmatmul__
     # ----- truediv -----
     "LaxBothTrueDivMixin", "NumpyBothTrueDivMixin",
     "LaxTrueDivMixin", "NumpyTrueDivMixin",  # __truediv__
@@ -109,6 +110,7 @@ from ._arrayish.binary import (
     LaxBothAndMixin,
     LaxBothFloorDivMixin,
     LaxBothLShiftMixin,
+    LaxBothMatMulMixin,
     LaxBothModMixin,
     LaxBothMulMixin,
     LaxBothOrMixin,
@@ -129,6 +131,7 @@ from ._arrayish.binary import (
     LaxRAndMixin,
     LaxRFloorDivMixin,
     LaxRLShiftMixin,
+    LaxRMatMulMixin,
     LaxRModMixin,
     LaxRMulMixin,
     LaxROrMixin,
@@ -150,6 +153,7 @@ from ._arrayish.binary import (
     NumpyBothDivModMixin,
     NumpyBothFloorDivMixin,
     NumpyBothLShiftMixin,
+    NumpyBothMatMulMixin,
     NumpyBothModMixin,
     NumpyBothMulMixin,
     NumpyBothOrMixin,
@@ -172,6 +176,7 @@ from ._arrayish.binary import (
     NumpyRDivModMixin,
     NumpyRFloorDivMixin,
     NumpyRLShiftMixin,
+    NumpyRMatMulMixin,
     NumpyRModMixin,
     NumpyRMulMixin,
     NumpyROrMixin,
