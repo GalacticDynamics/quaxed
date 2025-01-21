@@ -31,21 +31,18 @@ class LaxPosMixin:
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxPosMixin
 
-    >>> class MyArray(ArrayValue, LaxPosMixin):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxPosMixin):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> +x
-    MyArray(value=i32[3])
+    Val(v=i32[3])
 
-    """  # noqa: E501
+    """
 
     def __pos__(self: opt.CanPosSelf) -> opt.CanPosSelf:
         return self  # TODO: more robust implementation
@@ -56,21 +53,18 @@ class NumpyPosMixin:
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyPosMixin
 
-    >>> class MyArray(ArrayValue, NumpyPosMixin):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyPosMixin):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> +x
-    MyArray(value=i32[3])
+    Val(v=i32[3])
 
-    """  # noqa: E501
+    """
 
     def __pos__(self) -> opt.CanPosSelf:
         return qnp.positive(self)
@@ -85,21 +79,18 @@ class LaxNegMixin(Generic[R]):
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxNegMixin
 
-    >>> class MyArray(ArrayValue, LaxNegMixin[Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxNegMixin[Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> -x
     Array([-1, -2, -3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __neg__(self) -> R:
         return qlax.neg(self)
@@ -110,21 +101,18 @@ class NumpyNegMixin(Generic[R]):
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyNegMixin
 
-    >>> class MyArray(ArrayValue, NumpyNegMixin[Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyNegMixin[Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> -x
     Array([-1, -2, -3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __neg__(self) -> R:
         return qnp.negative(self)
@@ -142,21 +130,18 @@ class NumpyInvertMixin(Generic[R]):
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyInvertMixin
 
-    >>> class MyArray(ArrayValue, NumpyInvertMixin[Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyInvertMixin[Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> ~x
     Array([-2, -3, -4], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __invert__(self) -> R:
         return qnp.invert(self)
@@ -171,21 +156,18 @@ class LaxAbsMixin(Generic[R]):
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxAbsMixin
 
-    >>> class MyArray(ArrayValue, LaxAbsMixin[Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxAbsMixin[Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([-1, -2, -3]))
+    >>> x = Val(jnp.array([-1, -2, -3]))
     >>> abs(x)
     Array([1, 2, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __abs__(self) -> R:
         return qlax.abs(self)
@@ -196,21 +178,18 @@ class NumpyAbsMixin(Generic[R]):
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyAbsMixin
 
-    >>> class MyArray(ArrayValue, NumpyAbsMixin[Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyAbsMixin[Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([-1, -2, -3]))
+    >>> x = Val(jnp.array([-1, -2, -3]))
     >>> abs(x)
     Array([1, 2, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __abs__(self) -> R:
         return qnp.abs(self)
