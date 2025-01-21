@@ -45,10 +45,14 @@ class LaxLenMixin:
     >>> len(x)
     3
 
+    >>> x = MyArray(jnp.array(1))
+    >>> len(x)
+    0
+
     """  # noqa: E501
 
     def __len__(self: HasShape) -> int:
-        return self.shape[0]
+        return self.shape[0] if self.shape else 0
 
 
 class NumpyLenMixin:
@@ -70,10 +74,15 @@ class NumpyLenMixin:
     >>> len(x)
     3
 
+    >>> x = MyArray(jnp.array(1))
+    >>> len(x)
+    0
+
     """  # noqa: E501
 
     def __len__(self) -> int:
-        return qnp.shape(self)[0]
+        shape = qnp.shape(self)
+        return shape[0] if shape else 0
 
 
 # -----------------------------------------------
@@ -99,10 +108,14 @@ class LaxLengthHintMixin:
     >>> x.__length_hint__()
     3
 
+    >>> x = MyArray(jnp.array(0))
+    >>> x.__length_hint__()
+    0
+
     """  # noqa: E501
 
     def __length_hint__(self: HasShape) -> int:
-        return self.shape[0]
+        return self.shape[0] if self.shape else 0
 
 
 class NumpyLengthHintMixin:
@@ -124,7 +137,12 @@ class NumpyLengthHintMixin:
     >>> x.__length_hint__()
     3
 
+    >>> x = MyArray(jnp.array(1))
+    >>> x.__length_hint__()
+    0
+
     """  # noqa: E501
 
     def __length_hint__(self) -> int:
-        return qnp.shape(self)[0]
+        shape = qnp.shape(self)
+        return shape[0] if shape else 0

@@ -1242,7 +1242,7 @@ wheels = [
 
 [[package]]
 name = "quaxed"
-version = "0.7.2.dev4+g7d8f599.d20250120"
+version = "0.8.1.dev0+gf70fa86.d20250121"
 source = { editable = "." }
 dependencies = [
     { name = "jax" },
