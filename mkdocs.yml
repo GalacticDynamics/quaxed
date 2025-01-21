@@ -102,3 +102,4 @@ nav:
       - "api/scipy.md"
       - "api/array_api.md"
       - "api/lax.md"
+      - "api/arrayish.md"
