@@ -200,6 +200,7 @@ from ._arrayish.copy import (
     NumpyCopyMixin,
     NumpyDeepCopyMixin,
 )
+from ._arrayish.example import AbstractVal  # noqa: F401
 from ._arrayish.rich import (
     LaxComparisonMixin,
     LaxEqMixin,

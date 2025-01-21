@@ -90,22 +90,18 @@ class LaxAddMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxAddMixin
 
-    >>> class MyArray(ArrayValue, LaxAddMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxAddMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x + x
     Array([2, 4, 6], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __add__(self, other: T) -> R:
         return qlax.add(self, other)
@@ -116,22 +112,18 @@ class NumpyAddMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyAddMixin
 
-    >>> class MyArray(ArrayValue, NumpyAddMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyAddMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x + x
     Array([2, 4, 6], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __add__(self, other: T) -> R:
         return qnp.add(self, other)
@@ -146,22 +138,18 @@ class LaxRAddMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRAddMixin
 
-    >>> class MyArray(ArrayValue, LaxRAddMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRAddMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 + x
     Array([2, 3, 4], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __radd__(self, other: T) -> R:
         return qlax.add(other, self)
@@ -172,22 +160,18 @@ class NumpyRAddMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRAddMixin
 
-    >>> class MyArray(ArrayValue, NumpyRAddMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRAddMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 + x
     Array([2, 3, 4], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __radd__(self, other: T) -> R:
         return qnp.add(other, self)
@@ -216,22 +200,18 @@ class LaxSubMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxSubMixin
 
-    >>> class MyArray(ArrayValue, LaxSubMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxSubMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x - x
     Array([0, 0, 0], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __sub__(self, other: T) -> R:
         return qlax.sub(self, other)
@@ -242,22 +222,18 @@ class NumpySubMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpySubMixin
 
-    >>> class MyArray(ArrayValue, NumpySubMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpySubMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x - x
     Array([0, 0, 0], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __sub__(self, other: T) -> R:
         return qnp.subtract(self, other)
@@ -272,22 +248,18 @@ class LaxRSubMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRSubMixin
 
-    >>> class MyArray(ArrayValue, LaxRSubMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRSubMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 - x
     Array([ 0, -1, -2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rsub__(self, other: T) -> R:
         return qlax.sub(other, self)
@@ -298,22 +270,18 @@ class NumpyRSubMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
-    >>> from jaxtyping import Array, Bool
-    >>> from quax import ArrayValue
+    >>> from jaxtyping import Array
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRSubMixin
 
-    >>> class MyArray(ArrayValue, NumpyRSubMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRSubMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 - x
     Array([ 0, -1, -2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rsub__(self, other: T) -> R:
         return qnp.subtract(other, self)
@@ -341,22 +309,18 @@ class LaxMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxMulMixin
 
-    >>> class MyArray(ArrayValue, LaxMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x * x
     Array([1, 4, 9], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __mul__(self, other: T) -> R:
         return qlax.mul(self, other)
@@ -367,22 +331,18 @@ class NumpyMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyMulMixin
 
-    >>> class MyArray(ArrayValue, NumpyMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x * x
     Array([1, 4, 9], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __mul__(self, other: T) -> R:
         return qnp.multiply(self, other)
@@ -397,22 +357,18 @@ class LaxRMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRMulMixin
 
-    >>> class MyArray(ArrayValue, LaxRMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 * x
     Array([2, 4, 6], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rmul__(self, other: T) -> R:
         return qlax.mul(other, self)
@@ -423,22 +379,18 @@ class NumpyRMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRMulMixin
 
-    >>> class MyArray(ArrayValue, NumpyRMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 * x
     Array([2, 4, 6], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rmul__(self, other: T) -> R:
         return qnp.multiply(other, self)
@@ -466,24 +418,20 @@ class LaxMatMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxMatMulMixin
 
-    >>> class MyArray(ArrayValue, LaxMatMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxMatMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([[1, 2], [3, 4]]))
-    >>> y = MyArray(jnp.array([[5, 6], [7, 8]]))
+    >>> x = Val(jnp.array([[1, 2], [3, 4]]))
+    >>> y = Val(jnp.array([[5, 6], [7, 8]]))
     >>> x @ y
     Array([[19, 22],
            [43, 50]], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __matmul__(self, other: T) -> R:
         return qlax.dot(self, other)  # TODO: is this the right operator?
@@ -494,24 +442,20 @@ class NumpyMatMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyMatMulMixin
 
-    >>> class MyArray(ArrayValue, NumpyMatMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyMatMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([[1, 2], [3, 4]]))
-    >>> y = MyArray(jnp.array([[5, 6], [7, 8]]))
+    >>> x = Val(jnp.array([[1, 2], [3, 4]]))
+    >>> y = Val(jnp.array([[5, 6], [7, 8]]))
     >>> x @ y
     Array([[19, 22],
            [43, 50]], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __matmul__(self, other: T) -> R:
         return qnp.matmul(self, other)
@@ -525,24 +469,20 @@ class LaxRMatMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRMatMulMixin
 
-    >>> class MyArray(ArrayValue, LaxRMatMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRMatMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([[1, 2], [3, 4]]))
+    >>> x = Val(jnp.array([[1, 2], [3, 4]]))
     >>> y = jnp.array([[5, 6], [7, 8]])
     >>> y @ x
     Array([[23, 34],
            [31, 46]], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rmatmul__(self, other: T) -> R:
         return qlax.dot(other, self)  # TODO: is this the right operator?
@@ -553,24 +493,20 @@ class NumpyRMatMulMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRMatMulMixin
 
-    >>> class MyArray(ArrayValue, NumpyRMatMulMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRMatMulMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([[1, 2], [3, 4]]))
+    >>> x = Val(jnp.array([[1, 2], [3, 4]]))
     >>> y = jnp.array([[5, 6], [7, 8]])
     >>> y @ x
     Array([[23, 34],
            [31, 46]], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rmatmul__(self, other: T) -> R:
         return qnp.matmul(other, self)
@@ -599,22 +535,18 @@ class LaxTrueDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxTrueDivMixin
 
-    >>> class MyArray(ArrayValue, LaxTrueDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxTrueDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x / 2  # Note: integer division
     Array([0, 1, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __truediv__(self, other: T) -> R:
         return qlax.div(self, other)
@@ -625,22 +557,18 @@ class NumpyTrueDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyTrueDivMixin
 
-    >>> class MyArray(ArrayValue, NumpyTrueDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyTrueDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x / 2
     Array([0.5, 1. , 1.5], dtype=float32)
 
-    """  # noqa: E501
+    """
 
     def __truediv__(self, other: T) -> R:
         return qnp.true_divide(self, other)
@@ -655,22 +583,18 @@ class LaxRTrueDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRTrueDivMixin
 
-    >>> class MyArray(ArrayValue, LaxRTrueDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRTrueDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 / x
     Array([2, 1, 0], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rtruediv__(self, other: T) -> R:
         return qlax.div(other, self)
@@ -681,22 +605,18 @@ class NumpyRTrueDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRTrueDivMixin
 
-    >>> class MyArray(ArrayValue, NumpyRTrueDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRTrueDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 / x
     Array([2. , 1. , 0.6666667], dtype=float32)
 
-    """  # noqa: E501
+    """
 
     def __rtruediv__(self, other: T) -> R:
         return qnp.true_divide(other, self)
@@ -728,22 +648,18 @@ class LaxFloorDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxFloorDivMixin
 
-    >>> class MyArray(ArrayValue, LaxFloorDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxFloorDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1., 2, 3]))
+    >>> x = Val(jnp.array([1., 2, 3]))
     >>> x // 2.
     Array([0., 1., 1.], dtype=float32)
 
-    """  # noqa: E501
+    """
 
     def __floordiv__(self, other: T) -> R:
         return qlax.floor(qlax.div(self, other))
@@ -754,22 +670,18 @@ class NumpyFloorDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyFloorDivMixin
 
-    >>> class MyArray(ArrayValue, NumpyFloorDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyFloorDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x // 2
     Array([0, 1, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __floordiv__(self, other: T) -> R:
         return qnp.floor_divide(self, other)
@@ -787,22 +699,18 @@ class LaxRFloorDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRFloorDivMixin
 
-    >>> class MyArray(ArrayValue, LaxRFloorDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRFloorDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1., 2, 3]))
+    >>> x = Val(jnp.array([1., 2, 3]))
     >>> 2. // x
     Array([2., 1., 0.], dtype=float32)
 
-    """  # noqa: E501
+    """
 
     def __rfloordiv__(self, other: T) -> R:
         return qlax.floor(qlax.div(other, self))
@@ -813,22 +721,18 @@ class NumpyRFloorDivMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRFloorDivMixin
 
-    >>> class MyArray(ArrayValue, NumpyRFloorDivMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRFloorDivMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 // x
     Array([2, 1, 0], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rfloordiv__(self, other: T) -> R:
         return qnp.floor_divide(other, self)
@@ -857,22 +761,18 @@ class LaxModMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxModMixin
 
-    >>> class MyArray(ArrayValue, LaxModMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxModMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x % 2
     Array([1, 0, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __mod__(self, other: T) -> R:
         return qlax.rem(self, other)
@@ -883,22 +783,18 @@ class NumpyModMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyModMixin
 
-    >>> class MyArray(ArrayValue, NumpyModMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyModMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x % 2
     Array([1, 0, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __mod__(self, other: T) -> R:
         return qnp.mod(self, other)
@@ -913,22 +809,18 @@ class LaxRModMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRModMixin
 
-    >>> class MyArray(ArrayValue, LaxRModMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRModMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 % x
     Array([0, 0, 2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rmod__(self, other: T) -> R:
         return qlax.rem(other, self)
@@ -939,22 +831,18 @@ class NumpyRModMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRModMixin
 
-    >>> class MyArray(ArrayValue, NumpyRModMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRModMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 % x
     Array([0, 0, 2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rmod__(self, other: T) -> R:
         return qnp.mod(other, self)
@@ -986,22 +874,18 @@ class NumpyDivModMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyDivModMixin
 
-    >>> class MyArray(ArrayValue, NumpyDivModMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyDivModMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([5, 7, 9]))
+    >>> x = Val(jnp.array([5, 7, 9]))
     >>> divmod(x, 2)
     (Array([2, 3, 4], dtype=int32), Array([1, 1, 1], dtype=int32))
 
-    """  # noqa: E501
+    """
 
     def __divmod__(self, other: T) -> R:
         return qnp.divmod(self, other)
@@ -1019,22 +903,18 @@ class NumpyRDivModMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRDivModMixin
 
-    >>> class MyArray(ArrayValue, NumpyRDivModMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRDivModMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([5, 7, 9]))
+    >>> x = Val(jnp.array([5, 7, 9]))
     >>> divmod(20, x)
     (Array([4, 2, 2], dtype=int32), Array([0, 6, 2], dtype=int32))
 
-    """  # noqa: E501
+    """
 
     def __rdivmod__(self, other: T) -> R:
         return qnp.divmod(other, self)
@@ -1059,22 +939,18 @@ class LaxPowMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxPowMixin
 
-    >>> class MyArray(ArrayValue, LaxPowMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxPowMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1., 2, 3]))  # must be floating
+    >>> x = Val(jnp.array([1., 2, 3]))  # must be floating
     >>> x ** 2
     Array([1., 4., 9.], dtype=float32)
 
-    """  # noqa: E501
+    """
 
     def __pow__(self, other: T) -> R:
         return qlax.pow(self, other)
@@ -1085,22 +961,18 @@ class NumpyPowMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyPowMixin
 
-    >>> class MyArray(ArrayValue, NumpyPowMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyPowMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x ** 2
     Array([1, 4, 9], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __pow__(self, other: T) -> R:
         return qnp.power(self, other)
@@ -1115,22 +987,18 @@ class LaxRPowMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRPowMixin
 
-    >>> class MyArray(ArrayValue, LaxRPowMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRPowMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2. ** x
     Array([2., 4., 8.], dtype=float32)
 
-    """  # noqa: E501
+    """
 
     def __rpow__(self, other: T) -> R:
         return qlax.pow(other, self)
@@ -1141,22 +1009,18 @@ class NumpyRPowMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRPowMixin
 
-    >>> class MyArray(ArrayValue, NumpyRPowMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRPowMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 2 ** x
     Array([2, 4, 8], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rpow__(self, other: T) -> R:
         return qnp.power(other, self)
@@ -1185,22 +1049,18 @@ class LaxLShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxLShiftMixin
 
-    >>> class MyArray(ArrayValue, LaxLShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxLShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x << 1
     Array([2, 4, 6], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __lshift__(self, other: T) -> R:
         return qlax.shift_left(self, other)
@@ -1211,22 +1071,18 @@ class NumpyLShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyLShiftMixin
 
-    >>> class MyArray(ArrayValue, NumpyLShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyLShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x << 1
     Array([2, 4, 6], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __lshift__(self, other: T) -> R:
         return qnp.left_shift(self, other)
@@ -1241,22 +1097,18 @@ class LaxRLShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRLShiftMixin
 
-    >>> class MyArray(ArrayValue, LaxRLShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRLShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 << x
     Array([2, 4, 8], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rlshift__(self, other: T) -> R:
         return qlax.shift_left(other, self)
@@ -1267,22 +1119,18 @@ class NumpyRLShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRLShiftMixin
 
-    >>> class MyArray(ArrayValue, NumpyRLShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRLShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 << x
     Array([2, 4, 8], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rlshift__(self, other: T) -> R:
         return qnp.left_shift(other, self)
@@ -1311,22 +1159,18 @@ class LaxRShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRShiftMixin
 
-    >>> class MyArray(ArrayValue, LaxRShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([2, 4, 8]))
+    >>> x = Val(jnp.array([2, 4, 8]))
     >>> x >> 1
     Array([1, 2, 4], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     _RIGHT_SHIFT_LOGICAL: Literal[True, False] = True
 
@@ -1345,22 +1189,18 @@ class NumpyRShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRShiftMixin
 
-    >>> class MyArray(ArrayValue, NumpyRShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([2, 4, 8]))
+    >>> x = Val(jnp.array([2, 4, 8]))
     >>> x >> 1
     Array([1, 2, 4], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rshift__(self, other: T) -> R:
         return qnp.right_shift(self, other)
@@ -1375,22 +1215,18 @@ class LaxRRShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRRShiftMixin
 
-    >>> class MyArray(ArrayValue, LaxRRShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRRShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([2, 4, 8]))
+    >>> x = Val(jnp.array([2, 4, 8]))
     >>> 16 >> x
     Array([4, 1, 0], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     _RIGHT_SHIFT_LOGICAL: Literal[True, False] = True
 
@@ -1409,22 +1245,18 @@ class NumpyRRShiftMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRRShiftMixin
 
-    >>> class MyArray(ArrayValue, NumpyRRShiftMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRRShiftMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([2, 4, 8]))
+    >>> x = Val(jnp.array([2, 4, 8]))
     >>> 16 >> x
     Array([4, 1, 0], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rrshift__(self, other: T) -> R:
         return qnp.right_shift(other, self)
@@ -1453,22 +1285,18 @@ class LaxAndMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxAndMixin
 
-    >>> class MyArray(ArrayValue, LaxAndMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxAndMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x & 1
     Array([1, 0, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __and__(self, other: T) -> R:
         return qlax.bitwise_and(self, other)
@@ -1479,22 +1307,18 @@ class NumpyAndMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyAndMixin
 
-    >>> class MyArray(ArrayValue, NumpyAndMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyAndMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x & 1
     Array([1, 0, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __and__(self, other: T) -> R:
         return qnp.bitwise_and(self, other)
@@ -1509,22 +1333,18 @@ class LaxRAndMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRAndMixin
 
-    >>> class MyArray(ArrayValue, LaxRAndMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRAndMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 & x
     Array([1, 0, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rand__(self, other: T) -> R:
         return qlax.bitwise_and(other, self)
@@ -1535,22 +1355,18 @@ class NumpyRAndMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRAndMixin
 
-    >>> class MyArray(ArrayValue, NumpyRAndMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRAndMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 & x
     Array([1, 0, 1], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rand__(self, other: T) -> R:
         return qnp.bitwise_and(other, self)
@@ -1580,22 +1396,18 @@ class LaxXorMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxXorMixin
 
-    >>> class MyArray(ArrayValue, LaxXorMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxXorMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x ^ 1
     Array([0, 3, 2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __xor__(self, other: T) -> R:
         return qlax.bitwise_xor(self, other)
@@ -1606,22 +1418,18 @@ class NumpyXorMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyXorMixin
 
-    >>> class MyArray(ArrayValue, NumpyXorMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyXorMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x ^ 1
     Array([0, 3, 2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __xor__(self, other: T) -> R:
         return qnp.bitwise_xor(self, other)
@@ -1636,22 +1444,18 @@ class LaxRXorMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxRXorMixin
 
-    >>> class MyArray(ArrayValue, LaxRXorMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxRXorMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 ^ x
     Array([0, 3, 2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rxor__(self, other: T) -> R:
         return qlax.bitwise_xor(other, self)
@@ -1662,22 +1466,18 @@ class NumpyRXorMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyRXorMixin
 
-    >>> class MyArray(ArrayValue, NumpyRXorMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyRXorMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 ^ x
     Array([0, 3, 2], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __rxor__(self, other: T) -> R:
         return qnp.bitwise_xor(other, self)
@@ -1706,22 +1506,18 @@ class LaxOrMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxOrMixin
 
-    >>> class MyArray(ArrayValue, LaxOrMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxOrMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x | 1
     Array([1, 3, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __or__(self, other: T) -> R:
         return qlax.bitwise_or(self, other)
@@ -1732,22 +1528,18 @@ class NumpyOrMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyOrMixin
 
-    >>> class MyArray(ArrayValue, NumpyOrMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyOrMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x | 1
     Array([1, 3, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __or__(self, other: T) -> R:
         return qnp.bitwise_or(self, other)
@@ -1765,22 +1557,18 @@ class LaxROrMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxROrMixin
 
-    >>> class MyArray(ArrayValue, LaxROrMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxROrMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 | x
     Array([1, 3, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __ror__(self, other: T) -> R:
         return qlax.bitwise_or(other, self)
@@ -1791,22 +1579,18 @@ class NumpyROrMixin(Generic[T, R]):
 
     Examples
     --------
-    >>> from typing import Any
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyROrMixin
 
-    >>> class MyArray(ArrayValue, NumpyROrMixin[Any, Array]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyROrMixin[object, Array]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> 1 | x
     Array([1, 3, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __ror__(self, other: T) -> R:
         return qnp.bitwise_or(other, self)

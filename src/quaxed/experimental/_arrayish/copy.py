@@ -25,21 +25,18 @@ class NumpyCopyMixin(Generic[RCopy]):
     Examples
     --------
     >>> import copy
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyCopyMixin
 
-    >>> class MyArray(ArrayValue, NumpyCopyMixin[Any]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyCopyMixin[Any]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> copy.copy(x)
     Array([1, 2, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __copy__(self) -> RCopy:
         return qnp.copy(self)
@@ -54,22 +51,18 @@ class NumpyDeepCopyMixin(Generic[RDeepcopy]):
 
     Examples
     --------
-    >>> import copy
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyDeepCopyMixin
 
-    >>> class MyArray(ArrayValue, NumpyDeepCopyMixin[Any]):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyDeepCopyMixin[Any]):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> copy.deepcopy(x)
     Array([1, 2, 3], dtype=int32)
 
-    """  # noqa: E501
+    """
 
     def __deepcopy__(self, memo: dict[Any, Any], /) -> RDeepcopy:
         return qnp.copy(self)

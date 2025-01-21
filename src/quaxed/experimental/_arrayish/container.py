@@ -7,11 +7,9 @@ __all__ = [
 ]
 # fmt: on
 
-from typing import Protocol, TypeVar, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 import quaxed.numpy as qnp
-
-T = TypeVar("T")
 
 
 @runtime_checkable
@@ -31,25 +29,22 @@ class LaxLenMixin:
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxLenMixin
 
-    >>> class MyArray(ArrayValue, LaxLenMixin):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxLenMixin):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> len(x)
     3
 
-    >>> x = MyArray(jnp.array(1))
+    >>> x = Val(jnp.array(1))
     >>> len(x)
     0
 
-    """  # noqa: E501
+    """
 
     def __len__(self: HasShape) -> int:
         return self.shape[0] if self.shape else 0
@@ -60,25 +55,22 @@ class NumpyLenMixin:
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyLenMixin
 
-    >>> class MyArray(ArrayValue, NumpyLenMixin):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyLenMixin):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> len(x)
     3
 
-    >>> x = MyArray(jnp.array(1))
+    >>> x = Val(jnp.array(1))
     >>> len(x)
     0
 
-    """  # noqa: E501
+    """
 
     def __len__(self) -> int:
         shape = qnp.shape(self)
@@ -94,25 +86,22 @@ class LaxLengthHintMixin:
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, LaxLengthHintMixin
 
-    >>> class MyArray(ArrayValue, LaxLengthHintMixin):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, LaxLengthHintMixin):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x.__length_hint__()
     3
 
-    >>> x = MyArray(jnp.array(0))
+    >>> x = Val(jnp.array(0))
     >>> x.__length_hint__()
     0
 
-    """  # noqa: E501
+    """
 
     def __length_hint__(self: HasShape) -> int:
         return self.shape[0] if self.shape else 0
@@ -123,25 +112,22 @@ class NumpyLengthHintMixin:
 
     Examples
     --------
-    >>> import jax
     >>> import jax.numpy as jnp
     >>> from jaxtyping import Array
-    >>> from quax import ArrayValue
+    >>> from quaxed.experimental.arrayish import AbstractVal, NumpyLengthHintMixin
 
-    >>> class MyArray(ArrayValue, NumpyLengthHintMixin):
-    ...     value: Array
-    ...     def aval(self): return jax.core.ShapedArray(self.value.shape, self.value.dtype)
-    ...     def materialise(self): return self.value
+    >>> class Val(AbstractVal, NumpyLengthHintMixin):
+    ...     v: Array
 
-    >>> x = MyArray(jnp.array([1, 2, 3]))
+    >>> x = Val(jnp.array([1, 2, 3]))
     >>> x.__length_hint__()
     3
 
-    >>> x = MyArray(jnp.array(1))
+    >>> x = Val(jnp.array(1))
     >>> x.__length_hint__()
     0
 
-    """  # noqa: E501
+    """
 
     def __length_hint__(self) -> int:
         shape = qnp.shape(self)
