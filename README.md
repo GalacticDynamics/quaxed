@@ -37,7 +37,7 @@ pip install quaxed
 
 [![Read The Docs](https://img.shields.io/badge/read_docs-here-orange)](https://unxt.readthedocs.io/en/)
 
-## Quick Start
+### Quick Start
 
 To understand how `quax` works it's magic, see
 [`quax.quaxify`](https://docs.kidger.site/quax/api/quax/#quax.quaxify) and the
