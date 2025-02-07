@@ -104,7 +104,10 @@ class LaxAddMixin(Generic[T, R]):
     """
 
     def __add__(self, other: T) -> R:
-        return qlax.add(self, other)
+        try:
+            return qlax.add(self, other)
+        except Exception:  # noqa: BLE001
+            return NotImplemented
 
 
 class NumpyAddMixin(Generic[T, R]):
@@ -126,7 +129,10 @@ class NumpyAddMixin(Generic[T, R]):
     """
 
     def __add__(self, other: T) -> R:
-        return qnp.add(self, other)
+        try:
+            return qnp.add(self, other)
+        except Exception:  # noqa: BLE001
+            return NotImplemented
 
 
 # -------------------------------------
@@ -152,7 +158,10 @@ class LaxRAddMixin(Generic[T, R]):
     """
 
     def __radd__(self, other: T) -> R:
-        return qlax.add(other, self)
+        try:
+            return qlax.add(other, self)
+        except Exception:  # noqa: BLE001
+            return NotImplemented
 
 
 class NumpyRAddMixin(Generic[T, R]):
@@ -174,7 +183,10 @@ class NumpyRAddMixin(Generic[T, R]):
     """
 
     def __radd__(self, other: T) -> R:
-        return qnp.add(other, self)
+        try:
+            return qnp.add(other, self)
+        except Exception:  # noqa: BLE001
+            return NotImplemented
 
 
 # -------------------------------------
