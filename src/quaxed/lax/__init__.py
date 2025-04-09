@@ -229,7 +229,7 @@ from jax.lax import (
     ScatterDimensionNumbers,
 )
 
-_jax_version = tuple(map(int, jax.__version__.split(".")))
+_jax_version = tuple(map(int, jax.__version__.split(".")))  # noqa: RUF048
 if _jax_version >= (0, 4, 35):
     __all__ += ["DotAlgorithmPreset", "FftType"]
 
