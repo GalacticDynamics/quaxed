@@ -23,13 +23,14 @@
     "Typing :: Typed",
   ]
   dependencies = [
-    "jax>=0.4.3",
-    "jaxlib>=0.4.3",
+    "equinox>=0.11.5",
+    "jax>=0.4.34",
+    "jaxlib>=0.4.34",
     "jaxtyping>=0.2.34",
     "optype>=0.8.0",
     "plum-dispatch>=2.5.2",
     "quax>=0.0.5",
-]
+  ]
 
   [project.urls]
     Homepage = "https://github.com/GalacticDynamics/quaxed"
@@ -54,7 +55,7 @@
     "mkdocs==1.6.0",  # Main documentation generator.
     "mkdocs-material==9.5",  # Theme
     "mkdocs_include_exclude_files==0.0.1",  # Tweak which files are included/excluded
-    "mkdocstrings[python] >= 0.18",  # Autogenerate documentation from docstrings.
+    "mkdocstrings[python] == 0.18",  # Autogenerate documentation from docstrings.
     "mknotebooks==0.8",  # Turn Jupyter Lab notebooks into webpages.
     "nbconvert==7.16",
     "pygments==2.16",
@@ -180,7 +181,7 @@
     "tests/**" = ["ANN", "INP001", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
     "__init__.py" = ["F403"]
     "noxfile.py" = ["T20"]
-    "docs/conf.py" = ["INP001"]
+    "docs/**" = ["INP001"]
     "scratch/**" = ["ANN", "D", "FBT", "INP"]
 
   [tool.ruff.lint.pydocstyle]
@@ -190,8 +191,11 @@
 [tool.uv]
 constraint-dependencies = [
   "bleach>6.0",
+  "cffi>=1.14",
+  "opt_einsum>=3.2.0",
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
   "scipy>=1.13",
-  "jax<0.4.36", # TODO: remove when https://github.com/patrick-kidger/quax/pull/37 is merged
+  "jax>=0.4.34,<0.4.36", # TODO: remove when https://github.com/patrick-kidger/quax/pull/37 is merged
+  "jaxlib>=0.4.34,<0.4.36"
 ]
