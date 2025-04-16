@@ -26,13 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 from . import experimental, lax, numpy, scipy
 from ._jax import device_put, grad, hessian, jacfwd, jacrev, value_and_grad
-from ._setup import JAX_VERSION
 from ._version import version as __version__  # noqa: F401
-
-if JAX_VERSION < (0, 4, 32):
-    from . import array_api
-
-    __all__ += ["array_api"]
 
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation

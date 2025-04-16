@@ -100,5 +100,4 @@ nav:
       - "api/operator.md"
       - "api/numpy.md"
       - "api/scipy.md"
-      - "api/array_api.md"
       - "api/lax.md"

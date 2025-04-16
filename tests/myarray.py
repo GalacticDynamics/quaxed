@@ -6,7 +6,7 @@ from typing import Any
 
 import equinox as eqx
 import jax
-import jax.experimental.array_api as jax_xp
+import jax.numpy as jnp
 from jax import Device, lax
 from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import Shape
@@ -15,7 +15,6 @@ from plum import Dispatcher, Function, dispatch
 from quax import ArrayValue, register
 
 from quaxed._types import DType
-from quaxed.array_api._dispatch import dispatcher as ap_dispatcher
 
 
 class MyArray(ArrayValue):
@@ -25,7 +24,7 @@ class MyArray(ArrayValue):
     `quax` will not attempt to convert it to a JAX array.
     """
 
-    array: jax.Array = eqx.field(converter=jax_xp.asarray)
+    array: jax.Array = eqx.field(converter=jnp.asarray)
 
     def materialise(self) -> jax.Array:
         """Convert to a JAX array."""
@@ -1489,7 +1488,7 @@ def _zeta_p() -> MyArray:
 ###############################################################################
 
 
-@chain_dispatchers(dispatch, ap_dispatcher)
+@dispatch
 def arange(
     start: MyArray,
     stop: MyArray | None = None,
@@ -1499,7 +1498,7 @@ def arange(
     device: Any = None,
 ) -> MyArray:
     return MyArray(
-        jax_xp.arange(
+        jnp.arange(
             start.array,
             stop=stop.array if stop is not None else None,
             step=step.array if step is not None else None,
@@ -1509,7 +1508,7 @@ def arange(
     )
 
 
-@chain_dispatchers(dispatch, ap_dispatcher)
+@dispatch
 def empty_like(
     x: MyArray,
     /,
@@ -1517,10 +1516,10 @@ def empty_like(
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> MyArray:
-    return MyArray(jax_xp.empty_like(x.array, dtype=dtype, device=device))
+    return MyArray(jnp.empty_like(x.array, dtype=dtype, device=device))
 
 
-@chain_dispatchers(dispatch, ap_dispatcher)
+@dispatch
 def full_like(
     x: MyArray,
     /,
@@ -1530,11 +1529,11 @@ def full_like(
     device: Device | None = None,
 ) -> MyArray:
     return MyArray(
-        jax_xp.full_like(x.array, fill_value, dtype=dtype, device=device),
+        jnp.full_like(x.array, fill_value, dtype=dtype, device=device),
     )
 
 
-@chain_dispatchers(dispatch, ap_dispatcher)
+@dispatch
 def linspace(
     start: MyArray,
     stop: MyArray,
@@ -1545,7 +1544,7 @@ def linspace(
     endpoint: bool = True,
 ) -> MyArray:
     return MyArray(
-        jax_xp.linspace(
+        jnp.linspace(
             start.array,
             stop.array,
             num=num,
@@ -1556,21 +1555,21 @@ def linspace(
     )
 
 
-@chain_dispatchers(dispatch, ap_dispatcher)
+@dispatch
 def ones_like(
     x: MyArray,
     /,
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> MyArray:
-    return MyArray(jax_xp.ones_like(x.array, dtype=dtype, device=device))
+    return MyArray(jnp.ones_like(x.array, dtype=dtype, device=device))
 
 
-@chain_dispatchers(dispatch, ap_dispatcher)
+@dispatch
 def zeros_like(
     x: MyArray,
     /,
     dtype: DType | None = None,
     device: Device | None = None,
 ) -> MyArray:
-    return MyArray(jax_xp.zeros_like(x.array, dtype=dtype, device=device))
+    return MyArray(jnp.zeros_like(x.array, dtype=dtype, device=device))
