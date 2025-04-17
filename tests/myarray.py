@@ -1,8 +1,8 @@
 """Test with :class:`MyArray` inputs."""
 
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any
+from typing import Any, Self
 
 import equinox as eqx
 import jax
@@ -10,8 +10,8 @@ import jax.numpy as jnp
 from jax import Device, lax
 from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import Shape
-from jaxtyping import ArrayLike
-from plum import Dispatcher, Function, dispatch
+from jaxtyping import Array, ArrayLike, Bool
+from plum import dispatch
 from quax import ArrayValue, register
 
 from quaxed._types import DType
@@ -34,26 +34,49 @@ class MyArray(ArrayValue):
         """Return the ShapedArray."""
         return jax.core.get_aval(self.array)
 
+    def astype(self, dtype: Any) -> Self:
+        """Cast to type."""
+        return replace(self, array=self.array.astype(dtype))
 
-# ==============================================================================
+    def __getitem__(self, key: Any) -> Self:
+        """Get item."""
+        return replace(self, array=self.array[key])
 
+    @property
+    def size(self) -> int:
+        """Get the size."""
+        return self.array.size
 
-def chain_dispatchers(*dispatchers: Dispatcher) -> Callable[[Any], Function]:
-    """Apply many dispatchers to a function."""
+    def __len__(self) -> int:
+        """Get the length."""
+        return self.array.shape[0] if self.array.ndim > 0 else 0
 
-    def decorator(method: Any) -> Function:
-        for dispatcher in dispatchers:
-            f = dispatcher(method)
-        return f
+    def __lt__(self, other: Any) -> Bool[Array, "..."]:
+        """Less than operator."""
+        return self.array < other
 
-    return decorator
+    def __le__(self, other: Any) -> Bool[Array, "..."]:
+        """Less than or equal operator."""
+        return self.array <= other
+
+    def __ge__(self, other: Any) -> Bool[Array, "..."]:
+        """Greater than or equal operator."""
+        return self.array >= other
+
+    def __gt__(self, other: Any) -> Bool[Array, "..."]:
+        """Greater than operator."""
+        return self.array > other
+
+    def __rmul__(self, other: Any) -> Self:
+        """Multiplication operator."""
+        return replace(self, array=other * self.array)
 
 
 # ==============================================================================
 
 
 @register(lax.abs_p)
-def _abs_p(x: MyArray) -> MyArray:
+def abs_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.abs(x.array))
 
 
@@ -61,7 +84,7 @@ def _abs_p(x: MyArray) -> MyArray:
 
 
 @register(lax.acos_p)
-def _acos_p(x: MyArray) -> MyArray:
+def acos_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.acos(x.array))
 
 
@@ -69,7 +92,7 @@ def _acos_p(x: MyArray) -> MyArray:
 
 
 @register(lax.acosh_p)
-def _acosh_p(x: MyArray) -> MyArray:
+def acosh_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.acosh(x.array))
 
 
@@ -77,12 +100,17 @@ def _acosh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.add_p)
-def _add_p_qq(x: MyArray, y: ArrayLike) -> MyArray:
+def add_p_qq(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.add(x.array, y))
 
 
 @register(lax.add_p)
-def _add_p_qq(x: MyArray, y: MyArray) -> MyArray:
+def add_p_qq(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.add(x, y.array))
+
+
+@register(lax.add_p)
+def add_p_qq(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.add(x.array, y.array))
 
 
@@ -90,7 +118,7 @@ def _add_p_qq(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.after_all_p)
-def _after_all_p() -> MyArray:
+def after_all_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -98,7 +126,7 @@ def _after_all_p() -> MyArray:
 
 
 @register(lax.all_gather_p)
-def _all_gather_p() -> MyArray:
+def all_gather_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -106,7 +134,7 @@ def _all_gather_p() -> MyArray:
 
 
 @register(lax.all_to_all_p)
-def _all_to_all_p() -> MyArray:
+def all_to_all_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -114,23 +142,28 @@ def _all_to_all_p() -> MyArray:
 
 
 @register(lax.and_p)
-def _and_p(x1: MyArray, x2: MyArray, /) -> MyArray:
-    return MyArray(x1.array & x2.array)
+def and_p(x1: MyArray, x2: MyArray, /) -> MyArray:
+    return MyArray(lax.and_p.bind(x1.array, x2.array))
+
+
+@register(lax.and_p)
+def and_p(x1: MyArray, x2: ArrayLike, /) -> MyArray:
+    return MyArray(lax.and_p.bind(x1.array, x2))
 
 
 # ==============================================================================
 
 
 @register(lax.approx_top_k_p)
-def _approx_top_k_p() -> MyArray:
-    raise NotImplementedError
+def approx_top_k_p(x: MyArray, **kw: Any) -> list[MyArray]:
+    return [MyArray(t) for t in lax.approx_top_k_p.bind(x.array, **kw)]
 
 
 # ==============================================================================
 
 
 @register(lax.argmax_p)
-def _argmax_p(operand: MyArray, *, axes: Any, index_dtype: Any) -> MyArray:
+def argmax_p(operand: MyArray, *, axes: Any, index_dtype: Any) -> MyArray:
     return replace(operand, array=lax.argmax(operand.array, axes[0], index_dtype))
 
 
@@ -138,7 +171,7 @@ def _argmax_p(operand: MyArray, *, axes: Any, index_dtype: Any) -> MyArray:
 
 
 @register(lax.argmin_p)
-def _argmin_p(operand: MyArray, *, axes: Any, index_dtype: Any) -> MyArray:
+def argmin_p(operand: MyArray, *, axes: Any, index_dtype: Any) -> MyArray:
     return replace(operand, array=lax.argmin(operand.array, axes[0], index_dtype))
 
 
@@ -146,7 +179,7 @@ def _argmin_p(operand: MyArray, *, axes: Any, index_dtype: Any) -> MyArray:
 
 
 @register(lax.asin_p)
-def _asin_p(x: MyArray) -> MyArray:
+def asin_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.asin(x.array))
 
 
@@ -154,7 +187,7 @@ def _asin_p(x: MyArray) -> MyArray:
 
 
 @register(lax.asinh_p)
-def _asinh_p(x: MyArray) -> MyArray:
+def asinh_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.asinh(x.array))
 
 
@@ -162,15 +195,20 @@ def _asinh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.atan2_p)
-def _atan2_p(x: MyArray, y: MyArray) -> MyArray:
+def atan2_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.atan2(x.array, y.array))
+
+
+@register(lax.atan2_p)
+def atan2_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.atan2(x, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.atan_p)
-def _atan_p(x: MyArray) -> MyArray:
+def atan_p(x: MyArray) -> MyArray:
     return MyArray(lax.atan(x.array))
 
 
@@ -178,7 +216,7 @@ def _atan_p(x: MyArray) -> MyArray:
 
 
 @register(lax.atanh_p)
-def _atanh_p(x: MyArray) -> MyArray:
+def atanh_p(x: MyArray) -> MyArray:
     return MyArray(lax.atanh(x.array))
 
 
@@ -186,7 +224,7 @@ def _atanh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.axis_index_p)
-def _axis_index_p() -> MyArray:
+def axis_index_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -194,39 +232,39 @@ def _axis_index_p() -> MyArray:
 
 
 @register(lax.bessel_i0e_p)
-def _bessel_i0e_p() -> MyArray:
-    raise NotImplementedError
+def bessel_i0e_p(x: MyArray, /) -> MyArray:
+    return replace(x, array=lax.bessel_i0e(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.bessel_i1e_p)
-def _bessel_i1e_p() -> MyArray:
-    raise NotImplementedError
+def bessel_i1e_p(x: MyArray, /) -> MyArray:
+    return replace(x, array=lax.bessel_i1e(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.bitcast_convert_type_p)
-def _bitcast_convert_type_p() -> MyArray:
-    raise NotImplementedError
+def bitcast_convert_type_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.bitcast_convert_type_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.broadcast_in_dim_p)
-def _broadcast_in_dim_p(operand: MyArray, **kwargs: Any) -> MyArray:
-    return replace(operand, array=lax.broadcast_in_dim(operand.array, **kwargs))
+def broadcast_in_dim_p(operand: MyArray, **kw: Any) -> MyArray:
+    return replace(operand, array=lax.broadcast_in_dim_p.bind(operand.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.cbrt_p)
-def _cbrt_p(x: MyArray) -> MyArray:
+def cbrt_p(x: MyArray) -> MyArray:
     return MyArray(lax.cbrt(x.array))
 
 
@@ -234,7 +272,7 @@ def _cbrt_p(x: MyArray) -> MyArray:
 
 
 @register(lax.ceil_p)
-def _ceil_p(x: MyArray) -> MyArray:
+def ceil_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.ceil(x.array))
 
 
@@ -242,23 +280,29 @@ def _ceil_p(x: MyArray) -> MyArray:
 
 
 @register(lax.clamp_p)
-def _clamp_p(min: MyArray, x: MyArray, max: MyArray) -> MyArray:
-    return replace(x, array=lax.clamp(min.array, x.array, max.array))
+def clamp_p(min: ArrayLike, x: MyArray, max: ArrayLike) -> MyArray:
+    return replace(x, array=lax.clamp_p.bind(min, x.array, max))
+
+
+@register(lax.clamp_p)
+def clamp_p(min: MyArray, x: MyArray, max: MyArray) -> MyArray:
+    return replace(x, array=lax.clamp_p.bind(min.array, x.array, max.array))
 
 
 # ==============================================================================
 
 
 @register(lax.clz_p)
-def _clz_p() -> MyArray:
-    raise NotImplementedError
+def clz_p(x: MyArray, /) -> MyArray:
+    """Count leading zeros."""
+    return replace(x, array=lax.clz_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.complex_p)
-def _complex_p(x: MyArray, y: MyArray) -> MyArray:
+def complex_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.complex(x.array, y.array))
 
 
@@ -266,26 +310,38 @@ def _complex_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.concatenate_p)
-def _concatenate_p(
+def concatenate_p(
     operand0: MyArray,
     *operands: MyArray,
-    **kwargs: Any,
+    **kw: Any,
 ) -> MyArray:
     return MyArray(
-        lax.concatenate([operand0.array] + [op.array for op in operands], **kwargs)
+        lax.concatenate([operand0.array] + [op.array for op in operands], **kw)
     )
 
 
 @register(lax.concatenate_p)
-def _concatenate_p(operand0: ArrayLike, operand1: MyArray, /, **kwargs: Any) -> MyArray:
-    return MyArray(lax.concatenate_p.bind(operand0, operand1.array, **kwargs))
+def concatenate_p(operand0: ArrayLike, operand1: MyArray, /, **kw: Any) -> MyArray:
+    return MyArray(lax.concatenate_p.bind(operand0, operand1.array, **kw))
+
+
+@register(lax.concatenate_p)
+def concatenate_p(op0: MyArray, op1: ArrayLike, /, **kw: Any) -> MyArray:
+    return MyArray(lax.concatenate_p.bind(op0.array, op1, **kw))
+
+
+@register(lax.concatenate_p)
+def concatenate_p(
+    op0: ArrayLike, op1: MyArray, op2: ArrayLike, /, **kw: Any
+) -> MyArray:
+    return MyArray(lax.concatenate_p.bind(op0, op1.array, op2, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.cond_p)  # TODO: implement
-def _cond_p(index, consts) -> MyArray:
+def cond_p(index, consts) -> MyArray:
     raise NotImplementedError
 
 
@@ -293,27 +349,31 @@ def _cond_p(index, consts) -> MyArray:
 
 
 @register(lax.conj_p)
-def _conj_p(x: MyArray, *, input_dtype: Any) -> MyArray:
-    del input_dtype  # TODO: use this?
-    return replace(x, array=lax.conj(x.array))
+def conj_p(x: MyArray, **kw: Any) -> MyArray:
+    return replace(x, array=lax.conj_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.conv_general_dilated_p)
-def _conv_general_dilated_p() -> MyArray:
-    raise NotImplementedError
+def conv_general_dilated_p(arg0: MyArray, arg1: MyArray, **kw: Any) -> MyArray:
+    return MyArray(lax.conv_general_dilated_p.bind(arg0.array, arg1.array, **kw))
+
+
+@register(lax.conv_general_dilated_p)
+def conv_general_dilated_p(arg0: MyArray, arg1: ArrayLike, **kw: Any) -> MyArray:
+    return MyArray(lax.conv_general_dilated_p.bind(arg0.array, arg1, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.convert_element_type_p)
-def _convert_element_type_p(operand: MyArray, **kwargs: Any) -> MyArray:
+def convert_element_type_p(operand: MyArray, **kw: Any) -> MyArray:
     return replace(
         operand,
-        array=lax.convert_element_type_p.bind(operand.array, **kwargs),
+        array=lax.convert_element_type_p.bind(operand.array, **kw),
     )
 
 
@@ -321,7 +381,7 @@ def _convert_element_type_p(operand: MyArray, **kwargs: Any) -> MyArray:
 
 
 @register(lax.copy_p)
-def _copy_p(x: MyArray) -> MyArray:
+def copy_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.copy_p.bind(x.array))
 
 
@@ -329,7 +389,7 @@ def _copy_p(x: MyArray) -> MyArray:
 
 
 @register(lax.cos_p)
-def _cos_p(x: MyArray) -> MyArray:
+def cos_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.cos(x.array))
 
 
@@ -337,7 +397,7 @@ def _cos_p(x: MyArray) -> MyArray:
 
 
 @register(lax.cosh_p)
-def _cosh_p(x: MyArray) -> MyArray:
+def cosh_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.cosh(x.array))
 
 
@@ -345,7 +405,7 @@ def _cosh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.create_token_p)
-def _create_token_p() -> MyArray:
+def create_token_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -353,7 +413,7 @@ def _create_token_p() -> MyArray:
 
 
 @register(lax.cumlogsumexp_p)
-def _cumlogsumexp_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
+def cumlogsumexp_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
     # TODO: double check units make sense here.
     return replace(
         operand,
@@ -365,7 +425,7 @@ def _cumlogsumexp_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
 
 
 @register(lax.cummax_p)
-def _cummax_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
+def cummax_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
     return replace(operand, array=lax.cummax(operand.array, axis=axis, reverse=reverse))
 
 
@@ -373,7 +433,7 @@ def _cummax_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
 
 
 @register(lax.cummin_p)
-def _cummin_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
+def cummin_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
     return replace(operand, array=lax.cummin(operand.array, axis=axis, reverse=reverse))
 
 
@@ -381,7 +441,7 @@ def _cummin_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
 
 
 @register(lax.cumprod_p)
-def _cumprod_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
+def cumprod_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
     return replace(
         operand,
         array=lax.cumprod(operand.array, axis=axis, reverse=reverse),
@@ -392,7 +452,7 @@ def _cumprod_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
 
 
 @register(lax.cumsum_p)
-def _cumsum_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
+def cumsum_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
     return replace(operand, array=lax.cumsum(operand.array, axis=axis, reverse=reverse))
 
 
@@ -400,15 +460,15 @@ def _cumsum_p(operand: MyArray, *, axis: Any, reverse: Any) -> MyArray:
 
 
 @register(lax.device_put_p)
-def _device_put_p(x: MyArray, **kwargs: Any) -> MyArray:
-    return replace(x, array=jax.device_put(x.array, **kwargs))
+def device_put_p(x: MyArray, **kw: Any) -> MyArray:
+    return replace(x, array=jax.device_put(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.digamma_p)
-def _digamma_p(x: MyArray) -> MyArray:
+def digamma_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.digamma(x.array))
 
 
@@ -416,12 +476,12 @@ def _digamma_p(x: MyArray) -> MyArray:
 
 
 @register(lax.div_p)
-def _div_p(x: MyArray, y: MyArray) -> MyArray:
+def div_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.div(x.array, y.array))
 
 
 @register(lax.div_p)
-def _div_p(x: MyArray, y: ArrayLike) -> MyArray:
+def div_p(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.div(x.array, y))
 
 
@@ -429,42 +489,85 @@ def _div_p(x: MyArray, y: ArrayLike) -> MyArray:
 
 
 @register(lax.dot_general_p)  # TODO: implement
-def _dot_general_p(lhs: MyArray, rhs: MyArray, **kwargs: Any) -> MyArray:
-    return MyArray(lax.dot_general_p.bind(lhs.array, rhs.array, **kwargs))
+def dot_general_p(lhs: MyArray, rhs: MyArray, **kw: Any) -> MyArray:
+    return MyArray(lax.dot_general_p.bind(lhs.array, rhs.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.dynamic_slice_p)
-def _dynamic_slice_p(
+def dynamic_slice_p(
     operand: MyArray,
     start_indices: ArrayLike,
     dynamic_sizes: ArrayLike,
-    *,
-    slice_sizes: Any,
+    **kw: Any,
 ) -> MyArray:
-    raise NotImplementedError  # TODO: implement
+    return MyArray(
+        lax.dynamic_slice_p.bind(operand.array, start_indices, dynamic_sizes, **kw)
+    )
+
+
+@register(lax.dynamic_slice_p)
+def dynamic_slice_p(operand: MyArray, **kw: Any) -> MyArray:
+    return MyArray(lax.dynamic_slice_p.bind(operand.array, **kw))
+
+
+@register(lax.dynamic_slice_p)
+def dynamic_slice_p(operand: MyArray, index: ArrayLike, **kw: Any) -> MyArray:
+    return MyArray(lax.dynamic_slice_p.bind(operand.array, index, **kw))
+
+
+@register(lax.dynamic_slice_p)
+def dynamic_slice_p(operand: MyArray, index: MyArray, **kw: Any) -> MyArray:
+    return MyArray(lax.dynamic_slice_p.bind(operand.array, index.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.dynamic_update_slice_p)
-def _dynamic_update_slice_p() -> MyArray:
-    raise NotImplementedError
+def dynamic_update_slice_p(
+    arg0: MyArray, arg1: MyArray, arg2: ArrayLike, arg3: ArrayLike, **kw: Any
+) -> MyArray:
+    return MyArray(
+        lax.dynamic_update_slice_p.bind(arg0.array, arg1.array, arg2, arg3, **kw)
+    )
+
+
+@register(lax.dynamic_update_slice_p)
+def dynamic_update_slice_p(
+    arg0: ArrayLike, arg1: MyArray, arg2: ArrayLike, arg3: ArrayLike, **kw: Any
+) -> MyArray:
+    return MyArray(lax.dynamic_update_slice_p.bind(arg0, arg1.array, arg2, arg3, **kw))
+
+
+@register(lax.dynamic_update_slice_p)
+def dynamic_update_slice_p(
+    arg0: ArrayLike, arg1: MyArray, arg2: ArrayLike, **kw: Any
+) -> MyArray:
+    return MyArray(lax.dynamic_update_slice_p.bind(arg0, arg1.array, arg2, **kw))
+
+
+@register(lax.dynamic_update_slice_p)
+def dynamic_update_slice_p(
+    arg0: MyArray, arg1: MyArray, arg2: MyArray, **kw: Any
+) -> MyArray:
+    return MyArray(
+        lax.dynamic_update_slice_p.bind(arg0.array, arg1.array, arg2.array, **kw)
+    )
 
 
 # ==============================================================================
 
 
 @register(lax.eq_p)
-def _eq_p(x: MyArray, y: MyArray) -> MyArray:
+def eq_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.eq(x.array, y.array))
 
 
 @register(lax.eq_p)
-def _eq_p(x: MyArray, y: ArrayLike) -> MyArray:
+def eq_p(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.eq(x.array, y))
 
 
@@ -472,7 +575,7 @@ def _eq_p(x: MyArray, y: ArrayLike) -> MyArray:
 
 
 @register(lax.eq_to_p)
-def _eq_to_p() -> MyArray:
+def eq_to_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -480,7 +583,7 @@ def _eq_to_p() -> MyArray:
 
 
 @register(lax.erf_inv_p)
-def _erf_inv_p(x: MyArray) -> MyArray:
+def erf_inv_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.erf_inv(x.array))
 
 
@@ -488,7 +591,7 @@ def _erf_inv_p(x: MyArray) -> MyArray:
 
 
 @register(lax.erf_p)
-def _erf_p(x: MyArray) -> MyArray:
+def erf_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.erf(x.array))
 
 
@@ -496,7 +599,7 @@ def _erf_p(x: MyArray) -> MyArray:
 
 
 @register(lax.erfc_p)
-def _erfc_p(x: MyArray) -> MyArray:
+def erfc_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.erfc(x.array))
 
 
@@ -504,7 +607,7 @@ def _erfc_p(x: MyArray) -> MyArray:
 
 
 @register(lax.exp2_p)
-def _exp2_p(x: MyArray) -> MyArray:
+def exp2_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.exp2(x.array))
 
 
@@ -512,7 +615,7 @@ def _exp2_p(x: MyArray) -> MyArray:
 
 
 @register(lax.exp_p)
-def _exp_p(x: MyArray) -> MyArray:
+def exp_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.exp(x.array))
 
 
@@ -520,7 +623,7 @@ def _exp_p(x: MyArray) -> MyArray:
 
 
 @register(lax.expm1_p)
-def _expm1_p(x: MyArray) -> MyArray:
+def expm1_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.expm1(x.array))
 
 
@@ -528,7 +631,7 @@ def _expm1_p(x: MyArray) -> MyArray:
 
 
 @register(lax.fft_p)
-def _fft_p(x: MyArray, *, fft_type: Any, fft_lengths: Any) -> MyArray:
+def fft_p(x: MyArray, *, fft_type: Any, fft_lengths: Any) -> MyArray:
     return replace(x, array=lax.fft(x.array, fft_type, fft_lengths))
 
 
@@ -536,7 +639,7 @@ def _fft_p(x: MyArray, *, fft_type: Any, fft_lengths: Any) -> MyArray:
 
 
 @register(lax.floor_p)
-def _floor_p(x: MyArray) -> MyArray:
+def floor_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.floor(x.array))
 
 
@@ -544,7 +647,7 @@ def _floor_p(x: MyArray) -> MyArray:
 
 
 @register(lax.gather_p)
-def _gather_p(
+def gather_p(
     operand: MyArray,
     start_indices: MyArray,
     *,
@@ -570,7 +673,7 @@ def _gather_p(
 
 
 @register(lax.gather_p)
-def _gather_p(
+def gather_p(
     operand: MyArray,
     start_indices: ArrayLike,
     *,
@@ -599,23 +702,38 @@ def _gather_p(
 
 
 @register(lax.ge_p)
-def _ge_p(x: MyArray, y: MyArray) -> MyArray:
+def ge_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.ge(x.array, y.array))
+
+
+@register(lax.ge_p)
+def ge_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.ge(x.array, y))
+
+
+@register(lax.ge_p)
+def ge_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.ge(x, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.gt_p)
-def _gt_p(x: MyArray, y: MyArray) -> MyArray:
+def gt_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.gt(x.array, y.array))
+
+
+@register(lax.gt_p)
+def gt_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.gt(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.igamma_grad_a_p)
-def _igamma_grad_a_p() -> MyArray:
+def igamma_grad_a_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -623,23 +741,23 @@ def _igamma_grad_a_p() -> MyArray:
 
 
 @register(lax.igamma_p)
-def _igamma_p() -> MyArray:
-    raise NotImplementedError
+def igamma_p(a: int | float, x: MyArray) -> MyArray:
+    return replace(x, array=lax.igamma_p.bind(a, x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.igammac_p)
-def _igammac_p() -> MyArray:
-    raise NotImplementedError
+def igammac_p(a: int | float, x: MyArray) -> MyArray:
+    return replace(x, array=lax.igammac_p.bind(a, x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.imag_p)
-def _imag_p(x: MyArray) -> MyArray:
+def imag_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.imag(x.array))
 
 
@@ -647,7 +765,7 @@ def _imag_p(x: MyArray) -> MyArray:
 
 
 @register(lax.infeed_p)
-def _infeed_p() -> MyArray:
+def infeed_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -655,7 +773,7 @@ def _infeed_p() -> MyArray:
 
 
 @register(lax.integer_pow_p)
-def _integer_pow_p(x: MyArray, *, y: Any) -> MyArray:
+def integer_pow_p(x: MyArray, *, y: Any) -> MyArray:
     return replace(x, array=lax.integer_pow(x.array, y))
 
 
@@ -663,7 +781,7 @@ def _integer_pow_p(x: MyArray, *, y: Any) -> MyArray:
 
 
 # @register(lax.iota_p)
-# def _iota_p(dtype: MyArray) -> MyArray:
+# def iota_p(dtype: MyArray) -> MyArray:
 #     raise NotImplementedError
 
 
@@ -671,7 +789,7 @@ def _integer_pow_p(x: MyArray, *, y: Any) -> MyArray:
 
 
 @register(lax.is_finite_p)
-def _is_finite_p(x: MyArray) -> MyArray:
+def is_finite_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.is_finite(x.array))
 
 
@@ -679,15 +797,20 @@ def _is_finite_p(x: MyArray) -> MyArray:
 
 
 @register(lax.le_p)
-def _le_p(x: MyArray, y: MyArray) -> MyArray:
+def le_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.le(x.array, y.array))
+
+
+@register(lax.le_p)
+def le_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.le(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.le_to_p)
-def _le_to_p() -> MyArray:
+def le_to_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -695,7 +818,7 @@ def _le_to_p() -> MyArray:
 
 
 @register(lax.lgamma_p)
-def _lgamma_p(x: MyArray) -> MyArray:
+def lgamma_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.lgamma(x.array))
 
 
@@ -703,7 +826,7 @@ def _lgamma_p(x: MyArray) -> MyArray:
 
 
 @register(lax.linear_solve_p)
-def _linear_solve_p() -> MyArray:
+def linear_solve_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -711,7 +834,7 @@ def _linear_solve_p() -> MyArray:
 
 
 @register(lax.log1p_p)
-def _log1p_p(x: MyArray) -> MyArray:
+def log1p_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.log1p(x.array))
 
 
@@ -719,7 +842,7 @@ def _log1p_p(x: MyArray) -> MyArray:
 
 
 @register(lax.log_p)
-def _log_p(x: MyArray) -> MyArray:
+def log_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.log(x.array))
 
 
@@ -727,7 +850,7 @@ def _log_p(x: MyArray) -> MyArray:
 
 
 @register(lax.logistic_p)
-def _logistic_p(x: MyArray) -> MyArray:
+def logistic_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.logistic(x.array))
 
 
@@ -735,20 +858,25 @@ def _logistic_p(x: MyArray) -> MyArray:
 
 
 @register(lax.lt_p)
-def _lt_p(x: MyArray, y: MyArray) -> MyArray:
+def lt_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.lt(x.array, y.array))
 
 
 @register(lax.lt_p)
-def _lt_p(x: MyArray, y: ArrayLike) -> MyArray:
+def lt_p(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.lt(x.array, y))
+
+
+@register(lax.lt_p)
+def lt_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.lt(x, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.lt_to_p)
-def _lt_to_p() -> MyArray:
+def lt_to_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -756,17 +884,17 @@ def _lt_to_p() -> MyArray:
 
 
 @register(lax.max_p)
-def _max_p(x: MyArray, y: MyArray) -> MyArray:
+def max_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.max(x.array, y.array))
 
 
 @register(lax.max_p)
-def _max_p_d1(x: ArrayLike, y: MyArray) -> MyArray:
+def max_p_d1(x: ArrayLike, y: MyArray) -> MyArray:
     return MyArray(lax.max(x, y.array))
 
 
 @register(lax.max_p)
-def _max_p_d2(x: MyArray, y: ArrayLike) -> MyArray:
+def max_p_d2(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.max(x.array, y))
 
 
@@ -774,8 +902,13 @@ def _max_p_d2(x: MyArray, y: ArrayLike) -> MyArray:
 
 
 @register(lax.min_p)
-def _min_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.min(x.array, y.array))
+def min_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.min_p.bind(x.array, y.array))
+
+
+@register(lax.min_p)
+def min_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.min_p.bind(x, y.array))
 
 
 # ==============================================================================
@@ -783,28 +916,43 @@ def _min_p(x: MyArray, y: MyArray) -> MyArray:
 
 
 @register(lax.mul_p)
-def _mul_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.mul(x.array, y.array))
+def mul_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.mul_p.bind(x, y.array))
+
+
+@register(lax.mul_p)
+def mul_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.mul_p.bind(x.array, y))
+
+
+@register(lax.mul_p)
+def mul_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.mul_p.bind(x.array, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.ne_p)
-def _ne_p(x: MyArray, y: ArrayLike) -> MyArray:
+def ne_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.ne(x.array, y.array))
+
+
+@register(lax.ne_p)
+def ne_p(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.ne(x.array, y))
 
 
 @register(lax.ne_p)
-def _ne_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.ne(x.array, y.array))
+def ne_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.ne(x, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.neg_p)
-def _neg_p(x: MyArray) -> MyArray:
+def neg_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.neg(x.array))
 
 
@@ -812,15 +960,15 @@ def _neg_p(x: MyArray) -> MyArray:
 
 
 @register(lax.nextafter_p)
-def _nextafter_p() -> MyArray:
-    raise NotImplementedError
+def nextafter_p(arg0: MyArray, arg1: MyArray) -> MyArray:
+    return MyArray(lax.nextafter_p.bind(arg0.array, arg1.array))
 
 
 # ==============================================================================
 
 
 @register(lax.not_p)
-def _not_p(x: MyArray) -> MyArray:
+def not_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.bitwise_not(x.array))
 
 
@@ -828,15 +976,20 @@ def _not_p(x: MyArray) -> MyArray:
 
 
 @register(lax.or_p)
-def _or_p(x: MyArray, y: MyArray) -> MyArray:
+def or_p(x: MyArray, y: MyArray) -> MyArray:
     return replace(x, array=lax.bitwise_or(x.array, y.array))
+
+
+@register(lax.or_p)
+def or_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return replace(x, array=lax.bitwise_or(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.outfeed_p)
-def _outfeed_p() -> MyArray:
+def outfeed_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -844,15 +997,15 @@ def _outfeed_p() -> MyArray:
 
 
 @register(lax.pad_p)
-def _pad_p() -> MyArray:
-    raise NotImplementedError
+def pad_p(x: MyArray, v: ArrayLike, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.pad_p.bind(x.array, v, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.pmax_p)
-def _pmax_p() -> MyArray:
+def pmax_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -860,7 +1013,7 @@ def _pmax_p() -> MyArray:
 
 
 @register(lax.pmin_p)
-def _pmin_p() -> MyArray:
+def pmin_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -868,31 +1021,41 @@ def _pmin_p() -> MyArray:
 
 
 @register(lax.polygamma_p)
-def _polygamma_p() -> MyArray:
-    raise NotImplementedError
+def polygamma_p(a: float | int, x: MyArray) -> MyArray:
+    return replace(x, array=lax.polygamma_p.bind(a, x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.population_count_p)
-def _population_count_p() -> MyArray:
-    raise NotImplementedError
+def population_count_p(x: MyArray) -> MyArray:
+    return replace(x, array=lax.population_count_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.pow_p)
-def _pow_p_qq(x: MyArray, y: MyArray) -> MyArray:
+def pow_p_qq(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(array=lax.pow(x.array, y.array))
+
+
+@register(lax.pow_p)
+def pow_p_qq(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(array=lax.pow(x, y.array))
+
+
+@register(lax.pow_p)
+def pow_p_qq(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(array=lax.pow(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.ppermute_p)
-def _ppermute_p() -> MyArray:
+def ppermute_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -900,7 +1063,7 @@ def _ppermute_p() -> MyArray:
 
 
 @register(lax.psum_p)
-def _psum_p() -> MyArray:
+def psum_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -908,15 +1071,15 @@ def _psum_p() -> MyArray:
 
 
 @register(lax.random_gamma_grad_p)
-def _random_gamma_grad_p() -> MyArray:
-    raise NotImplementedError
+def random_gamma_grad_p(a: float | int, x: MyArray) -> MyArray:
+    return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.real_p)
-def _real_p(x: MyArray) -> MyArray:
+def real_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.real(x.array))
 
 
@@ -924,7 +1087,7 @@ def _real_p(x: MyArray) -> MyArray:
 
 
 @register(lax.reduce_and_p)
-def _reduce_and_p(
+def reduce_and_p(
     operand: MyArray,
     *,
     axes: Sequence[int],
@@ -936,31 +1099,31 @@ def _reduce_and_p(
 
 
 @register(lax.reduce_max_p)
-def _reduce_max_p() -> MyArray:
-    raise NotImplementedError
+def reduce_max_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.reduce_max_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.reduce_min_p)
-def _reduce_min_p() -> MyArray:
-    raise NotImplementedError
+def reduce_min_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.reduce_min_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.reduce_or_p)
-def _reduce_or_p() -> MyArray:
-    raise NotImplementedError
+def reduce_or_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.reduce_or_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.reduce_p)
-def _reduce_p() -> MyArray:
+def reduce_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -968,7 +1131,7 @@ def _reduce_p() -> MyArray:
 
 
 @register(lax.reduce_precision_p)
-def _reduce_precision_p() -> MyArray:
+def reduce_precision_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -976,23 +1139,23 @@ def _reduce_precision_p() -> MyArray:
 
 
 @register(lax.reduce_prod_p)
-def _reduce_prod_p() -> MyArray:
-    raise NotImplementedError
+def reduce_prod_p(x: MyArray, /, **kw) -> MyArray:
+    return replace(x, array=lax.reduce_prod_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.reduce_sum_p)
-def _reduce_sum_p(operand: MyArray, *, axes: tuple[int, ...]) -> MyArray:
-    return MyArray(lax.reduce_sum_p.bind(operand.array, axes=axes))
+def reduce_sum_p(x: MyArray, *, axes: tuple[int, ...]) -> MyArray:
+    return replace(x, array=lax.reduce_sum_p.bind(x.array, axes=axes))
 
 
 # ==============================================================================
 
 
 @register(lax.reduce_window_max_p)
-def _reduce_window_max_p() -> MyArray:
+def reduce_window_max_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1000,7 +1163,7 @@ def _reduce_window_max_p() -> MyArray:
 
 
 @register(lax.reduce_window_min_p)
-def _reduce_window_min_p() -> MyArray:
+def reduce_window_min_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1008,7 +1171,7 @@ def _reduce_window_min_p() -> MyArray:
 
 
 @register(lax.reduce_window_p)
-def _reduce_window_p() -> MyArray:
+def reduce_window_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1016,7 +1179,7 @@ def _reduce_window_p() -> MyArray:
 
 
 @register(lax.reduce_window_sum_p)
-def _reduce_window_sum_p() -> MyArray:
+def reduce_window_sum_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1024,7 +1187,7 @@ def _reduce_window_sum_p() -> MyArray:
 
 
 @register(lax.reduce_xor_p)
-def _reduce_xor_p() -> MyArray:
+def reduce_xor_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1032,25 +1195,29 @@ def _reduce_xor_p() -> MyArray:
 
 
 @register(lax.regularized_incomplete_beta_p)
-def _regularized_incomplete_beta_p() -> MyArray:
-    raise NotImplementedError
+def regularized_incomplete_beta_p(
+    a: float, x: MyArray, y: MyArray, /, **kw: Any
+) -> MyArray:
+    return replace(
+        x, array=lax.regularized_incomplete_beta_p.bind(a, x.array, y.array, **kw)
+    )
 
 
 # ==============================================================================
 
 
 @register(lax.rem_p)
-def _rem_p(x: MyArray, y: MyArray) -> MyArray:
+def rem_p(x: MyArray, y: MyArray) -> MyArray:
     return MyArray(lax.rem(x.array, y.array))
 
 
 @register(lax.rem_p)
-def _rem_p_d1(x: ArrayLike, y: MyArray) -> MyArray:
+def rem_p_d1(x: ArrayLike, y: MyArray) -> MyArray:
     return MyArray(lax.rem(x, y.array))
 
 
 @register(lax.rem_p)
-def _rem_p_d1(x: MyArray, y: ArrayLike) -> MyArray:
+def rem_p_d1(x: MyArray, y: ArrayLike) -> MyArray:
     return MyArray(lax.rem(x.array, y))
 
 
@@ -1058,15 +1225,15 @@ def _rem_p_d1(x: MyArray, y: ArrayLike) -> MyArray:
 
 
 @register(lax.reshape_p)
-def _reshape_p(operand: MyArray, *, new_sizes: Any, dimensions: Any) -> MyArray:
-    return replace(operand, array=lax.reshape(operand.array, new_sizes, dimensions))
+def reshape_p(operand: MyArray, **kw: Any) -> MyArray:
+    return replace(operand, array=lax.reshape_p.bind(operand.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.rev_p)
-def _rev_p(operand: MyArray, *, dimensions: Any) -> MyArray:
+def rev_p(operand: MyArray, *, dimensions: Any) -> MyArray:
     return replace(operand, array=lax.rev(operand.array, dimensions))
 
 
@@ -1074,7 +1241,7 @@ def _rev_p(operand: MyArray, *, dimensions: Any) -> MyArray:
 
 
 @register(lax.rng_bit_generator_p)
-def _rng_bit_generator_p() -> MyArray:
+def rng_bit_generator_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1082,7 +1249,7 @@ def _rng_bit_generator_p() -> MyArray:
 
 
 @register(lax.rng_uniform_p)
-def _rng_uniform_p() -> MyArray:
+def rng_uniform_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1090,7 +1257,7 @@ def _rng_uniform_p() -> MyArray:
 
 
 @register(lax.round_p)
-def _round_p(x: MyArray, *, rounding_method: Any) -> MyArray:
+def round_p(x: MyArray, *, rounding_method: Any) -> MyArray:
     return replace(x, array=lax.round(x.array, rounding_method))
 
 
@@ -1098,23 +1265,44 @@ def _round_p(x: MyArray, *, rounding_method: Any) -> MyArray:
 
 
 @register(lax.rsqrt_p)
-def _rsqrt_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.rsqrt(x.array) ** (-1 / 2))
+def rsqrt_p(x: MyArray, /) -> MyArray:
+    return replace(x, array=lax.rsqrt_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.scan_p)
-def _scan_p() -> MyArray:
-    raise NotImplementedError
+def scan_p(arg0: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.scan_p.bind(arg0.array, **kw)]
+
+
+@register(lax.scan_p)
+def scan_p(
+    a0: ArrayLike, a1: int, a2: MyArray, a3: bool, /, **kw: Any
+) -> list[MyArray]:
+    return [MyArray(x) for x in lax.scan_p.bind(a0, a1, a2.array, a3, **kw)]
+
+
+@register(lax.scan_p)
+def scan_p(
+    a0: ArrayLike, a1: ArrayLike, a2: int, a3: MyArray, a4: bool, /, **kw: Any
+) -> list[MyArray]:
+    return [MyArray(x) for x in lax.scan_p.bind(a0, a1, a2, a3.array, a4, **kw)]
+
+
+@register(lax.scan_p)
+def scan_p(
+    a0: MyArray, a1: MyArray, a2: ArrayLike, a3: ArrayLike, /, **kw: Any
+) -> list[MyArray]:
+    return [MyArray(x) for x in lax.scan_p.bind(a0.array, a1.array, a2, a3, **kw)]
 
 
 # ==============================================================================
 
 
 @register(lax.scatter_add_p)
-def _scatter_add_p(
+def scatter_add_p(
     operand: MyArray,
     scatter_indices: MyArray,
     updates: MyArray,
@@ -1142,7 +1330,7 @@ def _scatter_add_p(
 
 
 @register(lax.scatter_add_p)
-def _scatter_add_p(
+def scatter_add_p(
     operand: MyArray,
     scatter_indices: ArrayLike,
     updates: ArrayLike,
@@ -1170,7 +1358,7 @@ def _scatter_add_p(
 
 
 @register(lax.scatter_add_p)
-def _scatter_add_p(
+def scatter_add_p(
     operand: ArrayLike,
     scatter_indices: MyArray,
     updates: ArrayLike,
@@ -1197,39 +1385,11 @@ def _scatter_add_p(
     )
 
 
-# @register(lax.scatter_add_p)
-# def _scatter_add_p(
-#     operand: Zero,
-#     scatter_indices: MyArray,
-#     updates: MyArray,
-#     *,
-#     update_jaxpr: Any,
-#     update_consts: Any,
-#     dimension_numbers: Any,
-#     indices_are_sorted: bool,
-#     unique_indices: bool,
-#     mode: str | GatherScatterMode | None = None,
-# ) -> MyArray:
-#     return MyArray(
-#         lax.scatter_add_p.bind(
-#             jax_xp.zeros_like(operand),
-#             scatter_indices.array,
-#             updates.array,
-#             update_jaxpr=update_jaxpr,
-#             update_consts=update_consts,
-#             dimension_numbers=dimension_numbers,
-#             indices_are_sorted=indices_are_sorted,
-#             unique_indices=unique_indices,
-#             mode=mode,
-#         ),
-#     )
-
-
 # ==============================================================================
 
 
 @register(lax.scatter_max_p)
-def _scatter_max_p() -> MyArray:
+def scatter_max_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1237,7 +1397,7 @@ def _scatter_max_p() -> MyArray:
 
 
 @register(lax.scatter_min_p)
-def _scatter_min_p() -> MyArray:
+def scatter_min_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1245,7 +1405,7 @@ def _scatter_min_p() -> MyArray:
 
 
 @register(lax.scatter_mul_p)
-def _scatter_mul_p() -> MyArray:
+def scatter_mul_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1253,15 +1413,40 @@ def _scatter_mul_p() -> MyArray:
 
 
 @register(lax.scatter_p)
-def _scatter_p() -> MyArray:
-    raise NotImplementedError
+def scatter_p(arg0: ArrayLike, arg1: MyArray, arg2: ArrayLike, /, **kw: Any) -> MyArray:
+    return MyArray(lax.scatter_p.bind(arg0, arg1.array, arg2, **kw))
+
+
+@register(lax.scatter_p)
+def scatter_p(arg0: ArrayLike, arg1: ArrayLike, arg2: MyArray, /, **kw: Any) -> MyArray:
+    return MyArray(lax.scatter_p.bind(arg0, arg1, arg2.array, **kw))
+
+
+@register(lax.scatter_p)
+def scatter_p(arg0: MyArray, arg1: ArrayLike, arg2: ArrayLike, /, **kw: Any) -> MyArray:
+    return MyArray(lax.scatter_p.bind(arg0.array, arg1, arg2, **kw))
+
+
+@register(lax.scatter_p)
+def scatter_p(arg0: MyArray, arg1: MyArray, arg2: ArrayLike, /, **kw: Any) -> MyArray:
+    return MyArray(lax.scatter_p.bind(arg0.array, arg1.array, arg2, **kw))
+
+
+@register(lax.scatter_p)
+def scatter_p(arg0: ArrayLike, arg1: MyArray, arg2: MyArray, /, **kw: Any) -> MyArray:
+    return MyArray(lax.scatter_p.bind(arg0, arg1.array, arg2.array, **kw))
+
+
+@register(lax.scatter_p)
+def scatter_p(arg0: MyArray, arg1: ArrayLike, arg2: MyArray, /, **kw: Any) -> MyArray:
+    return MyArray(lax.scatter_p.bind(arg0.array, arg1, arg2.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.select_and_gather_add_p)
-def _select_and_gather_add_p() -> MyArray:
+def select_and_gather_add_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1269,7 +1454,7 @@ def _select_and_gather_add_p() -> MyArray:
 
 
 @register(lax.select_and_scatter_add_p)
-def _select_and_scatter_add_p() -> MyArray:
+def select_and_scatter_add_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1277,7 +1462,7 @@ def _select_and_scatter_add_p() -> MyArray:
 
 
 @register(lax.select_and_scatter_p)
-def _select_and_scatter_p() -> MyArray:
+def select_and_scatter_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1285,26 +1470,45 @@ def _select_and_scatter_p() -> MyArray:
 
 
 @register(lax.select_n_p)
-def _select_n_p(which: MyArray, *cases: MyArray) -> MyArray:
-    # Process the cases, replacing Zero and MyArray with a materialised array.
+def select_n_p(which: ArrayLike, *cases: MyArray) -> MyArray:
+    return MyArray(lax.select_n(which, *(case.array for case in cases)))
+
+
+@register(lax.select_n_p)
+def select_n_p(which: MyArray, *cases: MyArray) -> MyArray:
     return MyArray(lax.select_n(which.array, *(case.array for case in cases)))
 
 
 @register(lax.select_n_p)
-def _select_n_p(which: ArrayLike, case0: ArrayLike, case1: MyArray) -> MyArray:
+def select_n_p(which: ArrayLike, case0: ArrayLike, case1: MyArray) -> MyArray:
     return MyArray(lax.select_n(which, case0, case1.array))
 
 
 @register(lax.select_n_p)
-def _select_n_p(which: ArrayLike, case0: MyArray, case1: ArrayLike) -> MyArray:
+def select_n_p(which: ArrayLike, case0: MyArray, case1: ArrayLike) -> MyArray:
     return MyArray(lax.select_n(which, case0.array, case1))
+
+
+@register(lax.select_n_p)
+def select_n_p(which: MyArray, case0: MyArray, case1: ArrayLike) -> MyArray:
+    return MyArray(lax.select_n(which.array, case0.array, case1))
+
+
+@register(lax.select_n_p)
+def select_n_p(which: MyArray, case0: ArrayLike, case1: ArrayLike) -> MyArray:
+    return MyArray(lax.select_n(which.array, case0, case1))
+
+
+@register(lax.select_n_p)
+def select_n_p(which: MyArray, case0: ArrayLike, case1: MyArray) -> MyArray:
+    return MyArray(lax.select_n(which.array, case0, case1.array))
 
 
 # ==============================================================================
 
 
 @register(lax.sharding_constraint_p)
-def _sharding_constraint_p() -> MyArray:
+def sharding_constraint_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1312,31 +1516,41 @@ def _sharding_constraint_p() -> MyArray:
 
 
 @register(lax.shift_left_p)
-def _shift_left_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.shift_left(x.array, y.array))
+def shift_left_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.shift_left_p.bind(x.array, y.array))
+
+
+@register(lax.shift_left_p)
+def shift_left_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.shift_left_p.bind(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.shift_right_arithmetic_p)
-def _shift_right_arithmetic_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.shift_right_arithmetic(x.array, y.array))
+def shift_right_arithmetic_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.shift_right_arithmetic_p.bind(x.array, y.array))
+
+
+@register(lax.shift_right_arithmetic_p)
+def shift_right_arithmetic_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.shift_right_arithmetic_p.bind(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.shift_right_logical_p)
-def _shift_right_logical_p() -> MyArray:
-    raise NotImplementedError
+def shift_right_logical_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.shift_right_logical_p.bind(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.sign_p)
-def _sign_p(x: MyArray) -> MyArray:
+def sign_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.sign(x.array))
 
 
@@ -1344,7 +1558,7 @@ def _sign_p(x: MyArray) -> MyArray:
 
 
 @register(lax.sin_p)
-def _sin_p(x: MyArray) -> MyArray:
+def sin_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.sin(x.array))
 
 
@@ -1352,7 +1566,7 @@ def _sin_p(x: MyArray) -> MyArray:
 
 
 @register(lax.sinh_p)
-def _sinh_p(x: MyArray) -> MyArray:
+def sinh_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.sinh(x.array))
 
 
@@ -1360,7 +1574,7 @@ def _sinh_p(x: MyArray) -> MyArray:
 
 
 @register(lax.slice_p)
-def _slice_p(
+def slice_p(
     operand: MyArray,
     *,
     start_indices: Any,
@@ -1378,36 +1592,66 @@ def _slice_p(
     )
 
 
+@register(lax.split_p)
+def split_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.split_p.bind(x.array, **kw)]
+
+
 # ==============================================================================
 
 
 @register(lax.sort_p)
-def _sort_p() -> MyArray:
-    raise NotImplementedError
+def sort_p(arg: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.sort_p.bind(arg.array, **kw)]
+
+
+@register(lax.sort_p)
+def sort_p(arg0: MyArray, arg1: ArrayLike, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1, **kw)]
+
+
+@register(lax.sort_p)
+def sort_p(
+    arg0: MyArray, arg1: MyArray, arg2: ArrayLike, /, **kw: Any
+) -> list[MyArray]:
+    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1.array, arg2, **kw)]
+
+
+@register(lax.sort_p)
+def sort_p(arg0: MyArray, arg1: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1.array, **kw)]
+
+
+# ==============================================================================
+
+
+@register(lax.square_p)
+def square(x: MyArray) -> MyArray:
+    return replace(x, array=lax.square_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.sqrt_p)
-def _sqrt_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.sqrt(x.array))
+def sqrt_p(x: MyArray) -> MyArray:
+    return replace(x, array=lax.sqrt_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.squeeze_p)
-def _squeeze_p(x: MyArray, *, dimensions: Any) -> MyArray:
-    return replace(x, array=lax.squeeze(x.array, dimensions))
+def squeeze_p(x: MyArray, **kw: Any) -> MyArray:
+    return replace(x, array=lax.squeeze_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.stop_gradient_p)
-def _stop_gradient_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.stop_gradient(x.array))
+def stop_gradient_p(x: MyArray) -> MyArray:
+    return replace(x, array=lax.stop_gradient_p.bind(x.array))
 
 
 # ==============================================================================
@@ -1415,52 +1659,57 @@ def _stop_gradient_p(x: MyArray) -> MyArray:
 
 
 @register(lax.sub_p)
-def _sub_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.sub(x.array, y.array))
+def sub_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.sub_p.bind(x.array, y.array))
 
 
 @register(lax.sub_p)
-def _sub_p(x: MyArray, y: ArrayLike) -> MyArray:
-    return MyArray(lax.sub(x.array, y))
+def sub_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.sub_p.bind(x.array, y))
+
+
+@register(lax.sub_p)
+def sub_p(x: ArrayLike, y: MyArray) -> MyArray:
+    return MyArray(lax.sub_p.bind(x, y.array))
 
 
 # ==============================================================================
 
 
 @register(lax.tan_p)
-def _tan_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.tan(x.array))
+def tan_p(x: MyArray) -> MyArray:
+    return replace(x, array=lax.tan_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.tanh_p)
-def _tanh_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.tanh(x.array))
+def tanh_p(x: MyArray) -> MyArray:
+    return replace(x, array=lax.tanh_p.bind(x.array))
 
 
 # ==============================================================================
 
 
 @register(lax.top_k_p)
-def _top_k_p(operand: MyArray, k: int) -> MyArray:
-    raise replace(operand, array=lax.top_k(operand.array, k))
+def top_k_p(operand: MyArray, k: int = 0) -> MyArray:
+    return [MyArray(x) for x in lax.top_k(operand.array, k)]
 
 
 # ==============================================================================
 
 
 @register(lax.transpose_p)
-def _transpose_p(operand: MyArray, *, permutation: Any) -> MyArray:
-    return replace(operand, array=lax.transpose(operand.array, permutation))
+def transpose_p(operand: MyArray, /, **kw: Any) -> MyArray:
+    return replace(operand, array=lax.transpose_p.bind(operand.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.while_p)
-def _while_p() -> MyArray:
+def while_p() -> MyArray:
     raise NotImplementedError
 
 
@@ -1468,21 +1717,109 @@ def _while_p() -> MyArray:
 
 
 @register(lax.xor_p)
-def _xor_p(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.bitwise_xor(x.array, y.array))
+def xor_p(x: MyArray, y: MyArray) -> MyArray:
+    return MyArray(lax.xor_p.bind(x.array, y.array))
 
 
 @register(lax.xor_p)
-def _xor_p(x: MyArray, y: ArrayLike) -> MyArray:
-    return MyArray(lax.bitwise_xor(x.array, y))
+def xor_p(x: MyArray, y: ArrayLike) -> MyArray:
+    return MyArray(lax.xor_p.bind(x.array, y))
 
 
 # ==============================================================================
 
 
 @register(lax.zeta_p)
-def _zeta_p() -> MyArray:
-    raise NotImplementedError
+def zeta_p(x: MyArray, q: ArrayLike) -> MyArray:
+    return replace(x, array=lax.zeta_p.bind(x.array, q))
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.cholesky_p)
+def cholesky_p(x: MyArray, **kw: Any) -> MyArray:
+    return replace(x, array=lax.linalg.cholesky_p.bind(x.array, **kw))
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.eig_p)
+def eig_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.linalg.eig_p.bind(x.array, **kw)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.eigh_p)
+def eigh_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.linalg.eigh_p.bind(x.array, **kw)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.hessenberg_p)
+def hessenberg_p(x: MyArray, /) -> MyArray:
+    return [MyArray(x) for x in lax.linalg.hessenberg_p.bind(x.array)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.lu_p)
+def lu(x: MyArray, /) -> MyArray:
+    return [MyArray(x) for x in lax.linalg.lu_p.bind(x.array)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.householder_product_p)
+def householder_product_p(a: MyArray, taus: MyArray, /) -> MyArray:
+    return MyArray(lax.linalg.householder_product_p.bind(a.array, taus.array))
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.triangular_solve_p)
+def triangular_solve_p(arg0: MyArray, arg1: MyArray, /, **kw: Any) -> MyArray:
+    return MyArray(lax.linalg.triangular_solve_p.bind(arg0.array, arg1.array, **kw))
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.qr_p)
+def qr_p(arg: MyArray, /, **kw: Any) -> MyArray:
+    return [MyArray(x) for x in lax.linalg.qr_p.bind(arg.array, **kw)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.schur_p)
+def schur_p(arg: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.linalg.schur_p.bind(arg.array, **kw)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.svd_p)
+def svd_p(arg: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.linalg.svd_p.bind(arg.array, **kw)]
+
+
+# ==============================================================================
+
+
+@register(lax.linalg.tridiagonal_p)
+def tridiagonal_p(arg: MyArray, /, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.linalg.tridiagonal_p.bind(arg.array, **kw)]
 
 
 ###############################################################################
@@ -1567,9 +1904,6 @@ def ones_like(
 
 @dispatch
 def zeros_like(
-    x: MyArray,
-    /,
-    dtype: DType | None = None,
-    device: Device | None = None,
+    x: MyArray, /, dtype: DType | None = None, device: Device | None = None
 ) -> MyArray:
     return MyArray(jnp.zeros_like(x.array, dtype=dtype, device=device))
