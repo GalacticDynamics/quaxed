@@ -13,7 +13,7 @@ from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import Shape
 from jaxtyping import Array, ArrayLike, Bool
 from plum import dispatch
-from quax import ArrayValue, register
+from quax import ArrayValue, quaxify, register
 
 from quaxed._types import DType
 
@@ -73,6 +73,14 @@ class MyArray(ArrayValue):
     def __rmul__(self, other: Any) -> Self:
         """Multiplication operator."""
         return replace(self, array=other * self.array)
+
+    def __add__(self, other: Any) -> Self:
+        """Addition operator."""
+        return quaxify(jnp.add)(self, other)
+
+    def sum(self, **kw: Any) -> Self:
+        """Sum the array."""
+        return MyArray(self.array.sum(**kw))
 
 
 # ==============================================================================
