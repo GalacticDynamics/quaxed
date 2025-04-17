@@ -43,7 +43,7 @@ class MyArray(ArrayValue):
 
     def __getitem__(self, key: Any) -> Self:
         """Get item."""
-        return replace(self, array=self.array[key])
+        return MyArray(self.array[key])
 
     @property
     def size(self) -> int:
@@ -837,8 +837,28 @@ def lgamma_p(x: MyArray) -> MyArray:
 
 
 @register(lax.linear_solve_p)
-def linear_solve_p() -> MyArray:
-    raise NotImplementedError
+def linear_solve_p(
+    arg0: MyArray,
+    arg1: MyArray,
+    arg2: MyArray,
+    arg3: MyArray,
+    arg4: MyArray,
+    arg5: MyArray,
+    arg6: ArrayLike,
+    **kw: Any,
+) -> MyArray:
+    return MyArray(
+        lax.linear_solve_p.bind(
+            arg0.array,
+            arg1.array,
+            arg2.array,
+            arg3.array,
+            arg4.array,
+            arg5.array,
+            arg6,
+            **kw,
+        )
+    )
 
 
 # ==============================================================================

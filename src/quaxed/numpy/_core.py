@@ -499,14 +499,6 @@ r_ = QuaxedRClass()
 
 
 # =============================================================================
-
-
-def __dir__() -> list[str]:
-    """Return the list of names in the module."""
-    return sorted(__all__)
-
-
-# =============================================================================
 # Automated lazy construction
 
 # Direct transfers

@@ -1,6 +1,7 @@
 """Test with JAX inputs."""
 
 import jax.numpy as jnp
+import jax.tree as jtu
 import pytest
 from jax import lax
 
@@ -10,7 +11,6 @@ mark_todo = pytest.mark.skip(reason="TODO")
 
 x = jnp.array([[1, 2], [3, 4]], dtype=float)
 y = jnp.array([[5, 6], [7, 8]], dtype=float)
-x1225 = jnp.array([[1, 2], [2, 5]], dtype=float)
 xtrig = jnp.array([[0.1, 0.2], [0.3, 0.4]], dtype=float)
 xtrig2 = jnp.array([[0.5, 0.6], [0.7, 0.8]], dtype=float)
 xbit = jnp.array([[1, 0], [0, 1]], dtype=int)
@@ -228,6 +228,12 @@ def test_lax_functions(func_name, args, kw):
     assert jnp.array_equal(got, exp)
 
 
+###############################################################################
+# Linalg
+
+x1225 = jnp.array([[1, 2], [2, 5]], dtype=float)
+
+
 @pytest.mark.parametrize(
     ("func_name", "args", "kw"),
     [
@@ -251,9 +257,12 @@ def test_lax_functions(func_name, args, kw):
 )
 def test_lax_linalg_functions(func_name, args, kw):
     """Test lax vs qlax functions."""
-    got = getattr(qlax.linalg, func_name)(*args, **kw)
+    # JAX
     exp = getattr(lax.linalg, func_name)(*args, **kw)
-
-    got = got if isinstance(got, tuple | list) else (got,)
     exp = exp if isinstance(exp, tuple | list) else (exp,)
-    assert all(jnp.array_equal(g, e) for g, e in zip(got, exp, strict=False))
+
+    # Quaxed
+    got = getattr(qlax.linalg, func_name)(*args, **kw)
+    got = got if isinstance(got, tuple | list) else (got,)
+
+    assert jtu.all(jtu.map(jnp.array_equal, got, exp))

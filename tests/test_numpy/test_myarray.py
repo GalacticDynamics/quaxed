@@ -598,3 +598,71 @@ def test_vectorize():
 
     exp = f(x.array)
     assert jnp.array_equal(got.array, exp)
+
+
+###############################################################################
+# Linalg
+
+x1225 = MyArray(jnp.array([[1, 2], [2, 5]], dtype=float))
+xN3 = MyArray(jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float))
+
+
+@pytest.mark.parametrize(
+    ("func_name", "args", "kw"),
+    [
+        ("cholesky", (x1225,), {}),
+        ("cross", (xN3, xN3), {}),
+        ("det", (x1225,), {}),
+        ("diagonal", (xN3,), {}),
+        ("eig", (xN3,), {}),
+        ("eigvals", (xN3,), {}),
+        ("eigh", (xN3,), {}),
+        ("eigvalsh", (xN3,), {}),
+        pytest.param(
+            "inv", (x1225,), {}, marks=pytest.mark.xfail(reason="FIXME: tracer leak")
+        ),
+        ("matmul", (xN3, xN3), {}),
+        ("matrix_norm", (xN3,), {"ord": 2}),
+        ("matrix_power", (xN3, 2), {}),
+        ("matrix_rank", (xN3,), {}),
+        ("matrix_transpose", (xN3,), {}),
+        ("outer", (xN3[:, 0], xN3[:, 1]), {}),
+        ("pinv", (xN3,), {}),
+        ("qr", (xN3,), {}),
+        ("slogdet", (x1225,), {}),
+        pytest.param(
+            "solve",
+            (x1225, jnp.array([1, 2])),
+            {},
+            marks=pytest.mark.xfail(reason="FIXME: tracer leak"),
+        ),
+        ("svd", (xN3,), {}),
+        ("svdvals", (xN3,), {}),
+        ("tensordot", (xN3, xN3), {"axes": 1}),
+        ("trace", (xN3,), {}),
+        ("vecdot", (xN3[:, 0], xN3[:, 1]), {}),
+        ("vector_norm", (xN3,), {"ord": 2}),
+        ("norm", (xN3,), {"ord": 2}),
+    ],
+)
+def test_linalg_functions(func_name, args, kw):
+    """Test lax vs qlax functions."""
+    # Jax
+    jax_args, jax_kw = jtu.map(
+        lambda x: x.array if isinstance(x, MyArray) else x,
+        (args, kw),
+        is_leaf=lambda x: isinstance(x, MyArray),
+    )
+    exp = getattr(jnp.linalg, func_name)(*jax_args, **jax_kw)
+    exp = exp if isinstance(exp, tuple | list) else (exp,)
+
+    # Quaxed
+    got = getattr(qnp.linalg, func_name)(*args, **kw)
+    got = got if isinstance(got, tuple | list) else (got,)
+    got = jtu.map(
+        lambda x: x.array if isinstance(x, MyArray) else x,
+        got,
+        is_leaf=lambda x: isinstance(x, MyArray),
+    )
+
+    assert jtu.all(jtu.map(jnp.allclose, got, exp))

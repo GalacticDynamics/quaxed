@@ -67,9 +67,10 @@
   test = [
     "pytest >= 8.3",
     "pytest-cov >= 3",
-    "pytest-github-actions-annotate-failures",  # only applies to GH Actions
+    "pytest-env>=1.1.5",
+    "pytest-github-actions-annotate-failures", # only applies to GH Actions
     "sybil >= 7.1.0",
-  ]
+]
 
 
 [tool.hatch]
@@ -182,7 +183,7 @@ JAX_CHECK_TRACER_LEAKS = 1
 
   [tool.ruff.lint.per-file-ignores]
     "src/quaxed/**" = ["A004"]
-    "tests/**" = ["ANN", "C419", "FBT001", "INP001", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
+    "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
     "__init__.py" = ["F403"]
     "noxfile.py" = ["T20"]
     "docs/**" = ["INP001"]

@@ -540,3 +540,54 @@ def test_vectorize():
         return x + 1
 
     assert jnp.all(f(x) == jnp.vectorize(lambda x: x + 1)(x))
+
+
+###############################################################################
+# Linalg
+
+x1225 = jnp.array([[1, 2], [2, 5]], dtype=float)
+xN3 = jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float)
+
+
+@pytest.mark.parametrize(
+    ("func_name", "args", "kw"),
+    [
+        ("cholesky", (x1225,), {}),
+        ("cross", (xN3, xN3), {}),
+        ("det", (x1225,), {}),
+        ("diagonal", (xN3,), {}),
+        ("eig", (xN3,), {}),
+        ("eigvals", (xN3,), {}),
+        ("eigh", (xN3,), {}),
+        ("eigvalsh", (xN3,), {}),
+        ("inv", (x1225,), {}),
+        ("matmul", (xN3, xN3), {}),
+        ("matrix_norm", (xN3,), {"ord": 2}),
+        ("matrix_power", (xN3, 2), {}),
+        ("matrix_rank", (xN3,), {}),
+        ("matrix_transpose", (xN3,), {}),
+        ("outer", (xN3[:, 0], xN3[:, 1]), {}),
+        ("pinv", (xN3,), {}),
+        ("qr", (xN3,), {}),
+        ("slogdet", (x1225,), {}),
+        ("solve", (x1225, jnp.array([1, 2])), {}),
+        ("svd", (xN3,), {}),
+        ("svdvals", (xN3,), {}),
+        ("tensordot", (xN3, xN3), {"axes": 1}),
+        ("trace", (xN3,), {}),
+        ("vecdot", (xN3[:, 0], xN3[:, 1]), {}),
+        ("vector_norm", (xN3,), {"ord": 2}),
+        ("norm", (xN3,), {"ord": 2}),
+    ],
+)
+def test_linalg_functions(func_name, args, kw):
+    """Test lax vs qlax functions."""
+    # Jax
+    exp = getattr(jnp.linalg, func_name)(*args, **kw)
+    exp = exp if isinstance(exp, tuple | list) else (exp,)
+
+    # Quaxed
+    got = getattr(qnp.linalg, func_name)(*args, **kw)
+    got = got if isinstance(got, tuple | list) else (got,)
+
+    assert jtu.all(jtu.map(jnp.allclose, got, exp))
