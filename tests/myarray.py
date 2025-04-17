@@ -7,6 +7,7 @@ from typing import Any, Self
 import equinox as eqx
 import jax
 import jax.numpy as jnp
+import packaging.version
 from jax import Device, lax
 from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import Shape
@@ -15,6 +16,8 @@ from plum import dispatch
 from quax import ArrayValue, register
 
 from quaxed._types import DType
+
+JAX_VERSION = packaging.version.parse(jax.__version__)
 
 
 class MyArray(ArrayValue):
@@ -264,8 +267,8 @@ def broadcast_in_dim_p(operand: MyArray, **kw: Any) -> MyArray:
 
 
 @register(lax.cbrt_p)
-def cbrt_p(x: MyArray) -> MyArray:
-    return MyArray(lax.cbrt(x.array))
+def cbrt_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return MyArray(lax.cbrt(x.array, **kw))
 
 
 # ==============================================================================
@@ -389,8 +392,8 @@ def copy_p(x: MyArray) -> MyArray:
 
 
 @register(lax.cos_p)
-def cos_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.cos(x.array))
+def cos_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.cos(x.array, **kw))
 
 
 # ==============================================================================
@@ -607,24 +610,24 @@ def erfc_p(x: MyArray) -> MyArray:
 
 
 @register(lax.exp2_p)
-def exp2_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.exp2(x.array))
+def exp2_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.exp2(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.exp_p)
-def exp_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.exp(x.array))
+def exp_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.exp(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.expm1_p)
-def expm1_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.expm1(x.array))
+def expm1_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.expm1(x.array, **kw))
 
 
 # ==============================================================================
@@ -834,24 +837,24 @@ def linear_solve_p() -> MyArray:
 
 
 @register(lax.log1p_p)
-def log1p_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.log1p(x.array))
+def log1p_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.log1p(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.log_p)
-def log_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.log(x.array))
+def log_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.log(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.logistic_p)
-def logistic_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.logistic(x.array))
+def logistic_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.logistic(x.array, **kw))
 
 
 # ==============================================================================
@@ -1069,10 +1072,11 @@ def psum_p() -> MyArray:
 
 # ==============================================================================
 
+if packaging.version.Version("0.6.0") > JAX_VERSION:
 
-@register(lax.random_gamma_grad_p)
-def random_gamma_grad_p(a: float | int, x: MyArray) -> MyArray:
-    return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))
+    @register(lax.random_gamma_grad_p)
+    def random_gamma_grad_p(a: float | int, x: MyArray) -> MyArray:
+        return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))
 
 
 # ==============================================================================
@@ -1265,8 +1269,8 @@ def round_p(x: MyArray, *, rounding_method: Any) -> MyArray:
 
 
 @register(lax.rsqrt_p)
-def rsqrt_p(x: MyArray, /) -> MyArray:
-    return replace(x, array=lax.rsqrt_p.bind(x.array))
+def rsqrt_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.rsqrt_p.bind(x.array, **kw))
 
 
 # ==============================================================================
@@ -1558,8 +1562,8 @@ def sign_p(x: MyArray) -> MyArray:
 
 
 @register(lax.sin_p)
-def sin_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.sin(x.array))
+def sin_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.sin(x.array, **kw))
 
 
 # ==============================================================================
@@ -1634,8 +1638,8 @@ def square(x: MyArray) -> MyArray:
 
 
 @register(lax.sqrt_p)
-def sqrt_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.sqrt_p.bind(x.array))
+def sqrt_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.sqrt_p.bind(x.array, **kw))
 
 
 # ==============================================================================
@@ -1677,16 +1681,16 @@ def sub_p(x: ArrayLike, y: MyArray) -> MyArray:
 
 
 @register(lax.tan_p)
-def tan_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.tan_p.bind(x.array))
+def tan_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.tan_p.bind(x.array, **kw))
 
 
 # ==============================================================================
 
 
 @register(lax.tanh_p)
-def tanh_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.tanh_p.bind(x.array))
+def tanh_p(x: MyArray, /, **kw: Any) -> MyArray:
+    return replace(x, array=lax.tanh_p.bind(x.array, **kw))
 
 
 # ==============================================================================

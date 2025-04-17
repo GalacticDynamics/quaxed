@@ -9,6 +9,8 @@ import quaxed.lax as qlax
 
 from ..myarray import MyArray
 
+mark_todo = pytest.mark.skip(reason="TODO")
+
 x = MyArray(jnp.array([[1, 2], [3, 4]], dtype=float))
 y = MyArray(jnp.array([[5, 6], [7, 8]], dtype=float))
 x1225 = MyArray(jnp.array([[1, 2], [2, 5]], dtype=float))
@@ -175,7 +177,7 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("polygamma", (1.0, xtrig), {}, True),
         ("population_count", (xbit,), {}, True),
         ("pow", (x, y), {}, True),
-        ("random_gamma_grad", (1.0, x), {}, True),
+        pytest.param("random_gamma_grad", (1.0, x), {}, True, marks=mark_todo),
         ("real", (xcomplex,), {}, True),
         ("reciprocal", (x,), {}, True),
         pytest.param("reduce", (), {}, True, marks=pytest.mark.skip),

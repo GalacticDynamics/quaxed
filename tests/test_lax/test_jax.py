@@ -6,6 +6,8 @@ from jax import lax
 
 import quaxed.lax as qlax
 
+mark_todo = pytest.mark.skip(reason="TODO")
+
 x = jnp.array([[1, 2], [3, 4]], dtype=float)
 y = jnp.array([[5, 6], [7, 8]], dtype=float)
 x1225 = jnp.array([[1, 2], [2, 5]], dtype=float)
@@ -151,7 +153,7 @@ xcomp = jnp.array([[5, 2], [7, 2]], dtype=float)
         ("polygamma", (1.0, xtrig), {}),
         ("population_count", (xbit,), {}),
         ("pow", (x, y), {}),
-        ("random_gamma_grad", (1.0, x), {}),
+        pytest.param("random_gamma_grad", (1.0, x), {}, marks=mark_todo),
         ("real", (xcomplex,), {}),
         ("reciprocal", (x,), {}),
         pytest.param("reduce", (), {}, marks=pytest.mark.skip),

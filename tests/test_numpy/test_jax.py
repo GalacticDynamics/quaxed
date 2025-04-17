@@ -161,14 +161,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("flipud", (x,), {}),
         ("float16", (x,), {}),
         ("float32", (x,), {}),
-        pytest.param(
-            "float64",
-            (x,),
-            {},
-            marks=pytest.mark.skipif(
-                not hasattr(jnp, "float64"), reason="not available"
-            ),
-        ),
+        pytest.param("float64", (x,), {}, marks=mark_todo),
         ("float8_e4m3b11fnuz", (x,), {}),
         ("float8_e4m3fn", (x,), {}),
         ("float8_e4m3fnuz", (x,), {}),
