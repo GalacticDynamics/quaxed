@@ -7,14 +7,57 @@ list of available functions is in ``__all__`` and documented in the built-in
 
 """
 
+__all__ = [  # noqa: F822
+    "abs",
+    "add",
+    "and_",
+    "attrgetter",
+    "call",
+    "concat",
+    "contains",
+    "countOf",
+    "delitem",
+    "eq",
+    "floordiv",
+    "ge",
+    "getitem",
+    "gt",
+    "index",
+    "indexOf",
+    "inv",
+    "invert",
+    "is_",
+    "is_not",
+    "itemgetter",
+    "le",
+    "length_hint",
+    "lshift",
+    "lt",
+    "matmul",
+    "methodcaller",
+    "mod",
+    "mul",
+    "ne",
+    "neg",
+    "not_",
+    "or_",
+    "pos",
+    "pow",
+    "rshift",
+    "setitem",
+    "sub",
+    "truediv",
+    "truth",
+    "xor",
+]
+
 import operator
 import sys
 from collections.abc import Callable
+from operator import is_  # imported directly
 from typing import Any
 
 from quax import quaxify
-
-__all__ = operator.__all__
 
 
 def __dir__() -> list[str]:

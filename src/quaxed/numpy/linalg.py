@@ -6,6 +6,7 @@ __all__ = [  # noqa: F822
     "det",
     "diagonal",
     "eig",
+    "eigvals",
     "eigh",
     "eigvalsh",
     "inv",

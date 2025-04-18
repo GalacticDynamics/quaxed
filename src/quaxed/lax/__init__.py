@@ -201,6 +201,8 @@ __all__ = [
     "RandomAlgorithm",
     "RoundingMethod",
     "ScatterDimensionNumbers",
+    "DotAlgorithmPreset",
+    "FftType",
 ]
 
 
@@ -208,11 +210,13 @@ import sys
 from collections.abc import Callable
 from typing import Any
 
-import jax
 from jax import lax
 from quax import quaxify
 
-from . import linalg
+from . import (
+    _patch,  # noqa: F401
+    linalg,
+)
 
 # Explicit imports that don't need to be quaxified
 # isort: split
@@ -220,6 +224,8 @@ from jax.lax import (
     ConvDimensionNumbers,
     ConvGeneralDilatedDimensionNumbers,
     DotAlgorithm,
+    DotAlgorithmPreset,
+    FftType,
     GatherDimensionNumbers,
     GatherScatterMode,
     Precision,
@@ -228,12 +234,6 @@ from jax.lax import (
     RoundingMethod,
     ScatterDimensionNumbers,
 )
-
-_jax_version = tuple(map(int, jax.__version__.split(".")))  # noqa: RUF048
-if _jax_version >= (0, 4, 35):
-    __all__ += ["DotAlgorithmPreset", "FftType"]
-
-    from jax.lax import DotAlgorithmPreset, FftType
 
 
 def __dir__() -> list[str]:

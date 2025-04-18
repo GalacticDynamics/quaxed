@@ -23,14 +23,13 @@
     "Typing :: Typed",
   ]
   dependencies = [
-    "equinox>=0.11.5",
-    "jax>=0.4.34",
-    "jaxlib>=0.4.34",
-    "jaxtyping>=0.2.34",
+    "equinox>=0.12.1",
+    "jax>=0.5.3",
+    "jaxtyping>=0.3.1",
     "optype>=0.8.0",
     "plum-dispatch>=2.5.2",
-    "quax>=0.0.5",
-  ]
+    "quax>=0.2",
+]
 
   [project.urls]
     Homepage = "https://github.com/GalacticDynamics/quaxed"
@@ -46,10 +45,12 @@
 
 [dependency-groups]
   dev = [
-    "cz-conventional-gitmoji>=0.6.1",
     {include-group = "test"},
     {include-group = "docs"},
-  ]
+    "cz-conventional-gitmoji>=0.6.1",
+    "pre-commit>=4.2.0",
+    "ipykernel>=6.29.5",
+]
   docs = [
     "griffe < 1.0",  # For Python structure signatures"
     "mkdocs==1.6.0",  # Main documentation generator.
@@ -66,9 +67,10 @@
   test = [
     "pytest >= 8.3",
     "pytest-cov >= 3",
-    "pytest-github-actions-annotate-failures",  # only applies to GH Actions
+    "pytest-env>=1.1.5",
+    "pytest-github-actions-annotate-failures", # only applies to GH Actions
     "sybil >= 7.1.0",
-  ]
+]
 
 
 [tool.hatch]
@@ -143,10 +145,13 @@
     "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
     # jax
     "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
-    "ignore:jax\\.experimental\\.array_api import is no longer required as of JAX v0\\.4\\.32"
   ]
   log_cli_level = "INFO"
   testpaths = ["tests"]
+
+
+[tool.pytest_env]
+JAX_CHECK_TRACER_LEAKS = 1
 
 
 [tool.ruff]
@@ -178,7 +183,7 @@
 
   [tool.ruff.lint.per-file-ignores]
     "src/quaxed/**" = ["A004"]
-    "tests/**" = ["ANN", "INP001", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
+    "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
     "__init__.py" = ["F403"]
     "noxfile.py" = ["T20"]
     "docs/**" = ["INP001"]
@@ -187,15 +192,14 @@
   [tool.ruff.lint.pydocstyle]
     convention = "numpy"
 
-
 [tool.uv]
 constraint-dependencies = [
+  "appnope>=0.1.2",
   "bleach>6.0",
   "cffi>=1.14",
-  "opt_einsum>=3.2.0",
+  "decorator>=5.1.1",
+  "matplotlib>=3.7.1",
+  "matplotlib-inline>=0.1.6",
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
-  "scipy>=1.13",
-  "jax>=0.4.34,<0.4.36", # TODO: remove when https://github.com/patrick-kidger/quax/pull/37 is merged
-  "jaxlib>=0.4.34,<0.4.36"
 ]
