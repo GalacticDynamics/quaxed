@@ -213,10 +213,7 @@ from typing import Any
 from jax import lax
 from quax import quaxify
 
-from . import (
-    _patch,  # noqa: F401
-    linalg,
-)
+from . import linalg
 
 # Explicit imports that don't need to be quaxified
 # isort: split
