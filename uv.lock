@@ -1531,16 +1531,32 @@ wheels = [
 [[package]]
 name = "quax"
 version = "0.2.0"
-source = { registry = "https://pypi.org/simple" }
+source = { editable = "../quax" }
 dependencies = [
     { name = "equinox" },
     { name = "jax" },
     { name = "jaxtyping" },
     { name = "plum-dispatch" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/89/02/721331f21c60a79b0ba7cd0f264724aa6abe67c0a3c6026dd4bc9719ad1c/quax-0.2.0.tar.gz", hash = "sha256:cec1f48b92107e6473f803d779da441a5ccef0f4d80e04a2067121f1f64987ae", size = 26040 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/86/0c/422910c7ffad742899b8b112ca26ac81046252e3d044fa02035df5e876f0/quax-0.2.0-py3-none-any.whl", hash = "sha256:1f03e7966f358488ef2dba7c67a8f8009c3b256862ce65a9444a351928cb92e7", size = 36921 },
+
+[package.metadata]
+requires-dist = [
+    { name = "beartype", marker = "extra == 'dev'", specifier = ">=0.20.2" },
+    { name = "equinox", specifier = ">=0.12.1" },
+    { name = "hippogriffe", marker = "extra == 'docs'", specifier = "==0.2.0" },
+    { name = "jax", specifier = ">=0.5.3" },
+    { name = "jax", extras = ["cpu"], marker = "extra == 'dev'" },
+    { name = "jaxtyping", specifier = ">=0.3.1" },
+    { name = "mkdocs", marker = "extra == 'docs'", specifier = "==1.6.1" },
+    { name = "mkdocs-include-exclude-files", marker = "extra == 'docs'", specifier = "==0.1.0" },
+    { name = "mkdocs-ipynb", marker = "extra == 'docs'", specifier = "==0.1.1" },
+    { name = "mkdocs-material", marker = "extra == 'docs'", specifier = "==9.6.7" },
+    { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = "==0.28.3" },
+    { name = "plum-dispatch", specifier = ">=2.2.1" },
+    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.1.0" },
+    { name = "pymdown-extensions", marker = "extra == 'docs'", specifier = "==10.14.3" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.5" },
+    { name = "pytest-env", marker = "extra == 'dev'", specifier = ">=1.1.5" },
 ]
 
 [[package]]
@@ -1605,7 +1621,7 @@ requires-dist = [
     { name = "jaxtyping", specifier = ">=0.3.1" },
     { name = "optype", specifier = ">=0.8.0" },
     { name = "plum-dispatch", specifier = ">=2.5.2" },
-    { name = "quax", specifier = ">=0.2" },
+    { name = "quax", editable = "../quax" },
 ]
 
 [package.metadata.requires-dev]
