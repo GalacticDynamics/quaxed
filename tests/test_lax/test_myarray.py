@@ -1,5 +1,7 @@
 """Test with JAX inputs."""
 
+from typing import TypeAlias
+
 import jax.numpy as jnp
 import jax.tree as jtu
 import pytest
@@ -8,6 +10,8 @@ from jax import lax
 import quaxed.lax as qlax
 
 from ..myarray import MyArray
+
+AnyTuple: TypeAlias = tuple[object, ...]
 
 mark_todo = pytest.mark.skip(reason="TODO")
 
@@ -23,6 +27,49 @@ conv_kernel = MyArray(jnp.array([[[[1.0, 0.0], [0.0, -1.0]]]], dtype=float))
 xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
 
 
+def _check_and_unwrap(g: object, exp_ma: bool) -> object:
+    if exp_ma:
+        assert isinstance(g, MyArray), f"expected MyArray, got {type(g)}"
+        return g.array
+    return g
+
+
+def _broadcast_check(check: AnyTuple | bool, got: AnyTuple | list[object]) -> AnyTuple:
+    def _broadcast(subcheck, subgot):
+        # If subcheck is a PyTree, recurse
+        if jtu.structure(subcheck) == jtu.structure(subgot):
+            return subcheck
+        # Otherwise, broadcast the scalar into the structure of subgot
+        return jtu.map(lambda _: subcheck, subgot)
+
+    return jtu.map(_broadcast, check, tuple(got), is_leaf=lambda x: isinstance(x, bool))
+
+
+def _unwrap_myarray(
+    got: AnyTuple | list[object], expect_myarray: AnyTuple | bool
+) -> AnyTuple | list[object]:
+    expect_myarray = _broadcast_check(expect_myarray, got)
+
+    got_flat, tree_def = jtu.flatten(got, is_leaf=lambda x: isinstance(x, MyArray))
+    expma_flat, _ = jtu.flatten(expect_myarray)
+
+    got_flat = [
+        _check_and_unwrap(g, e) for g, e in zip(got_flat, expma_flat, strict=True)
+    ]
+    return jtu.unflatten(tree_def, got_flat)
+
+
+def _unwrap_args(
+    args: AnyTuple, kw: dict[str, object]
+) -> tuple[AnyTuple, dict[str, object]]:
+    """Unwrap the args and kw to JAX arrays."""
+    return jtu.map(
+        lambda x: x.array if isinstance(x, MyArray) else x,
+        (args, kw),
+        is_leaf=lambda x: isinstance(x, MyArray),
+    )
+
+
 @pytest.mark.parametrize(
     ("func_name", "args", "kw", "expect_myarray"),
     [
@@ -30,7 +77,7 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("acos", (xtrig,), {}, True),
         ("acosh", (x,), {}, True),
         ("add", (x, y), {}, True),
-        pytest.param("after_all", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("after_all", (), {}, True, marks=mark_todo),
         ("approx_max_k", (x, 2), {}, (True, True)),
         ("approx_min_k", (x, 2), {}, True),
         ("argmax", (x,), {"axis": 0, "index_dtype": int}, True),
@@ -63,7 +110,7 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("broadcast_in_dim", (x, (1, 1, 2, 2), (2, 3)), {}, True),
         ("broadcast_shapes", ((2, 3), (1, 3)), {}, False),
         ("broadcast_to_rank", (x,), {"rank": 3}, True),
-        pytest.param("broadcasted_iota", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("broadcasted_iota", (), {}, True, marks=mark_todo),
         ("cbrt", (x,), {}, True),
         ("ceil", (xround,), {}, True),
         ("clamp", (2.0, x, 3.0), {}, True),
@@ -118,7 +165,7 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
             },
             True,
         ),
-        pytest.param("conv_with_general_padding", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("conv_with_general_padding", (), {}, True, marks=mark_todo),
         ("cos", (x,), {}, True),
         ("cosh", (x,), {}, True),
         ("cumlogsumexp", (x,), {"axis": 0}, True),
@@ -129,10 +176,10 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("digamma", (xtrig,), {}, True),
         ("div", (x, y), {}, True),
         ("dot", (x, y), {}, True),
-        pytest.param("dot_general", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("dynamic_index_in_dim", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("dot_general", (), {}, True, marks=mark_todo),
+        pytest.param("dynamic_index_in_dim", (), {}, True, marks=mark_todo),
         ("dynamic_slice", (x, (0, 0), (2, 2)), {}, True),
-        pytest.param("dynamic_slice_in_dim", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("dynamic_slice_in_dim", (), {}, True, marks=mark_todo),
         pytest.param(
             "dynamic_update_index_in_dim", (), {}, True, marks=pytest.mark.skip
         ),
@@ -150,16 +197,16 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("floor", (xround,), {}, True),
         ("full", ((2, 2), 1.0), {}, False),
         ("full_like", (x, 1.0), {}, False),
-        pytest.param("gather", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("gather", (), {}, True, marks=mark_todo),
         ("ge", (x, xcomp), {}, True),
         ("gt", (x, xcomp), {}, True),
         ("igamma", (1.0, xtrig), {}, True),
         ("igammac", (1.0, xtrig), {}, True),
         ("imag", (xcomplex,), {}, True),
         ("index_in_dim", (x, 0, 0), {}, True),
-        pytest.param("index_take", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("index_take", (), {}, True, marks=mark_todo),
         ("integer_pow", (x, 2), {}, True),
-        pytest.param("iota", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("iota", (), {}, True, marks=mark_todo),
         ("is_finite", (x,), {}, True),
         ("le", (x, xcomp), {}, True),
         ("lgamma", (x,), {}, True),
@@ -173,28 +220,28 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("ne", (x, xcomp), {}, True),
         ("neg", (x,), {}, True),
         ("nextafter", (x, y), {}, True),
-        pytest.param("pad", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("pad", (), {}, True, marks=mark_todo),
         ("polygamma", (1.0, xtrig), {}, True),
         ("population_count", (xbit,), {}, True),
         ("pow", (x, y), {}, True),
         pytest.param("random_gamma_grad", (1.0, x), {}, True, marks=mark_todo),
         ("real", (xcomplex,), {}, True),
         ("reciprocal", (x,), {}, True),
-        pytest.param("reduce", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("reduce_precision", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("reduce_window", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("reduce", (), {}, True, marks=mark_todo),
+        pytest.param("reduce_precision", (), {}, True, marks=mark_todo),
+        pytest.param("reduce_window", (), {}, True, marks=mark_todo),
         ("rem", (x, y), {}, True),
         ("reshape", (x, (1, 4)), {}, True),
         ("rev", (x,), {"dimensions": (0,)}, True),
-        pytest.param("rng_bit_generator", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("rng_bit_generator", (), {}, True, marks=mark_todo),
         ("rng_uniform", (0, 1, (2, 3)), {}, False),
         ("round", (xround,), {}, True),
         ("rsqrt", (x,), {}, True),
-        pytest.param("scatter", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("scatter_apply", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("scatter_max", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("scatter_min", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("scatter_mul", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("scatter", (), {}, True, marks=mark_todo),
+        pytest.param("scatter_apply", (), {}, True, marks=mark_todo),
+        pytest.param("scatter_max", (), {}, True, marks=mark_todo),
+        pytest.param("scatter_min", (), {}, True, marks=mark_todo),
+        pytest.param("scatter_mul", (), {}, True, marks=mark_todo),
         ("shift_left", (xbit, 1), {}, True),
         ("shift_right_arithmetic", (xbit, 1), {}, True),
         ("shift_right_logical", (xbit, 1), {}, True),
@@ -204,7 +251,7 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("slice", (x, (0, 0), (2, 2)), {}, True),
         ("slice_in_dim", (x, 0, 0, 2), {}, True),
         ("sort", (x,), {}, True),
-        pytest.param("sort_key_val", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("sort_key_val", (), {}, True, marks=mark_todo),
         ("sqrt", (x,), {}, True),
         ("square", (x,), {}, True),
         ("sub", (x, y), {}, True),
@@ -214,62 +261,49 @@ xcomp = MyArray(jnp.array([[5, 2], [7, 2]], dtype=float))
         ("transpose", (x, (1, 0)), {}, True),
         ("zeros_like_array", (x,), {}, False),
         ("zeta", (x, 2.0), {}, True),
-        pytest.param("associative_scan", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("fori_loop", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("scan", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("associative_scan", (), {}, True, marks=mark_todo),
+        pytest.param("fori_loop", (), {}, True, marks=mark_todo),
+        pytest.param("scan", (), {}, True, marks=mark_todo),
         (
             "select",
             (jnp.array([[True, False], [True, False]], dtype=bool), x, y),
             {},
             True,
         ),
-        pytest.param("select_n", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("switch", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("select_n", (), {}, True, marks=mark_todo),
+        pytest.param("switch", (), {}, True, marks=mark_todo),
         ("while_loop", (lambda x: jnp.all(x < 10), lambda x: x + 1, x), {}, True),
         ("stop_gradient", (x,), {}, True),
-        pytest.param("custom_linear_solve", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("custom_root", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("all_gather", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("all_to_all", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("psum", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("psum_scatter", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("pmax", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("pmin", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("pmean", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("ppermute", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("pshuffle", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("pswapaxes", (), {}, True, marks=pytest.mark.skip),
-        pytest.param("axis_index", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("custom_linear_solve", (), {}, True, marks=mark_todo),
+        pytest.param("custom_root", (), {}, True, marks=mark_todo),
+        pytest.param("all_gather", (), {}, True, marks=mark_todo),
+        pytest.param("all_to_all", (), {}, True, marks=mark_todo),
+        pytest.param("psum", (), {}, True, marks=mark_todo),
+        pytest.param("psum_scatter", (), {}, True, marks=mark_todo),
+        pytest.param("pmax", (), {}, True, marks=mark_todo),
+        pytest.param("pmin", (), {}, True, marks=mark_todo),
+        pytest.param("pmean", (), {}, True, marks=mark_todo),
+        pytest.param("ppermute", (), {}, True, marks=mark_todo),
+        pytest.param("pshuffle", (), {}, True, marks=mark_todo),
+        pytest.param("pswapaxes", (), {}, True, marks=mark_todo),
+        pytest.param("axis_index", (), {}, True, marks=mark_todo),
         # --- Sharding-related operators ---
-        pytest.param("with_sharding_constraint", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("with_sharding_constraint", (), {}, True, marks=mark_todo),
     ],
 )
 def test_lax_functions(func_name, args, kw, expect_myarray):
     """Test lax vs qlax functions."""
     # Jax version
-    jax_args, jax_kw = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        (args, kw),
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
+    jax_args, jax_kw = _unwrap_args(args, kw)
     exp = getattr(lax, func_name)(*jax_args, **jax_kw)
     exp = exp if isinstance(exp, tuple | list) else (exp,)
 
     # Quaxed version
     got = getattr(qlax, func_name)(*args, **kw)
     got = got if isinstance(got, tuple | list) else (got,)
-    got_ = []
-    expect_myarray = (
-        expect_myarray
-        if isinstance(expect_myarray, tuple)
-        else (expect_myarray,) * len(got)
-    )
-    for i, (g, exp_ma) in enumerate(zip(got, expect_myarray, strict=True)):
-        if exp_ma:
-            assert isinstance(g, MyArray), f"{func_name} return {i} is not MyArray"
-        got_.append(g.array if isinstance(g, MyArray) else g)
+    got_ = _unwrap_myarray(got, expect_myarray)
 
-    assert all([jnp.array_equal(g, e) for g, e in zip(got_, exp, strict=False)])
+    assert jtu.all(jtu.map(jnp.allclose, got_, exp))
 
 
 def test_cond() -> None:
@@ -308,32 +342,19 @@ def test_map() -> None:
         ("schur", (x1225,), {}, True),
         ("svd", (x1225,), {}, True),
         ("tridiagonal", (x1225,), {}, True),
-        pytest.param("tridiagonal_solve", (), {}, True, marks=pytest.mark.skip),
+        pytest.param("tridiagonal_solve", (), {}, True, marks=mark_todo),
     ],
 )
 def test_lax_linalg_functions(func_name, args, kw, expect_myarray):
     """Test lax vs qlax functions."""
     # Jax version
-    jax_args, jax_kw = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        (args, kw),
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
+    jax_args, jax_kw = _unwrap_args(args, kw)
     exp = getattr(lax.linalg, func_name)(*jax_args, **jax_kw)
     exp = exp if isinstance(exp, tuple | list) else (exp,)
 
     # Quaxed version
     got = getattr(qlax.linalg, func_name)(*args, **kw)
     got = got if isinstance(got, tuple | list) else (got,)
-    got_ = []
-    expect_myarray = (
-        expect_myarray
-        if isinstance(expect_myarray, tuple)
-        else (expect_myarray,) * len(got)
-    )
-    for i, (g, exp_ma) in enumerate(zip(got, expect_myarray, strict=True)):
-        if exp_ma:
-            assert isinstance(g, MyArray), f"{func_name} return {i} is not MyArray"
-        got_.append(g.array if isinstance(g, MyArray) else g)
+    got_ = _unwrap_myarray(got, expect_myarray)
 
-    assert all(jnp.array_equal(g, e) for g, e in zip(got_, exp, strict=False))
+    assert jtu.all(jtu.map(jnp.allclose, got_, exp))

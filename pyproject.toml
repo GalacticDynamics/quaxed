@@ -68,7 +68,7 @@
     "pytest >= 8.3",
     "pytest-cov >= 3",
     "pytest-env>=1.1.5",
-    "pytest-github-actions-annotate-failures", # only applies to GH Actions
+    "pytest-github-actions-annotate-failures>=0.3.0",  # only applies to GH Actions
     "sybil >= 7.1.0",
 ]
 
@@ -200,6 +200,9 @@ constraint-dependencies = [
   "decorator>=5.1.1",
   "matplotlib>=3.7.1",
   "matplotlib-inline>=0.1.6",
+  "opt-einsum>=3.2.1",
+  "pickleshare>=0.7.5",
+  "psutil>=5.9.0",
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
 ]
