@@ -68,7 +68,7 @@
     "pytest >= 8.3",
     "pytest-cov >= 3",
     "pytest-env>=1.1.5",
-    "pytest-github-actions-annotate-failures", # only applies to GH Actions
+    "pytest-github-actions-annotate-failures>=0.3.0",  # only applies to GH Actions
     "sybil >= 7.1.0",
 ]
 
