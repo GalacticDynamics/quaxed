@@ -1,5 +1,7 @@
 """Test with JAX inputs."""
 
+from typing import TypeAlias
+
 import jax.numpy as jnp
 import jax.tree as jtu
 import pytest
@@ -8,6 +10,8 @@ from jax import lax
 import quaxed.lax as qlax
 
 from ..myarray import MyArray
+
+AnyTuple: TypeAlias = tuple[object, ...]
 
 mark_todo = pytest.mark.skip(reason="TODO")
 
@@ -30,9 +34,7 @@ def _check_and_unwrap(g: object, exp_ma: bool) -> object:
     return g
 
 
-def _broadcast_check(
-    check: tuple[object, ...] | bool, got: tuple[object, ...] | list[object]
-) -> tuple[object, ...]:
+def _broadcast_check(check: AnyTuple | bool, got: AnyTuple | list[object]) -> AnyTuple:
     def _broadcast(subcheck, subgot):
         # If subcheck is a PyTree, recurse
         if jtu.structure(subcheck) == jtu.structure(subgot):
@@ -44,8 +46,8 @@ def _broadcast_check(
 
 
 def _unwrap_myarray(
-    got: tuple[object, ...] | list[object], expect_myarray: tuple | bool
-) -> tuple[object, ...] | list[object]:
+    got: AnyTuple | list[object], expect_myarray: AnyTuple | bool
+) -> AnyTuple | list[object]:
     expect_myarray = _broadcast_check(expect_myarray, got)
 
     got_flat, tree_def = jtu.flatten(got, is_leaf=lambda x: isinstance(x, MyArray))
@@ -54,13 +56,12 @@ def _unwrap_myarray(
     got_flat = [
         _check_and_unwrap(g, e) for g, e in zip(got_flat, expma_flat, strict=True)
     ]
-    got = jtu.unflatten(tree_def, got_flat)
-    return got
+    return jtu.unflatten(tree_def, got_flat)
 
 
 def _unwrap_args(
-    args: tuple[object, ...], kw: dict[str, object]
-) -> tuple[tuple[object, ...], dict[str, object]]:
+    args: AnyTuple, kw: dict[str, object]
+) -> tuple[AnyTuple, dict[str, object]]:
     """Unwrap the args and kw to JAX arrays."""
     return jtu.map(
         lambda x: x.array if isinstance(x, MyArray) else x,
@@ -293,29 +294,16 @@ def _unwrap_args(
 def test_lax_functions(func_name, args, kw, expect_myarray):
     """Test lax vs qlax functions."""
     # Jax version
-    jax_args, jax_kw = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        (args, kw),
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
+    jax_args, jax_kw = _unwrap_args(args, kw)
     exp = getattr(lax, func_name)(*jax_args, **jax_kw)
     exp = exp if isinstance(exp, tuple | list) else (exp,)
 
     # Quaxed version
     got = getattr(qlax, func_name)(*args, **kw)
     got = got if isinstance(got, tuple | list) else (got,)
-    got_ = []
-    expect_myarray = (
-        expect_myarray
-        if isinstance(expect_myarray, tuple)
-        else (expect_myarray,) * len(got)
-    )
-    for i, (g, exp_ma) in enumerate(zip(got, expect_myarray, strict=True)):
-        if exp_ma:
-            assert isinstance(g, MyArray), f"{func_name} return {i} is not MyArray"
-        got_.append(g.array if isinstance(g, MyArray) else g)
+    got_ = _unwrap_myarray(got, expect_myarray)
 
-    assert all([jnp.array_equal(g, e) for g, e in zip(got_, exp, strict=False)])
+    assert jtu.all(jtu.map(jnp.allclose, got_, exp))
 
 
 def test_cond() -> None:
@@ -360,26 +348,13 @@ def test_map() -> None:
 def test_lax_linalg_functions(func_name, args, kw, expect_myarray):
     """Test lax vs qlax functions."""
     # Jax version
-    jax_args, jax_kw = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        (args, kw),
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
+    jax_args, jax_kw = _unwrap_args(args, kw)
     exp = getattr(lax.linalg, func_name)(*jax_args, **jax_kw)
     exp = exp if isinstance(exp, tuple | list) else (exp,)
 
     # Quaxed version
     got = getattr(qlax.linalg, func_name)(*args, **kw)
     got = got if isinstance(got, tuple | list) else (got,)
-    got_ = []
-    expect_myarray = (
-        expect_myarray
-        if isinstance(expect_myarray, tuple)
-        else (expect_myarray,) * len(got)
-    )
-    for i, (g, exp_ma) in enumerate(zip(got, expect_myarray, strict=True)):
-        if exp_ma:
-            assert isinstance(g, MyArray), f"{func_name} return {i} is not MyArray"
-        got_.append(g.array if isinstance(g, MyArray) else g)
+    got_ = _unwrap_myarray(got, expect_myarray)
 
-    assert all(jnp.array_equal(g, e) for g, e in zip(got_, exp, strict=False))
+    assert jtu.all(jtu.map(jnp.allclose, got_, exp))
