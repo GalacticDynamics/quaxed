@@ -18,6 +18,7 @@ xcomplex = jnp.array([[1 + 1j, 2 + 2j], [3 + 3j, 4 + 4j]], dtype=complex)
 xround = jnp.array([[1.1, 2.2], [3.3, 4.4]])
 conv_kernel = jnp.array([[[[1.0, 0.0], [0.0, -1.0]]]], dtype=float)
 xcomp = jnp.array([[5, 2], [7, 2]], dtype=float)
+xconv = jnp.arange(1, 17, dtype=float).reshape((1, 1, 4, 4))
 
 
 @pytest.mark.parametrize(
@@ -65,11 +66,7 @@ xcomp = jnp.array([[5, 2], [7, 2]], dtype=float)
         ("collapse", (x, 1), {}),
         ("concatenate", ((x, y), 0), {}),
         ("conj", (xcomplex,), {}),
-        (
-            "conv",
-            (jnp.arange(1, 17, dtype=float).reshape((1, 1, 4, 4)), conv_kernel),
-            {"window_strides": (1, 1), "padding": "SAME"},
-        ),
+        ("conv", (xconv, conv_kernel), {"window_strides": (1, 1), "padding": "SAME"}),
         ("convert_element_type", (x, jnp.int32), {}),
         (
             "conv_dimension_numbers",
@@ -78,18 +75,18 @@ xcomp = jnp.array([[5, 2], [7, 2]], dtype=float)
         ),
         (
             "conv_general_dilated",
-            (jnp.arange(1, 17, dtype=float).reshape((1, 1, 4, 4)), conv_kernel),
+            (xconv, conv_kernel),
             {"window_strides": (1, 1), "padding": "SAME"},
         ),
         pytest.param("conv_general_dilated_local", (), {}, marks=mark_todo),
         (
             "conv_general_dilated_patches",
-            (jnp.arange(1, 17, dtype=float).reshape((1, 1, 4, 4)),),
+            (xconv,),
             {"filter_shape": (2, 2), "window_strides": (1, 1), "padding": "VALID"},
         ),
         (
             "conv_transpose",
-            (jnp.arange(1, 17, dtype=float).reshape((1, 1, 4, 4)), conv_kernel),
+            (xconv, conv_kernel),
             {
                 "strides": (2, 2),
                 "padding": "SAME",
