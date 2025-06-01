@@ -200,6 +200,9 @@ constraint-dependencies = [
   "decorator>=5.1.1",
   "matplotlib>=3.7.1",
   "matplotlib-inline>=0.1.6",
+  "opt-einsum>=3.2.1",
+  "pickleshare>=0.7.5",
+  "psutil>=5.9.0",
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
 ]
