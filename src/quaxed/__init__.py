@@ -31,10 +31,10 @@ from ._version import version as __version__  # noqa: F401
 
 def __getattr__(name: str) -> Any:  # TODO: fuller annotation
     """Forward all other attribute accesses to Quaxified JAX."""
-    import sys
+    import sys  # noqa: PLC0415
 
-    import jax
-    from quax import quaxify
+    import jax  # noqa: PLC0415
+    from quax import quaxify  # noqa: PLC0415
 
     # TODO: detect if the attribute is a function or a module.
     # If it is a function, quaxify it. If it is a module, return a proxy object
