@@ -1,153 +1,153 @@
 [project]
-  name = "quaxed"
-  dynamic = ["version"]
-  description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
-  readme = "README.md"
-  requires-python = ">=3.11"
-  authors = [
-    { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
-  ]
-  classifiers = [
-    "Development Status :: 1 - Planning",
-    "Intended Audience :: Science/Research",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Scientific/Engineering",
-    "Typing :: Typed",
-  ]
-  dependencies = [
-    "equinox>=0.13.2",
-    "jax>=0.5.3",
-    "jaxtyping>=0.3.1",
-    "optype>=0.8.0",
-    "plum-dispatch>=2.5.2",
-    "quax>=0.2.1",
+name = "quaxed"
+dynamic = ["version"]
+description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
+]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering",
+  "Typing :: Typed",
+]
+dependencies = [
+  "equinox>=0.13.2",
+  "jax>=0.5.3",
+  "jaxtyping>=0.3.1",
+  "optype>=0.8.0",
+  "plum-dispatch>=2.5.2",
+  "quax>=0.2.1",
 ]
 
-  [project.urls]
-    Homepage = "https://github.com/GalacticDynamics/quaxed"
-    "Bug Tracker" = "https://github.com/GalacticDynamics/quaxed/issues"
-    Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
-    Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
+[project.urls]
+Homepage = "https://github.com/GalacticDynamics/quaxed"
+"Bug Tracker" = "https://github.com/GalacticDynamics/quaxed/issues"
+Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
+Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
 
 [build-system]
-  requires = ["hatchling", "hatch-vcs"]
-  build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 
 [dependency-groups]
-  dev = [
-    {include-group = "test"},
-    {include-group = "docs"},
-    "cz-conventional-gitmoji>=0.6.1",
-    "pre-commit>=4.2.0",
-    "ipykernel>=6.29.5",
+dev = [
+  "cz-conventional-gitmoji>=0.6.1",
+  "ipykernel>=6.29.5",
+  "pre-commit>=4.2.0",
+  {include-group = "docs"},
+  {include-group = "test"},
 ]
-  docs = [
-    "griffe < 1.0",  # For Python structure signatures"
-    "mkdocs==1.6.0",  # Main documentation generator.
-    "mkdocs-material==9.5",  # Theme
-    "mkdocs_include_exclude_files==0.0.1",  # Tweak which files are included/excluded
-    "mkdocstrings[python] == 0.18",  # Autogenerate documentation from docstrings.
-    "mknotebooks==0.8",  # Turn Jupyter Lab notebooks into webpages.
-    "nbconvert==7.16",
-    "pygments==2.16",
-    "pymdown-extensions==10.2",  # Markdown extensions e.g. to handle LaTeX.
-    "pytkdocs_tweaks==0.0.8",  # Tweaks mkdocstrings to improve various aspects
-    "jinja2==3.1"
-  ]
-  test = [
-    "pytest >= 8.3",
-    "pytest-cov>= 6.2.1",
-    "pytest-env>=1.1.5",
-    "pytest-github-actions-annotate-failures>=0.3.0",  # only applies to GH Actions
-    "sybil >= 7.1.0",
+docs = [
+  "griffe < 1.0",  # For Python structure signatures"
+  "mkdocs==1.6.0",  # Main documentation generator.
+  "mkdocs-material==9.5",  # Theme
+  "mkdocs_include_exclude_files==0.0.1",  # Tweak which files are included/excluded
+  "mkdocstrings[python] == 0.18",  # Autogenerate documentation from docstrings.
+  "mknotebooks==0.8",  # Turn Jupyter Lab notebooks into webpages.
+  "nbconvert==7.16",
+  "pygments==2.16",
+  "pymdown-extensions==10.2",  # Markdown extensions e.g. to handle LaTeX.
+  "pytkdocs_tweaks==0.0.8",  # Tweaks mkdocstrings to improve various aspects
+  "jinja2==3.1"
+]
+test = [
+  "pytest >= 8.3",
+  "pytest-cov>= 6.2.1",
+  "pytest-env>=1.1.5",
+  "pytest-github-actions-annotate-failures>=0.3.0",  # only applies to GH Actions
+  "sybil >= 7.1.0",
 ]
 
 
 [tool.hatch]
-  version.source = "vcs"
-  build.hooks.vcs.version-file = "src/quaxed/_version.py"
+version.source = "vcs"
+build.hooks.vcs.version-file = "src/quaxed/_version.py"
 
 
 [tool.codespell]
-  ignore-words-list = """
-      fro,
-  """
+ignore-words-list = """
+    fro,
+"""
 
 
 [tool.commitizen]
-  name = "cz_gitmoji"
+name = "cz_gitmoji"
 
 
 [tool.coverage]
-  run.source = ["quaxed"]
-  port.exclude_lines = [
-    'pragma: no cover',
-    '\.\.\.',
-    'if typing.TYPE_CHECKING:'
-  ]
+run.source = ["quaxed"]
+port.exclude_lines = [
+  'pragma: no cover',
+  '\.\.\.',
+  'if typing.TYPE_CHECKING:'
+]
 
 
 [tool.mypy]
-  files = ["src"]
-  python_version = "3.11"
-  warn_unused_configs = true
-  strict = true
-  enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-  warn_unreachable = true
-  disallow_untyped_defs = false
-  disallow_incomplete_defs = false
-  warn_return_any = false
+files = ["src"]
+python_version = "3.11"
+warn_unused_configs = true
+strict = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+warn_unreachable = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+warn_return_any = false
 
-  [[tool.mypy.overrides]]
-    module = "quaxed.*"
-    disallow_untyped_defs = true
-    disallow_incomplete_defs = true
+[[tool.mypy.overrides]]
+  module = "quaxed.*"
+  disallow_untyped_defs = true
+  disallow_incomplete_defs = true
 
-  [[tool.mypy.overrides]]
-    module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
-    ignore_missing_imports = true
+[[tool.mypy.overrides]]
+  module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
+  ignore_missing_imports = true
 
 
 [tool.pylint]
-  py-version = "3.11"
-  ignore-paths = [".*/_version.py"]
-  reports.output-format = "colorized"
-  similarities.ignore-imports = "yes"
-  messages_control.disable = [
-    "design",
-    "fixme",
-    "line-too-long",
-    "missing-function-docstring", # TODO: reinstate.
-    "missing-module-docstring",
-    "redefined-builtin",
-    "useless-import-alias",  # handled by ruff
-    "wrong-import-position",
-  ]
+py-version = "3.11"
+ignore-paths = [".*/_version.py"]
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+messages_control.disable = [
+  "design",
+  "fixme",
+  "line-too-long",
+  "missing-function-docstring", # TODO: reinstate.
+  "missing-module-docstring",
+  "redefined-builtin",
+  "useless-import-alias",  # handled by ruff
+  "wrong-import-position",
+]
 
 
 [tool.pytest.ini_options]
-  minversion = "8.3"
-  addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-  xfail_strict = true
-  filterwarnings = [
-    "error",
-    # jaxtyping
-    "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
-    # jax
-    "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
-  ]
-  log_cli_level = "INFO"
-  testpaths = ["src", "docs", "tests"]
+minversion = "8.3"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+xfail_strict = true
+filterwarnings = [
+  "error",
+  # jaxtyping
+  "ignore:ast\\.Str is deprecated and will be removed in Python 3.14:DeprecationWarning",
+  # jax
+  "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
+]
+log_cli_level = "INFO"
+testpaths = ["src", "docs", "tests"]
 
 
 [tool.pytest_env]
@@ -155,42 +155,42 @@ JAX_CHECK_TRACER_LEAKS = 1
 
 
 [tool.ruff]
-  [tool.ruff.lint]
-    extend-select = ["ALL"]
-    ignore = [
-        "A001",   # Variable is shadowing a Python builtin
-        "A002",   # Argument is shadowing a Python builtin
-        "ANN401", # Dynamically typed expressions (typing.Any) are disallowed  # TODO
-        "ARG001", # Unused function argument
-        "COM812", # Missing trailing comma
-        "D103",   # Missing docstring in public function  # TODO
-        "D203",   # one-blank-line-before-class
-        "D213",   # Multi-line docstring summary should start at the second line
-        "ISC001", # handled by formatter
-        "ERA001", # Found commented-out code
-        "F811",   # Redefinition of unused variable  <- plum
-        "FIX002", # Line contains TODO, consider resolving the issue
-        "PD011",  # Pandas
-        "PYI041", # Use `float` instead of `int | float`
-        "RUF022", # `__all__` is not sorted
-        "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
-        "TD003",  # Missing issue link on the line following this TODO
-    ]
+[tool.ruff.lint]
+extend-select = ["ALL"]
+ignore = [
+  "A001",   # Variable is shadowing a Python builtin
+  "A002",   # Argument is shadowing a Python builtin
+  "ANN401", # Dynamically typed expressions (typing.Any) are disallowed  # TODO
+  "ARG001", # Unused function argument
+  "COM812", # Missing trailing comma
+  "D103",   # Missing docstring in public function  # TODO
+  "D203",   # one-blank-line-before-class
+  "D213",   # Multi-line docstring summary should start at the second line
+  "ISC001", # handled by formatter
+  "ERA001", # Found commented-out code
+  "F811",   # Redefinition of unused variable  <- plum
+  "FIX002", # Line contains TODO, consider resolving the issue
+  "PD011",  # Pandas
+  "PYI041", # Use `float` instead of `int | float`
+  "RUF022", # `__all__` is not sorted
+  "TD002",  # Missing author in TODO; try: `# TODO(<author_name>): .
+  "TD003",  # Missing issue link on the line following this TODO
+]
 
-  [tool.ruff.lint.isort]
-    combine-as-imports = true
-    extra-standard-library = ["typing_extensions"]
+[tool.ruff.lint.isort]
+combine-as-imports = true
+extra-standard-library = ["typing_extensions"]
 
-  [tool.ruff.lint.per-file-ignores]
-    "src/quaxed/**" = ["A004"]
-    "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
-    "__init__.py" = ["F403"]
-    "noxfile.py" = ["T20"]
-    "docs/**" = ["INP001"]
-    "scratch/**" = ["ANN", "D", "FBT", "INP"]
+[tool.ruff.lint.per-file-ignores]
+"src/quaxed/**" = ["A004"]
+"tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
+"__init__.py" = ["F403"]
+"noxfile.py" = ["T20"]
+"docs/**" = ["INP001"]
+"scratch/**" = ["ANN", "D", "FBT", "INP"]
 
-  [tool.ruff.lint.pydocstyle]
-    convention = "numpy"
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.uv]
 constraint-dependencies = [
