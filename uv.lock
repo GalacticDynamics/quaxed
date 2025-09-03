@@ -1172,14 +1172,14 @@ wheels = [
 
 [[package]]
 name = "optional-dependencies"
-version = "0.3.2"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/26/ca/3f17d662f69cb0cfb1f0503d45cde988dcf66a0cf01a58a6c8965378422a/optional_dependencies-0.3.2.tar.gz", hash = "sha256:653accf158865b6867004390334fa7e72c43f432b5f2c47c05927196c7611127", size = 12610 }
+sdist = { url = "https://files.pythonhosted.org/packages/fd/9a/01c2aaee8ec00abe3dd51368c8a8c341b4352c1b23859d862edd62bd7ae5/optional_dependencies-0.4.0.tar.gz", hash = "sha256:8c2a764021ec47466a9c0375608d6976aa7f0d87f9a611e511ae70861edbd921", size = 68226 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a1/45/582749493b8eddd0933b2d8de39b2f0cda20b3475a9d16b2447a804fd6b3/optional_dependencies-0.3.2-py3-none-any.whl", hash = "sha256:e377389e9db9d54e42b04319ba71cdd256dde561ad8d4e89cbb5847d1f8bae3f", size = 8506 },
+    { url = "https://files.pythonhosted.org/packages/70/1c/c03aa5a23a3320f8b2875e1ddf6db679412533d95da2ebee15bfe611c1e3/optional_dependencies-0.4.0-py3-none-any.whl", hash = "sha256:aa5e4c2939681cf6b5f38de9ed7cdd60647526076452c29fbe170335fe34bf4a", size = 8551 },
 ]
 
 [[package]]
@@ -1629,7 +1629,7 @@ dev = [
     { name = "pytest-env" },
     { name = "pytest-github-actions-annotate-failures" },
     { name = "pytkdocs-tweaks" },
-    { name = "sybil" },
+    { name = "sybil", extra = ["pytest"] },
 ]
 docs = [
     { name = "griffe" },
@@ -1650,7 +1650,7 @@ test = [
     { name = "pytest-cov" },
     { name = "pytest-env" },
     { name = "pytest-github-actions-annotate-failures" },
-    { name = "sybil" },
+    { name = "sybil", extra = ["pytest"] },
 ]
 
 [package.metadata]
@@ -1675,7 +1675,7 @@ dev = [
     { name = "mkdocstrings", extras = ["python"], specifier = "==0.18" },
     { name = "mknotebooks", specifier = "==0.8" },
     { name = "nbconvert", specifier = "==7.16" },
-    { name = "optional-dependencies", specifier = ">=0.3.2" },
+    { name = "optional-dependencies", specifier = ">=0.4.0" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pygments", specifier = "==2.16" },
     { name = "pymdown-extensions", specifier = "==10.2" },
@@ -1684,7 +1684,7 @@ dev = [
     { name = "pytest-env", specifier = ">=1.1.5" },
     { name = "pytest-github-actions-annotate-failures", specifier = ">=0.3.0" },
     { name = "pytkdocs-tweaks", specifier = "==0.0.8" },
-    { name = "sybil", specifier = ">=7.1.0" },
+    { name = "sybil", extras = ["pytest"], specifier = ">=9.2.0" },
 ]
 docs = [
     { name = "griffe", specifier = "<1.0" },
@@ -1700,12 +1700,12 @@ docs = [
     { name = "pytkdocs-tweaks", specifier = "==0.0.8" },
 ]
 test = [
-    { name = "optional-dependencies", specifier = ">=0.3.2" },
+    { name = "optional-dependencies", specifier = ">=0.4.0" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "pytest-env", specifier = ">=1.1.5" },
     { name = "pytest-github-actions-annotate-failures", specifier = ">=0.3.0" },
-    { name = "sybil", specifier = ">=7.1.0" },
+    { name = "sybil", extras = ["pytest"], specifier = ">=9.2.0" },
 ]
 
 [[package]]
@@ -1979,11 +1979,16 @@ wheels = [
 
 [[package]]
 name = "sybil"
-version = "9.1.0"
+version = "9.2.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/4f/6a/70301b41715b24b5372b22e83bea6637d92f017e7718fffff78ae0a80381/sybil-9.1.0.tar.gz", hash = "sha256:c63c14c9843c62fa994c777eb48c0632f62be5c499ecbe05c1d130157ed6a6ca", size = 84284 }
+sdist = { url = "https://files.pythonhosted.org/packages/fe/01/cd109cc45ad8be87a3338ebb2d0e9f4a46a635952a7cf25f1f30fd13a794/sybil-9.2.0.tar.gz", hash = "sha256:a7cbccf4b06af7e946a218e23fd59fde36738e91eb698b15619a4d5f97b176bb", size = 43757 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3f/c5/995e0ff97f2f972c2c87fa35e1ad8926fcfc280853094118edc4c44b1e44/sybil-9.1.0-py3-none-any.whl", hash = "sha256:7fe20074289bbb5f06dc7ad564dff4ffe42a678add7860345089a7b78125132a", size = 37761 },
+    { url = "https://files.pythonhosted.org/packages/d0/e1/14e7b92ebebd8264a36555967e450035249f5a065f57a71d16a5ed7c36a9/sybil-9.2.0-py3-none-any.whl", hash = "sha256:c0c82823a86c2a9e202fb628526aa973700cc20dbfd5c91481c265521e40b742", size = 38521 },
+]
+
+[package.optional-dependencies]
+pytest = [
+    { name = "pytest" },
 ]
 
 [[package]]
