@@ -213,10 +213,16 @@ from typing import Any
 from jax import lax
 from quax import quaxify
 
+from quaxed._setup import JAX_VERSION
+
 from . import (
     _patch,  # noqa: F401
     linalg,
 )
+
+if JAX_VERSION >= (0, 7, 0):
+    __all__ += ["zeros_like"]
+
 
 # Explicit imports that don't need to be quaxified
 # isort: split

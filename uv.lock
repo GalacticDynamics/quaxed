@@ -1171,6 +1171,18 @@ wheels = [
 ]
 
 [[package]]
+name = "optional-dependencies"
+version = "0.3.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/26/ca/3f17d662f69cb0cfb1f0503d45cde988dcf66a0cf01a58a6c8965378422a/optional_dependencies-0.3.2.tar.gz", hash = "sha256:653accf158865b6867004390334fa7e72c43f432b5f2c47c05927196c7611127", size = 12610 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a1/45/582749493b8eddd0933b2d8de39b2f0cda20b3475a9d16b2447a804fd6b3/optional_dependencies-0.3.2-py3-none-any.whl", hash = "sha256:e377389e9db9d54e42b04319ba71cdd256dde561ad8d4e89cbb5847d1f8bae3f", size = 8506 },
+]
+
+[[package]]
 name = "optype"
 version = "0.10.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1608,6 +1620,7 @@ dev = [
     { name = "mkdocstrings", extra = ["python"] },
     { name = "mknotebooks" },
     { name = "nbconvert" },
+    { name = "optional-dependencies" },
     { name = "pre-commit" },
     { name = "pygments" },
     { name = "pymdown-extensions" },
@@ -1632,6 +1645,7 @@ docs = [
     { name = "pytkdocs-tweaks" },
 ]
 test = [
+    { name = "optional-dependencies" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-env" },
@@ -1661,6 +1675,7 @@ dev = [
     { name = "mkdocstrings", extras = ["python"], specifier = "==0.18" },
     { name = "mknotebooks", specifier = "==0.8" },
     { name = "nbconvert", specifier = "==7.16" },
+    { name = "optional-dependencies", specifier = ">=0.3.2" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pygments", specifier = "==2.16" },
     { name = "pymdown-extensions", specifier = "==10.2" },
@@ -1685,6 +1700,7 @@ docs = [
     { name = "pytkdocs-tweaks", specifier = "==0.0.8" },
 ]
 test = [
+    { name = "optional-dependencies", specifier = ">=0.3.2" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "pytest-env", specifier = ">=1.1.5" },

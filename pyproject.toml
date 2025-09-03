@@ -65,11 +65,12 @@ docs = [
   "jinja2==3.1"
 ]
 test = [
-  "pytest >= 8.3",
+  "optional-dependencies>=0.3.2",
+  "pytest>=8.3",
   "pytest-cov>= 6.2.1",
   "pytest-env>=1.1.5",
-  "pytest-github-actions-annotate-failures>=0.3.0",  # only applies to GH Actions
-  "sybil >= 7.1.0",
+  "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
+  "sybil>=9.2.0",
 ]
 
 

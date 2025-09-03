@@ -4,10 +4,18 @@ import jax.numpy as jnp
 import jax.tree as jtu
 import pytest
 from jax import lax
+from packaging.version import Version
 
 import quaxed.lax as qlax
 
+from ..conftest import OptDeps
+
 mark_todo = pytest.mark.skip(reason="TODO")
+mark_deprecated_jax7 = (
+    pytest.mark.skip(reason="deprecated")
+    if OptDeps.JAX.version > Version("0.7.0")
+    else []
+)
 
 x = jnp.array([[1, 2], [3, 4]], dtype=float)
 y = jnp.array([[5, 6], [7, 8]], dtype=float)
@@ -185,7 +193,7 @@ xconv = jnp.arange(1, 17, dtype=float).reshape((1, 1, 4, 4))
         ("tanh", (x,), {}),
         ("top_k", (x, 1), {}),
         ("transpose", (x, (1, 0)), {}),
-        ("zeros_like_array", (x,), {}),
+        pytest.param("zeros_like_array", (x,), {}, marks=mark_deprecated_jax7),
         ("zeta", (x, 2.0), {}),
         pytest.param("associative_scan", (), {}, marks=mark_todo),
         ("cond", (True, lambda: x, lambda: y), {}),
