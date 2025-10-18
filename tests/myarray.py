@@ -775,14 +775,6 @@ def imag_p(x: MyArray) -> MyArray:
 # ==============================================================================
 
 
-@register(lax.infeed_p)
-def infeed_p() -> MyArray:
-    raise NotImplementedError
-
-
-# ==============================================================================
-
-
 @register(lax.integer_pow_p)
 def integer_pow_p(x: MyArray, *, y: Any) -> MyArray:
     return replace(x, array=lax.integer_pow(x.array, y))
@@ -1014,14 +1006,6 @@ def or_p(x: MyArray, y: MyArray) -> MyArray:
 @register(lax.or_p)
 def or_p(x: MyArray, y: ArrayLike) -> MyArray:
     return replace(x, array=lax.bitwise_or(x.array, y))
-
-
-# ==============================================================================
-
-
-@register(lax.outfeed_p)
-def outfeed_p() -> MyArray:
-    raise NotImplementedError
 
 
 # ==============================================================================
