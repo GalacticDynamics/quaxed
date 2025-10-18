@@ -23,12 +23,12 @@
     "Typing :: Typed",
   ]
   dependencies = [
-    "equinox>=0.12.1",
+    "equinox>=0.13.2",
     "jax>=0.5.3",
     "jaxtyping>=0.3.1",
     "optype>=0.8.0",
     "plum-dispatch>=2.5.2",
-    "quax>=0.2",
+    "quax>=0.2.1",
 ]
 
   [project.urls]
