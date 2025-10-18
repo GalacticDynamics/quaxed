@@ -23,12 +23,12 @@
     "Typing :: Typed",
   ]
   dependencies = [
-    "equinox>=0.12.1",
+    "equinox>=0.13.2",
     "jax>=0.5.3",
     "jaxtyping>=0.3.1",
     "optype>=0.8.0",
     "plum-dispatch>=2.5.2",
-    "quax>=0.2",
+    "quax>=0.2.1",
 ]
 
   [project.urls]
@@ -66,7 +66,7 @@
   ]
   test = [
     "pytest >= 8.3",
-    "pytest-cov >= 3",
+    "pytest-cov>= 6.2.1",
     "pytest-env>=1.1.5",
     "pytest-github-actions-annotate-failures>=0.3.0",  # only applies to GH Actions
     "sybil >= 7.1.0",
@@ -147,7 +147,7 @@
     "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
   ]
   log_cli_level = "INFO"
-  testpaths = ["tests"]
+  testpaths = ["src", "docs", "tests"]
 
 
 [tool.pytest_env]
