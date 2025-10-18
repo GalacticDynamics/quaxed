@@ -147,7 +147,7 @@
     "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
   ]
   log_cli_level = "INFO"
-  testpaths = ["tests"]
+  testpaths = ["src", "docs", "tests"]
 
 
 [tool.pytest_env]
