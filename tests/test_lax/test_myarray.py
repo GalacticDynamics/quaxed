@@ -6,14 +6,21 @@ import jax.numpy as jnp
 import jax.tree as jtu
 import pytest
 from jax import lax
+from packaging.version import Version
 
 import quaxed.lax as qlax
 
+from ..conftest import OptDeps
 from ..myarray import MyArray
 
 AnyTuple: TypeAlias = tuple[object, ...]
 
 mark_todo = pytest.mark.skip(reason="TODO")
+mark_deprecated_jax7 = (
+    pytest.mark.skip(reason="deprecated")
+    if OptDeps.JAX.version > Version("0.7.0")
+    else []
+)
 
 x = MyArray(jnp.array([[1, 2], [3, 4]], dtype=float))
 y = MyArray(jnp.array([[5, 6], [7, 8]], dtype=float))
@@ -259,7 +266,7 @@ def _unwrap_args(
         ("tanh", (x,), {}, True),
         ("top_k", (x, 1), {}, True),
         ("transpose", (x, (1, 0)), {}, True),
-        ("zeros_like_array", (x,), {}, False),
+        pytest.param("zeros_like_array", (x,), {}, False, marks=mark_deprecated_jax7),
         ("zeta", (x, 2.0), {}, True),
         pytest.param("associative_scan", (), {}, True, marks=mark_todo),
         pytest.param("fori_loop", (), {}, True, marks=mark_todo),
