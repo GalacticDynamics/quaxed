@@ -25,12 +25,10 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@f677139bbe7f9c59b41e40162b753cc15f5c51b9 # v5.3.0
-        with:
-          python-version: "3.13"
+          persist-credentials: false
       - uses: hynek/build-and-inspect-python-package@efb823f52190ad02594531168b7a2d5790e66516 # v2.14.0
 
   test-publish:
