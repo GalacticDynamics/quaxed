@@ -65,6 +65,8 @@ def vectorize(  # noqa: C901, PLR0915
     callable
         Vectorized version of the given function.
 
+    Examples
+    --------
     Here are a few examples of how one could write vectorized linear algebra
     routines using :func:`vectorize`:
 
