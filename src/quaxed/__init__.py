@@ -7,7 +7,7 @@ to be used with those functions, not only jax arrays.
 
 """
 
-__all__ = [
+__all__ = (
     # Modules
     "lax",
     "numpy",
@@ -20,7 +20,7 @@ __all__ = [
     "jacfwd",
     "jacrev",
     "value_and_grad",
-]
+)
 
 from typing import TYPE_CHECKING, Any
 

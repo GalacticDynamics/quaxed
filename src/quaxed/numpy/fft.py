@@ -1,6 +1,6 @@
 """FFT functions."""
 
-__all__ = [
+__all__ = (
     "fft",
     "ifft",
     "fftn",
@@ -15,7 +15,7 @@ __all__ = [
     "rfftfreq",
     "fftshift",
     "ifftshift",
-]
+)
 
 
 from jax.numpy import fft as _jax_fft

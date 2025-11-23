@@ -1,7 +1,7 @@
 """Quaxed :mod:`jax.lax`."""
 # pylint: disable=undefined-all-variable
 
-__all__ = [  # noqa: F822
+__all__ = (  # noqa: F822
     "cholesky",
     "eig",
     "eigh",
@@ -15,7 +15,7 @@ __all__ = [  # noqa: F822
     "triangular_solve",
     "tridiagonal",
     "tridiagonal_solve",
-]
+)
 
 
 import sys

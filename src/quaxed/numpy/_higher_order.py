@@ -1,6 +1,6 @@
 """Quaxed :mod:`jax.numpy`."""
 
-__all__ = ["vectorize"]
+__all__ = ("vectorize",)
 
 import functools
 import warnings

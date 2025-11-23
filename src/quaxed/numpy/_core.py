@@ -2,7 +2,7 @@
 """Quaxed :mod:`jax.numpy`."""
 # pylint: disable=undefined-all-variable
 
-__all__ = [
+__all__ = (
     # modules
     "fft",
     "linalg",
@@ -404,7 +404,7 @@ __all__ = [
     "where",
     "zeros",
     # "zeros_like",  # in _creation_functions
-]
+)
 
 import sys
 from collections.abc import Callable

@@ -1,13 +1,13 @@
 """Quaxed :mod:`jax`."""
 
-__all__ = [
+__all__ = (
     "device_put",
     "grad",
     "hessian",
     "jacfwd",
     "jacrev",
     "value_and_grad",
-]
+)
 
 from collections.abc import Callable, Hashable
 from typing import Any, TypeAlias

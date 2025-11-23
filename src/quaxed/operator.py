@@ -7,7 +7,7 @@ list of available functions is in ``__all__`` and documented in the built-in
 
 """
 
-__all__ = [  # noqa: F822
+__all__ = (  # noqa: F822
     "abs",
     "add",
     "and_",
@@ -49,7 +49,7 @@ __all__ = [  # noqa: F822
     "truediv",
     "truth",
     "xor",
-]
+)
 
 import operator
 import sys

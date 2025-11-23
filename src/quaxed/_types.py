@@ -1,6 +1,6 @@
 """Copyright (c) 2023 Nathaniel Starkman. All rights reserved."""
 
-__all__: list[str] = []
+__all__: tuple[str, ...] = ()
 
 from typing import Any, Protocol, runtime_checkable
 

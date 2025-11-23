@@ -10,7 +10,7 @@ library.
 
 """
 
-__all__ = [
+__all__ = (
     "bernoulli",
     "betainc",
     "betaln",
@@ -52,7 +52,7 @@ __all__ = [
     "rel_entr",
     "poch",
     "hyp1f1",
-]
+)
 
 import sys
 from collections.abc import Callable

@@ -30,7 +30,7 @@ from ._creation_functions import *
 from ._higher_order import *
 
 __all__ = (
-    ["fft", "linalg"]  # noqa: RUF005
+    ("fft", "linalg")  # noqa: RUF005
     + _core.__all__
     + _higher_order.__all__
     + _creation_functions.__all__
