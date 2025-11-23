@@ -1,6 +1,6 @@
 """Quaxed :mod:`jax.numpy.linalg`."""
 
-__all__ = [  # noqa: F822
+__all__ = (  # noqa: F822
     "cholesky",
     "cross",
     "det",
@@ -27,7 +27,7 @@ __all__ = [  # noqa: F822
     "vecdot",
     "vector_norm",
     "norm",
-]
+)
 
 import sys
 from collections.abc import Callable

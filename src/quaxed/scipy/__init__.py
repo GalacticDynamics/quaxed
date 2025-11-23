@@ -5,6 +5,6 @@ This module wraps the functions in :external:`jax.scipy` with
 
 """
 
-__all__ = ["linalg", "special"]
+__all__ = ("linalg", "special")
 
 from . import linalg, special

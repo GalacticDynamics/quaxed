@@ -10,9 +10,7 @@ library.
 
 """
 
-__all__ = [
-    "svd",
-]
+__all__ = ("svd",)
 
 import sys
 from collections.abc import Callable

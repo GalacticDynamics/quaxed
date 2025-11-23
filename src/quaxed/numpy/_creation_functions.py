@@ -1,6 +1,6 @@
 """Array API creation functions."""
 
-__all__ = [
+__all__ = (
     "arange",
     "asarray",
     "empty_like",
@@ -12,7 +12,7 @@ __all__ = [
     "tril",
     "triu",
     "zeros_like",
-]
+)
 
 
 from typing import Literal, TypeVar
