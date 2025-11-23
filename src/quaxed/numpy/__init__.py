@@ -19,8 +19,10 @@ If a function is missing, please file an Issue.
 """
 # pylint: disable=redefined-builtin
 
+import warnings
 from typing import Any
 
+import jax.numpy as _jnp
 from jaxtyping import install_import_hook
 
 from . import _core, _creation_functions, _higher_order, fft, linalg
@@ -39,6 +41,11 @@ __all__ = (
 def __getattr__(name: str) -> Any:
     if name in __all__:
         return getattr(_core, name)
+
+    if hasattr(_jnp, name):
+        msg = f"Missing `quaxed.numpy.{name}`. Falling back to `jax.numpy.{name}`. "
+        warnings.warn(msg, UserWarning, stacklevel=2)
+        return getattr(_jnp, name)
 
     msg = f"module {__name__!r} has no attribute {name!r}"
     raise AttributeError(msg)
