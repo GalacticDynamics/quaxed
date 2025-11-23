@@ -46,9 +46,10 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
   "cz-conventional-gitmoji>=0.6.1",
-  "ipykernel>=6.29.5",
-  "pre-commit>=4.2.0",
   {include-group = "docs"},
+  {include-group = "jupyter"},
+  {include-group = "lint"},
+  {include-group = "nox"},
   {include-group = "test"},
 ]
 docs = [
@@ -63,6 +64,18 @@ docs = [
   "pymdown-extensions==10.2",  # Markdown extensions e.g. to handle LaTeX.
   "pytkdocs_tweaks==0.0.8",  # Tweaks mkdocstrings to improve various aspects
   "jinja2==3.1"
+]
+jupyter = [
+    "ipykernel>=6.29.5",
+]
+lint = [
+    "pre-commit>=4.2.0",
+    "pylint>=4.0.3",
+    "ruff>=0.14.6",
+]
+nox = [
+    "nox>=2025.11.12",
+    "nox-uv>=0.6.3",
 ]
 test = [
   "optional-dependencies>=0.4.0",
@@ -80,6 +93,7 @@ build.hooks.vcs.version-file = "src/quaxed/_version.py"
 
 
 [tool.codespell]
+skip = "uv.lock"
 ignore-words-list = """
     fro,
 """
