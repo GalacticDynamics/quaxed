@@ -10,12 +10,12 @@ __all__ = (
 )
 
 from collections.abc import Callable, Hashable
-from typing import Any, TypeAlias
+from typing import Any
 
 import jax
 from quax import quaxify
 
-AxisName: TypeAlias = Hashable
+type AxisName = Hashable
 
 
 # =============================================================================
