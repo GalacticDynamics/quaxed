@@ -66,6 +66,7 @@ from jax.lax import (
     erf_inv as erf_inv,
     erfc as erfc,
     exp as exp,
+    exp2 as exp2,
     expand_dims as expand_dims,
     expm1 as expm1,
     fft as fft,
@@ -200,3 +201,6 @@ from jax.lax import (
     RoundingMethod as RoundingMethod,
     ScatterDimensionNumbers as ScatterDimensionNumbers,
 )
+
+# Explicit imports that don't need to be quaxified
+# isort: split
