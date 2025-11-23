@@ -3,7 +3,7 @@ name = "quaxed"
 dynamic = ["version"]
 description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 authors = [
   { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
 ]
@@ -16,9 +16,9 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering",
   "Typing :: Typed",
 ]
@@ -26,7 +26,7 @@ dependencies = [
   "equinox>=0.13.2",
   "jax>=0.5.3",
   "jaxtyping>=0.3.1",
-  "optype>=0.8.0",
+  "optype>=0.14.0",
   "plum-dispatch>=2.5.2",
   "quax>=0.2.1",
 ]
@@ -76,7 +76,7 @@ nox = [
 test = [
   "optional-dependencies>=0.4.0",
   "pytest>=8.3",
-  "pytest-cov>= 6.2.1",
+  "pytest-cov>=6.2.1",
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
@@ -110,7 +110,7 @@ port.exclude_lines = [
 
 [tool.mypy]
 files = ["src"]
-python_version = "3.11"
+python_version = "3.12"
 warn_unused_configs = true
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
@@ -130,7 +130,7 @@ warn_return_any = false
 
 
 [tool.pylint]
-py-version = "3.11"
+py-version = "3.12"
 ignore-paths = [".*/_version.py"]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
@@ -208,14 +208,22 @@ convention = "numpy"
 [tool.uv]
 constraint-dependencies = [
   "appnope>=0.1.2",
+  "backcall>=0.2.0",
   "bleach>6.0",
   "cffi>=1.14",
   "decorator>=5.1.1",
+  "future>=1.0.0",
+  "iniconfig>=2.0.0",
   "matplotlib>=3.7.1",
   "matplotlib-inline>=0.1.6",
+  "nest-asyncio>=1.5.0",
   "opt-einsum>=3.2.1",
   "pickleshare>=0.7.5",
+  "ply>3.11",
   "psutil>=5.9.0",
+  "pycparser>=2.20",
   "pyparsing>=3.0.0",
-  "pyzmq>=25.0",
+  "pyzmq>=26.0",
+  "scipy>=1.11.2",
+  "wcwidth>=0.2.0"
 ]

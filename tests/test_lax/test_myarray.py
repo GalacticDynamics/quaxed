@@ -1,7 +1,5 @@
 """Test with JAX inputs."""
 
-from typing import TypeAlias
-
 import jax.numpy as jnp
 import jax.tree as jtu
 import pytest
@@ -13,7 +11,7 @@ import quaxed.lax as qlax
 from ..conftest import OptDeps
 from ..myarray import MyArray
 
-AnyTuple: TypeAlias = tuple[object, ...]
+type AnyTuple = tuple[object, ...]
 
 mark_todo = pytest.mark.skip(reason="TODO")
 mark_deprecated_jax7 = (

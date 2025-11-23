@@ -2,7 +2,7 @@
 
 from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any, Self
+from typing import Any, Final, Self
 
 import equinox as eqx
 import jax
@@ -18,6 +18,7 @@ from quax import ArrayValue, quaxify, register
 from quaxed._types import DType
 
 JAX_VERSION = packaging.version.parse(jax.__version__)
+JAX_VERSION_LT_8: Final = packaging.version.Version("0.8.0") > JAX_VERSION
 
 
 class MyArray(ArrayValue):
@@ -1163,8 +1164,8 @@ def reduce_prod_p(x: MyArray, /, **kw) -> MyArray:
 
 
 @register(lax.reduce_sum_p)
-def reduce_sum_p(x: MyArray, *, axes: tuple[int, ...]) -> MyArray:
-    return replace(x, array=lax.reduce_sum_p.bind(x.array, axes=axes))
+def reduce_sum_p(x: MyArray, **kw) -> MyArray:
+    return replace(x, array=lax.reduce_sum_p.bind(x.array, **kw))
 
 
 # ==============================================================================
@@ -1709,8 +1710,8 @@ def tanh_p(x: MyArray, /, **kw: Any) -> MyArray:
 
 
 @register(lax.top_k_p)
-def top_k_p(operand: MyArray, k: int = 0) -> MyArray:
-    return [MyArray(x) for x in lax.top_k(operand.array, k)]
+def top_k_p(operand: MyArray, /, k: int = 0, **kw: Any) -> list[MyArray]:
+    return [MyArray(x) for x in lax.top_k(operand.array, k, **kw)]
 
 
 # ==============================================================================
