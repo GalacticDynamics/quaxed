@@ -1,4 +1,5 @@
 """Quaxed :mod:`jax.numpy.linalg`."""
+# pylint: disable=undefined-all-variable
 
 __all__ = (  # noqa: F822
     "cholesky",

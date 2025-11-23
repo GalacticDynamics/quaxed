@@ -1,4 +1,5 @@
 """Array API creation functions."""
+# pylint: disable=E0102,E1121,E1125
 
 __all__ = (
     "arange",

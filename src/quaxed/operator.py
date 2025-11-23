@@ -6,6 +6,7 @@ list of available functions is in ``__all__`` and documented in the built-in
 `operator` library.
 
 """
+# pylint: disable=undefined-all-variable
 
 __all__ = (  # noqa: F822
     "abs",
