@@ -1,5 +1,6 @@
 """Test fallback warnings for numpy functions not in quaxed.numpy.__all__."""
 
+import inspect
 import warnings
 from operator import itemgetter
 
@@ -20,15 +21,22 @@ def key(request):
 def test_missing_functions_raise_warning(key):
     """Test missing quaxed.numpy functions raise UserWarning, fall back to numpy."""
     # Get all callable functions from numpy that are in numpy.__all__
-    numpy_functions = {
-        name for name in dir(jnp) if hasattr(jnp, name) and callable(getattr(jnp, name))
+    jax_numpy_functions = {
+        name
+        for name in dir(jnp)
+        if (
+            hasattr(jnp, name)
+            and not name.startswith("_")
+            and callable(getattr(jnp, name))
+            and not inspect.isclass(getattr(jnp, name))
+        )
     }
 
     # Get all functions available in quaxed.numpy
     quaxed_functions = set(qnp.__all__)  # type: ignore[attr-defined]
 
     # Find functions that are in numpy but not in quaxed
-    missing_functions = numpy_functions - quaxed_functions
+    missing_functions = jax_numpy_functions - quaxed_functions
 
     # Test a sample of missing functions
     key, subkey = jr.split(key)
@@ -38,20 +46,18 @@ def test_missing_functions_raise_warning(key):
     )
 
     for func_name in sample_functions:
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
-
+        match = (
+            rf"Missing `quaxed\.numpy\.{func_name}`."
+            rf"*Falling back to `jax\.numpy\.{func_name}`"
+        )
+        with pytest.warns(UserWarning, match=match) as record:
             # Access the function through quaxed.numpy
             func = getattr(qnp, func_name)
 
-            # Verify a warning was raised
-            assert len(w) == 1
-            assert issubclass(w[0].category, UserWarning)
-            assert f"Missing `quaxed.numpy.{func_name}`" in str(w[0].message)
-            assert f"Falling back to `jax.numpy.{func_name}`" in str(w[0].message)
-
-            # Verify it actually returns the numpy function
-            assert func is getattr(jnp, func_name)
+        # Verify a warning was raised
+        assert len(record) == 1
+        # Verify it actually returns the numpy function
+        assert func is getattr(jnp, func_name)
 
 
 def test_available_functions_no_warning():
