@@ -7,7 +7,7 @@ list of available functions is in ``__all__`` and documented in the built-in
 
 """
 
-__all__ = (  # noqa: F822
+__all__: tuple[str, ...] = (  # noqa: F822
     "abs",
     "add",
     "and_",
