@@ -139,6 +139,7 @@ ignore-paths = [".*/_version.py"]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [
+  "C0415",  # Import outside toplevel -- handled by ruff
   "design",
   "fixme",
   "line-too-long",
@@ -147,6 +148,7 @@ messages_control.disable = [
   "redefined-builtin",
   "useless-import-alias",  # handled by ruff
   "wrong-import-position",
+  "R0801",  # Similar lines
 ]
 
 

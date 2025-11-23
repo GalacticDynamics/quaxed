@@ -2,7 +2,7 @@
 """Quaxed :mod:`jax.numpy`."""
 # pylint: disable=undefined-all-variable
 
-__all__ = (
+__all__: tuple[str, ...] = (
     # modules
     "fft",
     "linalg",

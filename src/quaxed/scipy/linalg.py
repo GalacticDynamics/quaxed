@@ -1,5 +1,3 @@
-# ruff:noqa: F822
-
 """Quaxed :mod:`jax.scipy.linalg`.
 
 This module wraps the functions in :external:`jax.scipy.linalg` with
@@ -9,6 +7,8 @@ in ``__all__`` and documented in the built-in :external:`jax.scipy.linalg`
 library.
 
 """
+# ruff:noqa: F822
+# pylint: disable=undefined-all-variable
 
 __all__ = ("svd",)
 

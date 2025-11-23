@@ -1,5 +1,3 @@
-# ruff:noqa: F822
-
 """Quaxed :mod:`jax.scipy.special`.
 
 This module wraps the functions in :external:`jax.scipy.special` with
@@ -9,6 +7,8 @@ in ``__all__`` and documented in the built-in :external:`jax.scipy.special`
 library.
 
 """
+# ruff:noqa: F822
+# pylint: disable=undefined-all-variable
 
 __all__ = (
     "bernoulli",

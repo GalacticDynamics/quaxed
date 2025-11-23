@@ -39,7 +39,7 @@ __all__ = (
 
 # TODO: consolidate with ``_core.__getattr__``.
 def __getattr__(name: str) -> Any:
-    if name in __all__:
+    if name in _core.__all__:
         return getattr(_core, name)
 
     if hasattr(_jnp, name):
