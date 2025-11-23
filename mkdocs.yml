@@ -38,7 +38,7 @@ edit_uri: "" # No edit button, as some of our pages are in /docs and some in /ex
 strict: true # Don't allow warnings during the build process
 
 extra_javascript:
-  # The below three make MathJax work, see https://squidfunk.github.io/mkdocs-material/reference/mathjax/
+  # The below two make MathJax work, see https://squidfunk.github.io/mkdocs-material/reference/mathjax/
   - _static/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
@@ -58,40 +58,37 @@ markdown_extensions:
       toc_depth: 4
 
 plugins:
-  - search # default search plugin; needs manually re-enabling when using any other plugins
+  - search:
+      # See https://github.com/squidfunk/mkdocs-material/discussions/8116#discussioncomment-12632752
+      # and https://github.com/patrick-kidger/equinox/issues/984
+      # In particular this allows for searching e.g. 'filter_grad' and to match 'equinox.filter_grad'.
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
   - autorefs # Cross-links to headings
   - include_exclude_files:
       include:
         - ".htaccess"
       exclude:
         - "_overrides"
-  - mknotebooks # Jupyter notebooks
+  - ipynb
   - mkdocstrings:
-      default_handler: python
       handlers:
         python:
-          setup_commands:
-            - import pytkdocs_tweaks
-            - pytkdocs_tweaks.main()
-            - import jaxtyping
-            - jaxtyping.set_array_name_format("array")
-
           options:
-            allow_inspection: true
             docstring_style: numpy
+            force_inspection: true
             heading_level: 2
             inherited_members: true # Allow looking up inherited methods
             members_order: source # order methods according to their order of definition in the source code, not alphabetical order
             show_bases: true
             show_if_no_docstring: true
             show_inheritance_diagram: true
+            show_overloads: true
             show_root_full_path: true # display "diffrax.asdf" not just "asdf"
             show_root_heading: true # actually display anything at all...
             show_signature_annotations: true
             show_signature_return_annotation: true
             show_signature_parameter_types: true
-          external:
-            numpy: https://numpy.org/doc/stable/
+            show_symbol_type_toc: true
 
 nav:
   - "index.md"
