@@ -80,6 +80,7 @@ test = [
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
+  "mypy>=1.10",
 ]
 
 
@@ -127,6 +128,10 @@ warn_return_any = false
 [[tool.mypy.overrides]]
   module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
   ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+  module = ["quaxed.numpy", "quaxed.numpy.*"]
+  ignore_errors = true
 
 
 [tool.pylint]
@@ -196,6 +201,7 @@ extra-standard-library = ["typing_extensions"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/quaxed/**" = ["A004"]
+"src/quaxed/numpy/__init__.pyi" = ["ALL"]
 "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
 "__init__.py" = ["F403"]
 "noxfile.py" = ["T20"]
