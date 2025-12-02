@@ -33,6 +33,15 @@ custom array-ish objects, not only jax arrays.
 pip install quaxed
 ```
 
+Note that `quaxed` builds a
+[typing stub file](https://typing.python.org/en/latest/guides/writing_stubs.html)
+during the build process to provide type hints for some quaxified libraries
+(e.g., `quaxed.numpy`). This enables `quaxed` functions to be typed correctly
+when working with custom array-like objects. If you find inconsistencies or
+issues with the type hints or stub files, we recommend using
+[`uv`](https://docs.astral.sh/uv/) to set up your development environment and
+pin the versions of `quaxed` and its dependencies.
+
 ## Documentation
 
 [![Read The Docs](https://img.shields.io/badge/read_docs-here-orange)](https://unxt.readthedocs.io/en/)

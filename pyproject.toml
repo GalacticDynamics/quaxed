@@ -39,7 +39,7 @@ Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
 build-backend = "hatchling.build"
 
 
@@ -80,16 +80,19 @@ test = [
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
+  "mypy>=1.10",
+  "typing_extensions"
 ]
 
 
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/quaxed/_version.py"
+build.hooks.custom.path = "tools/make_numpy_stub.py"
 
 
 [tool.codespell]
-skip = "uv.lock"
+skip = ["uv.lock", "tools/make_numpy_stub.py"]
 ignore-words-list = """
     fro,
 """
@@ -196,11 +199,13 @@ extra-standard-library = ["typing_extensions"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/quaxed/**" = ["A004"]
+"src/quaxed/numpy/__init__.pyi" = ["ALL"]
 "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
 "__init__.py" = ["F403"]
 "noxfile.py" = ["T20"]
 "docs/**" = ["INP001"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
+"tools/**" = ["INP001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
