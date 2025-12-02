@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Generated type stubs
+src/quaxed/numpy/__init__.pyi
+
 # C extensions
 *.so
 
