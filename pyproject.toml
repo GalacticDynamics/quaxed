@@ -129,10 +129,6 @@ warn_return_any = false
   module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
   ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-  module = ["quaxed.numpy", "quaxed.numpy.*"]
-  ignore_errors = true
-
 
 [tool.pylint]
 py-version = "3.11"
