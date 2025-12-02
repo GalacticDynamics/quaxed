@@ -138,7 +138,8 @@ def _add_typealias_imports(text: str, /) -> str:
     Args:
         text: The complete contents of the upstream ``jax.numpy`` stub file.
 
-    Returns:
+    Returns
+    -------
         The rewritten stub text with additional imports and the widened
         ``ArrayLike`` type alias.
 
@@ -186,7 +187,8 @@ def _replace_binary_ufunc(text: str, /) -> str:
         text: The stub file contents in which the ``BinaryUfunc`` protocol
             should be replaced.
 
-    Returns:
+    Returns
+    -------
         The stub text with the original ``BinaryUfunc`` protocol replaced by
         the custom ``BINARY_UFUNC`` definition.
 
@@ -221,11 +223,13 @@ def _rewrite_unary(text: str, /) -> str:
         text: The stub text in which unary function signatures should be
             rewritten.
 
-    Returns:
+    Returns
+    -------
         The stub text with matching unary ufunc definitions replaced by
         overload-based signatures.
 
     """
+
     def repl(match: re.Match[str], /) -> str:
         tail = match.group("tail")
         name = match.group("name")
@@ -265,11 +269,13 @@ def _rewrite_binary(text: str, /) -> str:
         text: The stub text in which binary function signatures should be
             rewritten.
 
-    Returns:
+    Returns
+    -------
         The stub text with matching binary ufunc definitions replaced by
         overload-based signatures.
 
     """
+
     def repl(match: re.Match[str], /) -> str:
         tail = match.group("tail")
         name = match.group("name")
@@ -348,7 +354,7 @@ class NumPyStubBuildHook(BuildHookInterface):
       the file is always included in the built distribution, even if it would
       otherwise be excluded by default file discovery.
 
-    The hook is registered under the plugin name 
+    The hook is registered under the plugin name
     ``"quaxed-numpy-stub-hook"`` and can be enabled via Hatch's pyproject
     configuration.
 
