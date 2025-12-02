@@ -1,14 +1,21 @@
-"""Regenerate the `quaxed.numpy` type stub file with ArrayValue-aware overloads."""
+"""Custom hatch build hook to generate type stubs at build time."""
 
-import argparse
+from __future__ import annotations
+
 import re
 import textwrap
 from pathlib import Path
+from typing import Any
 
 import jax.numpy as jnp
+from hatchling.builders.hooks.plugin.interface import BuildHookInterface
+
+# ---------------------------------------------------------------------------
+# Stub generation logic (mirrors tools/update_numpy_stub.py)
+# ---------------------------------------------------------------------------
 
 RE_UNARY = re.compile(
-    (r"^def (?P<name>\w+)\(x: ArrayLike, /(?P<tail>[^)]*)\) -> Array: \.\.\.$"),
+    r"^def (?P<name>\w+)\(x: ArrayLike, /(?P<tail>[^)]*)\) -> Array: \.\.\.$",
     re.MULTILINE,
 )
 
@@ -94,19 +101,14 @@ def _add_typealias_imports(text: str) -> str:
         "Protocol, TypeAlias, TypeVar, Union, overload",
         1,
     )
-
-    # Add quax import
     text = text.replace("import os\n", "import os\nimport quax\n", 1)
-
     text = text.replace(
         "Array, ArrayLike, DType",
         "Array,\n    ArrayLike as _ArrayLike,\n    DType",
         1,
     )
-
     alias = "ArrayLike: TypeAlias = _ArrayLike | quax.ArrayValue\n\n"
     text = text.replace("import numpy as _np\n\n", f"import numpy as _np\n\n{alias}", 1)
-
     return text.replace(
         "_T = TypeVar('_T')",
         (
@@ -170,7 +172,8 @@ def _rewrite_binary(text: str) -> str:
     return RE_BINARY.sub(repl, text)
 
 
-def update_stub(output: Path) -> None:
+def generate_numpy_stub(output: Path) -> None:
+    """Generate the quaxed.numpy stub file from the upstream jax.numpy stub."""
     upstream = Path(jnp.__file__).with_suffix(".pyi")
     text = upstream.read_text()
     text = _add_typealias_imports(text)
@@ -181,19 +184,30 @@ def update_stub(output: Path) -> None:
     output.write_text(text)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Regenerate quaxed numpy stub with ArrayValue overloads",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("src/quaxed/numpy/__init__.pyi"),
-        help="Path to write the generated stub",
-    )
-    args = parser.parse_args()
-    update_stub(args.output)
+# ---------------------------------------------------------------------------
+# Hatch build hook
+# ---------------------------------------------------------------------------
 
 
-if __name__ == "__main__":
-    main()
+class NumPyStubBuildHook(BuildHookInterface):
+    """Build hook that generates the quaxed.numpy stub file."""
+
+    PLUGIN_NAME = "numpy-stub"
+
+    def initialize(
+        self,
+        _: str,
+        build_data: dict[str, Any],
+    ) -> None:
+        """Generate the numpy stub before building."""
+        root = Path(self.root)
+        stub_path = root / "src" / "quaxed" / "numpy" / "__init__.pyi"
+
+        # Generate the stub
+        self.app.display_info(f"Generating numpy stub: {stub_path}")
+        generate_numpy_stub(stub_path)
+
+        # Ensure it's included in the build artifacts
+        build_data.setdefault("force_include", {})[str(stub_path)] = (
+            "quaxed/numpy/__init__.pyi"
+        )

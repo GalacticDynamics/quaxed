@@ -39,7 +39,7 @@ Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
 build-backend = "hatchling.build"
 
 
@@ -87,10 +87,11 @@ test = [
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/quaxed/_version.py"
+build.hooks.custom.path = "tools/make_numpy_stub.py"
 
 
 [tool.codespell]
-skip = "uv.lock"
+skip = ["uv.lock", "tools/make_numpy_stub.py"]
 ignore-words-list = """
     fro,
 """
@@ -203,6 +204,7 @@ extra-standard-library = ["typing_extensions"]
 "noxfile.py" = ["T20"]
 "docs/**" = ["INP001"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
+"tools/**" = ["INP001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
