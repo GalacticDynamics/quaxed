@@ -81,6 +81,7 @@ test = [
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
   "mypy>=1.10",
+  "typing_extensions"
 ]
 
 
