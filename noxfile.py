@@ -86,7 +86,7 @@ def pyright_lint(s: nox.Session, /) -> None:
 # Testing
 
 
-@session(uv_groups=["test-all"], reuse_venv=True)
+@session(uv_groups=["test", "build"], reuse_venv=True)
 def test(s: nox.Session, /) -> None:
     """Run the tests with all optional dependencies.
 

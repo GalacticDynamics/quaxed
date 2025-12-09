@@ -80,6 +80,7 @@ nox = [
 ]
 test = [
   "optional-dependencies>=0.4.0",
+  "mypy>=1.19.0",
   "pytest>=8.3",
   "pytest-cov>= 6.2.1",
   "pytest-env>=1.1.5",
@@ -175,6 +176,7 @@ filterwarnings = [
 ]
 log_cli_level = "INFO"
 testpaths = ["src", "docs", "tests"]
+norecursedirs = ["src/quaxed/_tools"]
 
 
 [tool.pytest_env]
@@ -217,7 +219,7 @@ extra-standard-library = ["typing_extensions"]
 "noxfile.py" = ["T20"]
 "docs/**" = ["INP001"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
-"src/quaxed/_tools/**" = ["INP001"]
+"src/quaxed/_tools/**" = ["E501", "INP001", "RET504"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

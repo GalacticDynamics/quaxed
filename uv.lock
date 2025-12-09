@@ -1719,6 +1719,7 @@ nox = [
     { name = "nox-uv" },
 ]
 test = [
+    { name = "mypy" },
     { name = "optional-dependencies" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -1786,6 +1787,7 @@ nox = [
     { name = "nox-uv", specifier = ">=0.6.3" },
 ]
 test = [
+    { name = "mypy", specifier = ">=1.19.0" },
     { name = "optional-dependencies", specifier = ">=0.4.0" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-cov", specifier = ">=6.2.1" },

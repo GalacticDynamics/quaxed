@@ -17,7 +17,7 @@ __all__ = (
 
 
 from collections.abc import Sequence
-from typing import Literal, TypeVar
+from typing import Literal, TypeVar, cast
 
 import jax
 import jax.numpy as jnp
@@ -93,7 +93,7 @@ def asarray(
     dtype: DType | None = None,
     order: Literal["C", "F", "A", "K"] | None = None,
 ) -> Value:
-    return jnp.asarray(obj, dtype=dtype, order=order)
+    return cast("Value", jnp.asarray(obj, dtype=dtype, order=order))
 
 
 # =============================================================================
