@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any
 
 import jax.numpy as jnp
+
+# pylint: disable=import-error
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 logger = logging.getLogger(__name__)
@@ -807,7 +809,7 @@ def generate_numpy_stub(output: Path, /) -> None:
 
     """
     upstream = Path(jnp.__file__).with_suffix(".pyi")
-    text = upstream.read_text()
+    text = upstream.read_text(encoding="utf-8")
     text = _add_typealias_imports(text)
     text = _replace_binary_ufunc(text)
     text = _rewrite_single_arraylike_param(text)

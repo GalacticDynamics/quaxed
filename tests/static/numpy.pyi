@@ -137,26 +137,89 @@ result131: MyArray = qnp.argsort(arr000)
 ##############################################################################
 # Two-Argument Functions
 
-# Test that binary ufuncs preserve MyArray type
+# Arithmetic operations
 result132: MyArray = qnp.add(arr000, arr001)
 result133: MyArray = qnp.subtract(arr000, arr001)
 result134: MyArray = qnp.multiply(arr000, arr001)
 result135: MyArray = qnp.divide(arr000, arr001)
-result136: MyArray = qnp.maximum(arr000, arr001)
-result137: MyArray = qnp.minimum(arr000, arr001)
+result136: MyArray = qnp.power(arr000, arr001)
+result137: MyArray = qnp.floor_divide(arr000, arr001)
+result138: MyArray = qnp.true_divide(arr000, arr001)
+result139: MyArray = qnp.mod(arr000, arr001)
+result140: MyArray = qnp.remainder(arr000, arr001)
+result141: MyArray = qnp.fmod(arr000, arr001)
+
+# Comparison operations
+result150: MyArray = qnp.maximum(arr000, arr001)
+result151: MyArray = qnp.minimum(arr000, arr001)
+result152: MyArray = qnp.fmax(arr000, arr001)
+result153: MyArray = qnp.fmin(arr000, arr001)
+result154: MyArray = qnp.equal(arr000, arr001)
+result155: MyArray = qnp.not_equal(arr000, arr001)
+result156: MyArray = qnp.greater(arr000, arr001)
+result157: MyArray = qnp.greater_equal(arr000, arr001)
+result158: MyArray = qnp.less(arr000, arr001)
+result159: MyArray = qnp.less_equal(arr000, arr001)
+
+# Bitwise operations
+result160: MyArray = qnp.bitwise_and(arr000, arr001)
+result161: MyArray = qnp.bitwise_or(arr000, arr001)
+result162: MyArray = qnp.bitwise_xor(arr000, arr001)
+result163: MyArray = qnp.left_shift(arr000, arr001)
+result164: MyArray = qnp.right_shift(arr000, arr001)
+result165: MyArray = qnp.bitwise_left_shift(arr000, arr001)
+result166: MyArray = qnp.bitwise_right_shift(arr000, arr001)
+
+# Logical operations
+result170: MyArray = qnp.logical_and(arr000, arr001)
+result171: MyArray = qnp.logical_or(arr000, arr001)
+result172: MyArray = qnp.logical_xor(arr000, arr001)
+
+# Trigonometric operations
+result180: MyArray = qnp.arctan2(arr000, arr001)
+result181: MyArray = qnp.atan2(arr000, arr001)
+result182: MyArray = qnp.hypot(arr000, arr001)
+
+# Special math operations
+result190: MyArray = qnp.copysign(arr000, arr001)
+result191: MyArray = qnp.nextafter(arr000, arr001)
+result192: MyArray = qnp.ldexp(arr000, arr001)
+result193: MyArray = qnp.gcd(arr000, arr001)
+result194: MyArray = qnp.lcm(arr000, arr001)
+
+# Logarithmic operations
+result200: MyArray = qnp.logaddexp(arr000, arr001)
+result201: MyArray = qnp.logaddexp2(arr000, arr001)
+
+# Matrix/vector operations
+result210: MyArray = qnp.dot(arr000, arr001)
+result211: MyArray = qnp.inner(arr000, arr001)
+# TODO: outer needs overload fix - second param should support _ArrayValueT
+# result212: MyArray = qnp.outer(arr000, arr001)
+result213: MyArray = qnp.matmul(arr002, arr002)
+result214: MyArray = qnp.vdot(arr000, arr001)
+result215: MyArray = qnp.kron(arr000, arr001)
+result216: MyArray = qnp.cross(arr000, arr001)
+
+# Statistical/signal operations
+result220: MyArray = qnp.convolve(arr000, arr001)
+result221: MyArray = qnp.correlate(arr000, arr001)
 
 # Test that binary ufuncs with mixed types preserve MyArray
-result138: MyArray = qnp.add(arr000, scalar000)
-result139: MyArray = qnp.add(scalar000, arr000)
-result140: MyArray = qnp.multiply(arr000, scalar000)
-result141: MyArray = qnp.multiply(scalar000, arr000)
+result230: MyArray = qnp.add(arr000, scalar000)
+result231: MyArray = qnp.add(scalar000, arr000)
+result232: MyArray = qnp.multiply(arr000, scalar000)
+result233: MyArray = qnp.multiply(scalar000, arr000)
+result234: MyArray = qnp.power(arr000, scalar000)
+result235: MyArray = qnp.maximum(arr000, scalar000)
+result236: MyArray = qnp.minimum(arr000, scalar000)
 
 # test full_like
-result142: MyArray = qnp.full_like(arr002, 7.0)
-result143: MyArray = qnp.full_like(arr002, MyArray(qnp.array(7.0)))
+result240: MyArray = qnp.full_like(arr002, 7.0)
+result241: MyArray = qnp.full_like(arr002, MyArray(qnp.array(7.0)))
 
 # Test reshape preserves MyArray type
-result144: MyArray = qnp.reshape(arr000, (3, 1))
+result250: MyArray = qnp.reshape(arr000, (3, 1))
 
 ##############################################################################
 # Multi-Argument Functions

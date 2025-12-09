@@ -37,7 +37,7 @@ def _process_stub_flag(s: nox.Session, /) -> list[str]:
 # Linting
 
 
-@session(uv_groups=["lint"], reuse_venv=True)
+@session(uv_groups=["lint", "build"], reuse_venv=True)
 def lint(s: nox.Session, /) -> None:
     """Run the linter.
 
