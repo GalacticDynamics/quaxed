@@ -7,17 +7,6 @@ import nox
 from nox_uv import session
 
 nox.needs_version = ">=2024.3.2"
-nox.options.sessions = [
-    # Linting
-    "lint",
-    "pylint",
-    "precommit",
-    # Testing
-    "tests",
-    # Documentation
-    "docs",
-    "build_api_docs",
-]
 nox.options.default_venv_backend = "uv"
 
 DIR = Path(__file__).parent.resolve()
@@ -33,7 +22,7 @@ def lint(s: nox.Session, /) -> None:
     pylint(s)  # reuse pylint session
 
 
-@session(venv_backend="uv", reuse_venv=True)
+@session(uv_groups=["lint"], reuse_venv=True)
 def precommit(s: nox.Session, /) -> None:
     """Run pre-commit."""
     s.run("pre-commit", "run", "--all-files", *s.posargs)
