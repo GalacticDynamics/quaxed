@@ -164,6 +164,7 @@ messages_control.disable = [
   "missing-function-docstring", # TODO: reinstate.
   "missing-module-docstring",
   "redefined-builtin",
+  "unused-argument",  # handled by ruff
   "useless-import-alias",  # handled by ruff
   "wrong-import-position",
   "R0801",  # Similar lines
