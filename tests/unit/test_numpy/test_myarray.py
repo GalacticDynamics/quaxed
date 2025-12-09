@@ -159,6 +159,7 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         ("exp", (x,), {}, True),
         ("exp2", (x,), {}, True),
         ("expand_dims", (x, 0), {}, True),
+        ("expand_dims", (x, (0, 2)), {}, True),
         ("expm1", (x,), {}, True),
         pytest.param("extract", (jnp.array([True]), x), {}, True, marks=xfail_quax58),
         ("fabs", (x,), {}, True),

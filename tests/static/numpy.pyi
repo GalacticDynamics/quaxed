@@ -101,6 +101,8 @@ result095: MyArray = qnp.flip(arr000)
 result096: MyArray = qnp.fliplr(arr002)
 result097: MyArray = qnp.flipud(arr002)
 result098: MyArray = qnp.rot90(arr002)
+result099: MyArray = qnp.expand_dims(arr000, 0)
+result099a: MyArray = qnp.expand_dims(arr000, (0, 2))
 
 # Cumulative operations
 result100: MyArray = qnp.cumsum(arr000)

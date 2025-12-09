@@ -133,5 +133,4 @@ def build(s: nox.Session, /) -> None:
     if build_path.exists():
         shutil.rmtree(build_path)
 
-    s.install("build")
-    s.run("build")
+    s.run("python", "-m", "build")
