@@ -72,6 +72,7 @@ lint = [
     "mypy>=1.19.0",
     "pre-commit>=4.2.0",
     "pylint>=4.0.3",
+    "pyright>=1.1.407",
     "ruff>=0.14.6",
 ]
 nox = [

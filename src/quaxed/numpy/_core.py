@@ -1,5 +1,6 @@
 # ruff: noqa: F822
 """Quaxed :mod:`jax.numpy`."""
+# pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 
 __all__: tuple[str, ...] = (
