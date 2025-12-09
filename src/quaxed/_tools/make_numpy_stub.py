@@ -1,7 +1,12 @@
+# /// script
+# dependencies = [
+#   "jax>=0.5.3",
+#   "hatchling",
+# ]
+# ///
 """Custom hatch build hook to generate type stubs at build time."""
 
-from __future__ import annotations
-
+import logging
 import re
 import textwrap
 from pathlib import Path
@@ -9,6 +14,8 @@ from typing import Any
 
 import jax.numpy as jnp
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Stub generation logic (mirrors tools/update_numpy_stub.py)
@@ -335,12 +342,32 @@ def generate_numpy_stub(output: Path, /) -> None:
     output.write_text(text)
 
 
+def main() -> int:
+    """CLI entry point to generate the numpy stub file.
+
+    Returns
+    -------
+        Exit code (0 for success).
+
+    """
+    # Determine the project root
+    # __file__ is in src/quaxed/_tools/make_numpy_stub.py
+    # so we need to go up 3 levels to get to project root
+    root = Path(__file__).parent.parent.parent.parent
+    stub_path = root / "src" / "quaxed" / "numpy" / "__init__.pyi"
+
+    logger.info("Generating numpy stub: %s", stub_path)
+    generate_numpy_stub(stub_path)
+    logger.info("Successfully generated: %s", stub_path)
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Hatch build hook
 # ---------------------------------------------------------------------------
 
 
-class NumPyStubBuildHook(BuildHookInterface):
+class NumPyStubBuildHook(BuildHookInterface[Any]):
     """Hatch build hook that generates the ``quaxed.numpy`` stub before build.
 
     This hook integrates the stub generation logic into Hatch's build process.

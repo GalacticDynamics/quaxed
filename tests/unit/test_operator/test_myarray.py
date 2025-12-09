@@ -7,8 +7,7 @@ import jax.tree as jtu
 import pytest
 
 import quaxed.operator as qops
-
-from ..myarray import MyArray
+from tests.myarray import MyArray
 
 x = MyArray(jnp.array([[1, 2], [3, 4]], dtype=float))
 y = MyArray(jnp.array([[5, 6], [7, 8]], dtype=float))

@@ -10,8 +10,7 @@ import numpy as np
 import pytest
 
 import quaxed.numpy as qnp
-
-from ..myarray import MyArray
+from tests.myarray import MyArray
 
 xfail_quax58 = pytest.mark.xfail(
     reason="https://github.com/patrick-kidger/quax/issues/58"

@@ -37,6 +37,9 @@ Homepage = "https://github.com/GalacticDynamics/quaxed"
 Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
 Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
+[project.scripts]
+quaxed-make-stubs = "quaxed._tools.make_stubs:main"
+
 
 [build-system]
 requires = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
@@ -46,6 +49,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
   "cz-conventional-gitmoji>=0.6.1",
+  {include-group = "build"},
   {include-group = "docs"},
   {include-group = "jupyter"},
   {include-group = "lint"},
@@ -65,6 +69,7 @@ jupyter = [
     "ipykernel>=6.29.5",
 ]
 lint = [
+    "mypy>=1.19.0",
     "pre-commit>=4.2.0",
     "pylint>=4.0.3",
     "ruff>=0.14.6",
@@ -80,19 +85,25 @@ test = [
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
-  "mypy>=1.10",
   "typing_extensions"
+]
+build = [
+    "hatchling>=1.28.0",
 ]
 
 
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/quaxed/_version.py"
-build.hooks.custom.path = "tools/make_numpy_stub.py"
+build.hooks.custom.path = "src/quaxed/_tools/make_numpy_stub.py"
 
 
 [tool.codespell]
-skip = ["uv.lock", "tools/make_numpy_stub.py"]
+skip = [
+  "uv.lock",
+  "src/quaxed/_tools/make_numpy_stub.py",
+  "src/quaxed/numpy/__init__.pyi"
+]
 ignore-words-list = """
     fro,
 """
@@ -201,14 +212,18 @@ extra-standard-library = ["typing_extensions"]
 "src/quaxed/**" = ["A004"]
 "src/quaxed/numpy/__init__.pyi" = ["ALL"]
 "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
+"tests/static/**" = ["F841", "PYI015"]
 "__init__.py" = ["F403"]
 "noxfile.py" = ["T20"]
 "docs/**" = ["INP001"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
-"tools/**" = ["INP001"]
+"src/quaxed/_tools/**" = ["INP001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.repo-review]
+ignore = ["PC140"]
 
 [tool.uv]
 constraint-dependencies = [

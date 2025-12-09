@@ -413,9 +413,9 @@ from typing import Any, Literal, TypeVar
 import jax.numpy as jnp
 from jax._src.numpy.index_tricks import CClass, RClass
 from jaxtyping import ArrayLike
+from quax import quaxify
 
 from quaxed._types import DType
-from quaxed._utils import quaxify
 
 from . import fft, linalg
 
@@ -457,7 +457,7 @@ def squeeze(a: ArrayLike, axis: int | tuple[int, ...] | None = None) -> ArrayLik
     return jnp.squeeze(a, axis=axis)
 
 
-class QuaxedCClass(CClass):  # type: ignore[misc]
+class QuaxedCClass(CClass):
     """Quaxed version of `jax.numpy.CClass`.
 
     Examples
@@ -478,7 +478,7 @@ class QuaxedCClass(CClass):  # type: ignore[misc]
 c_ = QuaxedCClass()
 
 
-class QuaxedRClass(RClass):  # type: ignore[misc]
+class QuaxedRClass(RClass):
     """Quaxed version of `jax.numpy.RClass`.
 
     Examples

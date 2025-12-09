@@ -76,6 +76,35 @@ Quantity['area'](Array(4, dtype=int64, weak_type=True), unit='km2')
 
 We welcome contributions!
 
+### Running Tests
+
+To run tests locally, you'll need to install `nox` with `nox-uv`:
+
+```bash
+uv tool install --with nox-uv nox
+```
+
+Then you can run the test suite:
+
+```bash
+nox -s test
+```
+
+Or run linting:
+
+```bash
+nox -s lint
+```
+
+The `quaxed.numpy` module uses automatically generated type stubs. These are
+typically generated during package installation, but if you need to regenerate
+them (e.g., after updating JAX), pass the `--remake-stubs` flag:
+
+```bash
+nox -s lint -- --remake-stubs
+nox -s test -- --remake-stubs
+```
+
 ## Citation
 
 [![DOI][zenodo-badge]][zenodo-link]
