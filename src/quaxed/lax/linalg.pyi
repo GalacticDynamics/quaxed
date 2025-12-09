@@ -7,7 +7,7 @@ from jax.lax.linalg import (
     lu as lu,
     qdwh as qdwh,
     qr as qr,
-    shur as shur,
+    schur as schur,
     svd as svd,
     triangular_solve as triangular_solve,
     tridiagonal as tridiagonal,

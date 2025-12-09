@@ -1,4 +1,5 @@
 """Quaxed :mod:`jax.lax`."""
+# pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 
 __all__ = (  # noqa: F822

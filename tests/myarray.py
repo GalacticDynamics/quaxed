@@ -1,8 +1,9 @@
 """Test with :class:`MyArray` inputs."""
+# mypy: disable-error-code=no-redef
 
 from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any, Self
+from typing import Any, Self, final
 
 import equinox as eqx
 import jax
@@ -13,13 +14,15 @@ from jax._src.lax.slicing import GatherDimensionNumbers, GatherScatterMode
 from jax._src.typing import Shape
 from jaxtyping import Array, ArrayLike, Bool
 from plum import dispatch
-from quax import ArrayValue, quaxify, register
+from quax import ArrayValue, register
 
+import quaxed.numpy as qnp
 from quaxed._types import DType
 
 JAX_VERSION = packaging.version.parse(jax.__version__)
 
 
+@final
 class MyArray(ArrayValue):
     """A :class:`quax.ArrayValue` that is dense.
 
@@ -35,7 +38,7 @@ class MyArray(ArrayValue):
 
     def aval(self) -> jax.core.ShapedArray:
         """Return the ShapedArray."""
-        return jax.core.get_aval(self.array)
+        return jax.core.get_aval(self.array)  # type: ignore[no-untyped-call]
 
     def astype(self, dtype: Any) -> Self:
         """Cast to type."""
@@ -76,9 +79,9 @@ class MyArray(ArrayValue):
 
     def __add__(self, other: Any) -> Self:
         """Addition operator."""
-        return quaxify(jnp.add)(self, other)
+        return qnp.add(self, other)
 
-    def sum(self, **kw: Any) -> Self:
+    def sum(self, **kw: Any) -> "MyArray":
         """Sum the array."""
         return MyArray(self.array.sum(**kw))
 
@@ -167,7 +170,7 @@ def and_p(x1: MyArray, x2: ArrayLike, /) -> MyArray:
 
 @register(lax.approx_top_k_p)
 def approx_top_k_p(x: MyArray, **kw: Any) -> list[MyArray]:
-    return [MyArray(t) for t in lax.approx_top_k_p.bind(x.array, **kw)]
+    return [MyArray(t) for t in lax.approx_top_k_p.bind(x.array, **kw)]  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -384,7 +387,7 @@ def conv_general_dilated_p(arg0: MyArray, arg1: ArrayLike, **kw: Any) -> MyArray
 def convert_element_type_p(operand: MyArray, **kw: Any) -> MyArray:
     return replace(
         operand,
-        array=lax.convert_element_type_p.bind(operand.array, **kw),
+        array=lax.convert_element_type_p.bind(operand.array, **kw),  # type: ignore[no-untyped-call]
     )
 
 
@@ -393,7 +396,7 @@ def convert_element_type_p(operand: MyArray, **kw: Any) -> MyArray:
 
 @register(lax.copy_p)
 def copy_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.copy_p.bind(x.array))
+    return replace(x, array=lax.copy_p.bind(x.array))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -840,7 +843,7 @@ def linear_solve_p(
     **kw: Any,
 ) -> MyArray:
     return MyArray(
-        lax.linear_solve_p.bind(
+        lax.linear_solve_p.bind(  # type: ignore[no-untyped-call]
             arg0.array,
             arg1.array,
             arg2.array,
@@ -1086,9 +1089,9 @@ def psum_p() -> MyArray:
 
 if packaging.version.Version("0.6.0") > JAX_VERSION:
 
-    @register(lax.random_gamma_grad_p)
+    @register(lax.random_gamma_grad_p)  # type: ignore[attr-defined]
     def random_gamma_grad_p(a: float | int, x: MyArray) -> MyArray:
-        return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))
+        return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))  # type: ignore[attr-defined]
 
 
 # ==============================================================================
@@ -1610,7 +1613,7 @@ def slice_p(
 
 @register(lax.split_p)
 def split_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
-    return [MyArray(x) for x in lax.split_p.bind(x.array, **kw)]
+    return [MyArray(x) for x in lax.split_p.bind(x.array, **kw)]  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -1667,7 +1670,7 @@ def squeeze_p(x: MyArray, **kw: Any) -> MyArray:
 
 @register(lax.stop_gradient_p)
 def stop_gradient_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.stop_gradient_p.bind(x.array))
+    return replace(x, array=lax.stop_gradient_p.bind(x.array))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -1709,7 +1712,7 @@ def tanh_p(x: MyArray, /, **kw: Any) -> MyArray:
 
 
 @register(lax.top_k_p)
-def top_k_p(operand: MyArray, k: int = 0) -> MyArray:
+def top_k_p(operand: MyArray, k: int = 0) -> list[MyArray]:
     return [MyArray(x) for x in lax.top_k(operand.array, k)]
 
 
@@ -1778,7 +1781,7 @@ def eigh_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
 
 
 @register(lax.linalg.hessenberg_p)
-def hessenberg_p(x: MyArray, /) -> MyArray:
+def hessenberg_p(x: MyArray, /) -> list[MyArray]:
     return [MyArray(x) for x in lax.linalg.hessenberg_p.bind(x.array)]
 
 
@@ -1786,7 +1789,7 @@ def hessenberg_p(x: MyArray, /) -> MyArray:
 
 
 @register(lax.linalg.lu_p)
-def lu(x: MyArray, /) -> MyArray:
+def lu(x: MyArray, /) -> list[MyArray]:
     return [MyArray(x) for x in lax.linalg.lu_p.bind(x.array)]
 
 
@@ -1810,7 +1813,7 @@ def triangular_solve_p(arg0: MyArray, arg1: MyArray, /, **kw: Any) -> MyArray:
 
 
 @register(lax.linalg.qr_p)
-def qr_p(arg: MyArray, /, **kw: Any) -> MyArray:
+def qr_p(arg: MyArray, /, **kw: Any) -> list[MyArray]:
     return [MyArray(x) for x in lax.linalg.qr_p.bind(arg.array, **kw)]
 
 
@@ -1876,7 +1879,21 @@ def empty_like(
 def full_like(
     x: MyArray,
     /,
-    fill_value: bool | int | float | complex | MyArray,
+    fill_value: MyArray,
+    *,
+    dtype: DType | None = None,
+    device: Device | None = None,
+) -> MyArray:
+    return MyArray(
+        jnp.full_like(x.array, fill_value.array, dtype=dtype, device=device),
+    )
+
+
+@dispatch
+def full_like(
+    x: MyArray,
+    /,
+    fill_value: bool | int | float | complex,
     *,
     dtype: DType | None = None,
     device: Device | None = None,
