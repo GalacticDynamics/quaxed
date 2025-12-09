@@ -128,7 +128,7 @@ def vectorize(  # noqa: C901, PLR0915
             f"on vectorized function with excluded={excluded!r} and "
             f"signature={signature!r}"
         )
-        excluded_func, args, kwargs = _apply_excluded(pyfunc, excluded, args, kwargs)
+        excluded_func, args, kwargs = _apply_excluded(pyfunc, excluded, args, kwargs)  # type: ignore[assignment]
 
         if signature is not None:
             input_core_dims, output_core_dims = _parse_gufunc_signature(signature)
@@ -141,7 +141,7 @@ def vectorize(  # noqa: C901, PLR0915
             if any(input_core_dims[i] != () for i in none_args):
                 msg = f"Cannot pass None at locations {none_args} with {signature=}"
                 raise ValueError(msg)
-            excluded_func, args, _ = _apply_excluded(excluded_func, none_args, args, {})
+            excluded_func, args, _ = _apply_excluded(excluded_func, none_args, args, {})  # type: ignore[assignment]
             input_core_dims = [
                 dim for i, dim in enumerate(input_core_dims) if i not in none_args
             ]

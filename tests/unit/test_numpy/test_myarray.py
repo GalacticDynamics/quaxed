@@ -10,8 +10,7 @@ import numpy as np
 import pytest
 
 import quaxed.numpy as qnp
-
-from ..myarray import MyArray
+from tests.myarray import MyArray
 
 xfail_quax58 = pytest.mark.xfail(
     reason="https://github.com/patrick-kidger/quax/issues/58"
@@ -160,6 +159,7 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         ("exp", (x,), {}, True),
         ("exp2", (x,), {}, True),
         ("expand_dims", (x, 0), {}, True),
+        ("expand_dims", (x, (0, 2)), {}, True),
         ("expm1", (x,), {}, True),
         pytest.param("extract", (jnp.array([True]), x), {}, True, marks=xfail_quax58),
         ("fabs", (x,), {}, True),

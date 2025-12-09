@@ -10,8 +10,8 @@ from packaging.version import Version
 
 import quaxed.lax as qlax
 
+from ...myarray import MyArray
 from ..conftest import OptDeps
-from ..myarray import MyArray
 
 AnyTuple: TypeAlias = tuple[object, ...]
 

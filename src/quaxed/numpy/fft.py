@@ -19,8 +19,7 @@ __all__ = (
 
 
 from jax.numpy import fft as _jax_fft
-
-from quaxed._utils import quaxify
+from quax import quaxify
 
 fft = quaxify(_jax_fft.fft)
 ifft = quaxify(_jax_fft.ifft)
