@@ -8,6 +8,7 @@ library.
 
 """
 # ruff:noqa: F822
+# pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 
 __all__ = ("svd",)

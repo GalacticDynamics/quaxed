@@ -51,7 +51,7 @@ def _add_type_ignore(line: str, ignore_code: str, /) -> str:
     # Check if line already has a type: ignore comment
     if "# type: ignore[" in line:
         # Find the closing bracket and insert the new code before it
-        # Handle both "# type: ignore[code]" and "# type: ignore[code1, code2]"
+        # Handle both "type: ignore[code]" and "type: ignore[code1, code2]"
         return line.replace("]", f", {ignore_code}]", 1)
     if "# type: ignore" in line:
         # Has type: ignore but no brackets, replace with bracketed version
@@ -879,7 +879,7 @@ class NumPyStubBuildHook(BuildHookInterface[Any]):
 
     def initialize(
         self,
-        _: str,
+        version: str,  # noqa: ARG002
         build_data: dict[str, Any],
     ) -> None:
         """Generate the numpy stub before building."""

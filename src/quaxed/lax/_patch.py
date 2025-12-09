@@ -1,4 +1,5 @@
 """Patches for `quax`."""
+# pyright: reportUnnecessaryTypeIgnoreComment=false
 
 __all__: tuple[str, ...] = ()
 

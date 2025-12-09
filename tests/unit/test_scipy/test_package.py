@@ -13,10 +13,10 @@ def test_dir():
 def test_not_in_scipy_special():
     """Test error message for non-members."""
     with pytest.raises(AttributeError, match="Cannot get"):
-        _ = quaxed.scipy.special.not_a_member
+        _ = quaxed.scipy.special.not_a_member  # pyright: ignore[reportAttributeAccessIssue]
 
 
 def test_not_in_scipy_linalg():
     """Test error message for non-members."""
     with pytest.raises(AttributeError, match="Cannot get"):
-        _ = quaxed.scipy.linalg.not_a_member
+        _ = quaxed.scipy.linalg.not_a_member  # pyright: ignore[reportAttributeAccessIssue]

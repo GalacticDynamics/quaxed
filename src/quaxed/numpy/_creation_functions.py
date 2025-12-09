@@ -1,4 +1,5 @@
 """Array API creation functions."""
+# pyright: reportCallIssue=false, reportRedeclaration=false, reportUnnecessaryTypeIgnoreComment=false
 # pylint: disable=E0102,E1121,E1125
 
 __all__ = (
@@ -157,7 +158,7 @@ def full_like(
     shape: tuple[int, ...] | None = None,
 ) -> ArrayLike:
     # dispatch on both `x` and `fill_value`
-    return full_like.invoke(type(x), type(fill_value))(
+    return full_like.invoke(type(x), type(fill_value))(  # pyright: ignore[reportFunctionMemberAccess]
         x, fill_value, dtype=dtype, shape=shape
     )
 
@@ -176,7 +177,7 @@ def linspace(  # noqa: PLR0913
     retstep: bool = False,
     dtype: DType | None = None,
     axis: int = 0,
-) -> jax.Array | jax.core.Tracer | Value:
+) -> jax.Array | jax.core.Tracer | Value:  # pyright: ignore[reportAttributeAccessIssue]
     return jnp.linspace(
         start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
     )
@@ -193,7 +194,7 @@ def linspace(  # noqa: PLR0913
     retstep: bool = False,
     dtype: DType | None = None,
     axis: int = 0,
-) -> jax.Array | jax.core.Tracer | Value:
+) -> jax.Array | jax.core.Tracer | Value:  # pyright: ignore[reportAttributeAccessIssue]
     # dispatch on `start`, `stop`, and `num`
     return linspace(
         start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis

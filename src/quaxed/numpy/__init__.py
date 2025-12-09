@@ -17,6 +17,7 @@ documented in their respective libraries.
 If a function is missing, please file an Issue.
 
 """
+# pyright: reportUnsupportedDunderAll=false
 # pylint: disable=redefined-builtin
 
 import warnings
