@@ -1,4 +1,5 @@
 """Patches for `quax`."""
+# pyright: reportUnnecessaryTypeIgnoreComment=false
 
 __all__: tuple[str, ...] = ()
 
@@ -9,7 +10,7 @@ from jax import lax
 from jaxtyping import Array, ArrayLike
 
 
-@quax.register(lax.scan_p)  # type: ignore[misc]
+@quax.register(lax.scan_p)
 def scan_p(*args: ArrayLike, **kw: Any) -> Array:
     """Patched implementation of lax.map."""
-    return lax.scan_p.bind(*args, **kw)
+    return lax.scan_p.bind(*args, **kw)  # type: ignore[no-untyped-call]

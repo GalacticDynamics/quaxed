@@ -17,6 +17,22 @@ env:
   FORCE_COLOR: 3
 
 jobs:
+  lint:
+    name: Lint Codebase
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
+
+      - name: Install
+        run: uv sync --group nox --group lint --group build --locked
+
+      - name: Lint
+        run: uv run --frozen nox -s lint
+
   tests:
     name: Check Python ${{ matrix.python-version }} on ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
@@ -34,10 +50,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install
+        run: uv sync --group nox --group lint --group build --locked
+
       - name: Test package
         run: >-
-          uv run --group test pytest --cov --cov-report=xml --cov-report=term
-          --durations=20
+          uv run --frozen nox -s pytest -- --cov --cov-report=xml
+          --cov-report=term --durations=20
+
+      - name: Test Static Types
+        run: uv run --frozen nox -s mypy_test
 
       - name: Upload coverage report
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1

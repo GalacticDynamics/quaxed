@@ -1,4 +1,5 @@
 """Array API creation functions."""
+# pyright: reportCallIssue=false, reportRedeclaration=false, reportUnnecessaryTypeIgnoreComment=false
 # pylint: disable=E0102,E1121,E1125
 
 __all__ = (
@@ -16,23 +17,23 @@ __all__ = (
 )
 
 
-from typing import Literal, TypeVar
+from collections.abc import Sequence
+from typing import Literal, TypeVar, cast
 
 import jax
 import jax.numpy as jnp
+import plum
 from jaxtyping import ArrayLike
-from plum import dispatch
-from quax import Value
+from quax import Value, quaxify
 
 from quaxed._types import DType
-from quaxed._utils import quaxify
 
 T = TypeVar("T")
 
 # =============================================================================
 
 
-@dispatch
+@plum.dispatch
 def arange(
     start: ArrayLike,
     stop: ArrayLike | None,
@@ -44,7 +45,7 @@ def arange(
     return jnp.arange(start, stop, step, dtype=dtype)
 
 
-@dispatch  # type: ignore[no-redef]
+@plum.dispatch  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
     stop: ArrayLike | None,
@@ -57,7 +58,7 @@ def arange(
     return arange(start, stop, step, dtype=dtype)
 
 
-@dispatch  # type: ignore[no-redef]
+@plum.dispatch  # type: ignore[no-redef]
 def arange(
     start: ArrayLike,
     /,
@@ -70,7 +71,7 @@ def arange(
     return arange(start, stop, step, dtype=dtype)
 
 
-@dispatch  # type: ignore[no-redef]
+@plum.dispatch  # type: ignore[no-redef]
 def arange(
     *,
     start: ArrayLike,
@@ -93,13 +94,13 @@ def asarray(
     dtype: DType | None = None,
     order: Literal["C", "F", "A", "K"] | None = None,
 ) -> Value:
-    return jnp.asarray(obj, dtype=dtype, order=order)
+    return cast("Value", jnp.asarray(obj, dtype=dtype, order=order))
 
 
 # =============================================================================
 
 
-@dispatch  # type: ignore[misc]
+@plum.dispatch
 def empty_like(
     prototype: ArrayLike,
     /,
@@ -113,7 +114,7 @@ def empty_like(
 # =============================================================================
 
 
-@dispatch
+@plum.dispatch
 def full(
     shape: tuple[int, ...] | int,
     fill_value: ArrayLike,
@@ -123,7 +124,7 @@ def full(
     return jnp.full(shape, fill_value, dtype=dtype)
 
 
-@dispatch  # type: ignore[no-redef]
+@plum.dispatch  # type: ignore[no-redef]
 def full(
     shape: tuple[int, ...] | int,
     *,
@@ -136,7 +137,7 @@ def full(
 # =============================================================================
 
 
-@dispatch
+@plum.dispatch
 def full_like(
     x: ArrayLike,
     /,
@@ -148,7 +149,7 @@ def full_like(
     return jnp.full_like(x, fill_value, dtype=dtype, shape=shape)
 
 
-@dispatch  # type: ignore[no-redef]
+@plum.dispatch  # type: ignore[no-redef]
 def full_like(
     x: ArrayLike,
     *,
@@ -157,7 +158,7 @@ def full_like(
     shape: tuple[int, ...] | None = None,
 ) -> ArrayLike:
     # dispatch on both `x` and `fill_value`
-    return full_like.invoke(type(x), type(fill_value))(
+    return full_like.invoke(type(x), type(fill_value))(  # pyright: ignore[reportFunctionMemberAccess]
         x, fill_value, dtype=dtype, shape=shape
     )
 
@@ -165,7 +166,7 @@ def full_like(
 # =============================================================================
 
 
-@dispatch
+@plum.dispatch
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
@@ -176,13 +177,13 @@ def linspace(  # noqa: PLR0913
     retstep: bool = False,
     dtype: DType | None = None,
     axis: int = 0,
-) -> jax.Array | jax.core.Tracer | Value:
+) -> jax.Array | jax.core.Tracer | Value:  # pyright: ignore[reportAttributeAccessIssue]
     return jnp.linspace(
         start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
     )
 
 
-@dispatch  # type: ignore[no-redef]
+@plum.dispatch  # type: ignore[no-redef]
 def linspace(  # noqa: PLR0913
     start: ArrayLike,
     stop: ArrayLike,
@@ -193,7 +194,7 @@ def linspace(  # noqa: PLR0913
     retstep: bool = False,
     dtype: DType | None = None,
     axis: int = 0,
-) -> jax.Array | jax.core.Tracer | Value:
+) -> jax.Array | jax.core.Tracer | Value:  # pyright: ignore[reportAttributeAccessIssue]
     # dispatch on `start`, `stop`, and `num`
     return linspace(
         start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
@@ -206,14 +207,14 @@ def linspace(  # noqa: PLR0913
 @quaxify
 def meshgrid(
     *arrays: ArrayLike, copy: bool = True, sparse: bool = False, indexing: str = "xy"
-) -> list[ArrayLike]:
+) -> Sequence[ArrayLike]:
     return jnp.meshgrid(*arrays, copy=copy, sparse=sparse, indexing=indexing)
 
 
 # =============================================================================
 
 
-@dispatch  # type: ignore[misc]
+@plum.dispatch
 def ones_like(
     x: ArrayLike, /, *, dtype: DType | None = None, shape: tuple[int, ...] | None = None
 ) -> ArrayLike:
@@ -239,7 +240,7 @@ def triu(x: ArrayLike, /, *, k: int = 0) -> ArrayLike:
 # =============================================================================
 
 
-@dispatch  # type: ignore[misc]
+@plum.dispatch
 def zeros_like(
     x: ArrayLike,
     /,

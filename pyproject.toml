@@ -37,6 +37,9 @@ Homepage = "https://github.com/GalacticDynamics/quaxed"
 Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
 Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
 
+[project.scripts]
+quaxed-make-stubs = "quaxed._tools.make_stubs:main"
+
 
 [build-system]
 requires = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
@@ -46,6 +49,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
   "cz-conventional-gitmoji>=0.6.1",
+  {include-group = "build"},
   {include-group = "docs"},
   {include-group = "jupyter"},
   {include-group = "lint"},
@@ -65,8 +69,10 @@ jupyter = [
     "ipykernel>=6.29.5",
 ]
 lint = [
+    "mypy>=1.19.0",
     "pre-commit>=4.2.0",
     "pylint>=4.0.3",
+    "pyright>=1.1.407",
     "ruff>=0.14.6",
 ]
 nox = [
@@ -75,24 +81,31 @@ nox = [
 ]
 test = [
   "optional-dependencies>=0.4.0",
+  "mypy>=1.19.0",
   "pytest>=8.3",
   "pytest-cov>= 6.2.1",
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
-  "mypy>=1.10",
   "typing_extensions"
+]
+build = [
+    "hatchling>=1.28.0",
 ]
 
 
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/quaxed/_version.py"
-build.hooks.custom.path = "tools/make_numpy_stub.py"
+build.hooks.custom.path = "src/quaxed/_tools/make_numpy_stub.py"
 
 
 [tool.codespell]
-skip = ["uv.lock", "tools/make_numpy_stub.py"]
+skip = [
+  "uv.lock",
+  "src/quaxed/_tools/make_numpy_stub.py",
+  "src/quaxed/numpy/__init__.pyi"
+]
 ignore-words-list = """
     fro,
 """
@@ -116,7 +129,7 @@ files = ["src"]
 python_version = "3.11"
 warn_unused_configs = true
 strict = true
-enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool", "unused-ignore"]
 warn_unreachable = true
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
@@ -132,6 +145,12 @@ warn_return_any = false
   ignore_missing_imports = true
 
 
+[tool.pyright]
+include = ["src"]
+exclude = ["src/quaxed/numpy/__init__.pyi"]
+reportUnnecessaryTypeIgnoreComment = "error"
+
+
 [tool.pylint]
 py-version = "3.11"
 ignore-paths = [".*/_version.py"]
@@ -145,6 +164,7 @@ messages_control.disable = [
   "missing-function-docstring", # TODO: reinstate.
   "missing-module-docstring",
   "redefined-builtin",
+  "unused-argument",  # handled by ruff
   "useless-import-alias",  # handled by ruff
   "wrong-import-position",
   "R0801",  # Similar lines
@@ -164,6 +184,7 @@ filterwarnings = [
 ]
 log_cli_level = "INFO"
 testpaths = ["src", "docs", "tests"]
+norecursedirs = ["src/quaxed/_tools"]
 
 
 [tool.pytest_env]
@@ -201,14 +222,18 @@ extra-standard-library = ["typing_extensions"]
 "src/quaxed/**" = ["A004"]
 "src/quaxed/numpy/__init__.pyi" = ["ALL"]
 "tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
+"tests/static/**" = ["F841", "PYI015"]
 "__init__.py" = ["F403"]
 "noxfile.py" = ["T20"]
 "docs/**" = ["INP001"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
-"tools/**" = ["INP001"]
+"src/quaxed/_tools/**" = ["E501", "INP001", "RET504"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.repo-review]
+ignore = ["PC140"]
 
 [tool.uv]
 constraint-dependencies = [

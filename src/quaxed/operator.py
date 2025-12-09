@@ -6,6 +6,7 @@ list of available functions is in ``__all__`` and documented in the built-in
 `operator` library.
 
 """
+# pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 
 __all__: tuple[str, ...] = (  # noqa: F822
