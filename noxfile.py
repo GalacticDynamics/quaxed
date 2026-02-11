@@ -47,10 +47,10 @@ def lint(s: nox.Session, /) -> None:
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    s.notify("precommit")
-    s.notify("pylint")
-    s.notify("mypy_lint")
-    s.notify("pyright_lint")
+    s.notify("precommit", posargs=s.posargs)
+    s.notify("pylint", posargs=s.posargs)
+    s.notify("mypy_lint", posargs=s.posargs)
+    s.notify("pyright_lint", posargs=s.posargs)
 
 
 @session(uv_groups=["lint"], reuse_venv=True)
@@ -95,8 +95,9 @@ def test(s: nox.Session, /) -> None:
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    s.notify("pytest", posargs=s.posargs)
-    s.notify("mypy_test")
+    posargs = _process_stub_flag(s)
+    s.notify("pytest", posargs=posargs)
+    s.notify("mypy_test", posargs=posargs)
 
 
 @session(uv_groups=["test"], reuse_venv=True)
