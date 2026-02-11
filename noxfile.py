@@ -47,10 +47,10 @@ def lint(s: nox.Session, /) -> None:
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    s.notify("precommit", posargs=s.posargs)
-    s.notify("pylint", posargs=s.posargs)
-    s.notify("mypy_lint", posargs=s.posargs)
-    s.notify("pyright_lint", posargs=s.posargs)
+    precommit(s)
+    pylint(s)
+    mypy_lint(s)
+    pyright_lint(s)
 
 
 @session(uv_groups=["lint"], reuse_venv=True)
@@ -89,7 +89,7 @@ def pyright_lint(s: nox.Session, /) -> None:
 # Testing
 
 
-@session(uv_groups=["test", "build"], reuse_venv=True, default=True)
+@session(python=False, default=True)
 def test(s: nox.Session, /) -> None:
     """Run the tests with all optional dependencies.
 

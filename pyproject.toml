@@ -78,7 +78,7 @@ nox = ["nox>=2025.11.12", "nox-uv>=0.6.3"]
 test = [
   "optional-dependencies>=0.4.0",
   "mypy>=1.19.0",
-  "pytest>=8.3",
+  "pytest>=9.0.0",
   "pytest-cov>= 6.2.1",
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
