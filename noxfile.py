@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# dependencies = ["nox"]
+#    dependencies = ["nox", "nox_uv"]
 # ///
 """Nox setup."""
 
@@ -41,16 +41,16 @@ def _process_stub_flag(s: nox.Session, /) -> list[str]:
 # Linting
 
 
-@session(uv_groups=["lint", "build"], reuse_venv=True)
+@session(uv_groups=["lint", "build"], reuse_venv=True, default=True)
 def lint(s: nox.Session, /) -> None:
     """Run the linter.
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    precommit(s)  # reuse pre-commit session
-    pylint(s)  # reuse pylint session
-    mypy_lint(s)  # reuse mypy session
-    pyright_lint(s)  # reuse pyright session
+    s.notify("precommit")
+    s.notify("pylint")
+    s.notify("mypy_lint")
+    s.notify("pyright_lint")
 
 
 @session(uv_groups=["lint"], reuse_venv=True)
@@ -89,14 +89,14 @@ def pyright_lint(s: nox.Session, /) -> None:
 # Testing
 
 
-@session(uv_groups=["test", "build"], reuse_venv=True)
+@session(uv_groups=["test", "build"], reuse_venv=True, default=True)
 def test(s: nox.Session, /) -> None:
     """Run the tests with all optional dependencies.
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    pytest(s)  # reuse pytest session
-    mypy_test(s)  # reuse mypy test session
+    s.notify("pytest", posargs=s.posargs)
+    s.notify("mypy_test")
 
 
 @session(uv_groups=["test"], reuse_venv=True)
@@ -139,6 +139,8 @@ def build(s: nox.Session, /) -> None:
 
     s.run("python", "-m", "build")
 
+
+# =============================================================================
 
 if __name__ == "__main__":
     nox.main()

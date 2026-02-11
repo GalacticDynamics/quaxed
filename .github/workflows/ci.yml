@@ -28,7 +28,7 @@ jobs:
         uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
 
       - name: Install
-        run: uv sync --group nox --group lint --group build --locked
+        run: uv sync --no-default-groups --group nox --group lint --locked
 
       - name: Lint
         run: uv run --frozen nox -s lint
@@ -51,15 +51,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install
-        run: uv sync --group nox --group lint --group build --locked
+        run:
+          uv sync --no-default-groups --group nox --group test --group build
+          --locked
 
       - name: Test package
-        run: >-
-          uv run --frozen nox -s pytest -- --cov --cov-report=xml
-          --cov-report=term --durations=20
-
-      - name: Test Static Types
-        run: uv run --frozen nox -s mypy_test
+        run: |
+          uv run --frozen nox -s test -- --cov --cov-report=xml --cov-report=term --durations=20
 
       - name: Upload coverage report
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
@@ -84,9 +82,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Test package
-        run: >-
-          uv run --group test --resolution lowest pytest --cov --cov-report=xml
-          --cov-report=term --durations=20
+        run: |
+          uv run --group test --resolution lowest pytest --cov --cov-report=xml --cov-report=term --durations=20
 
       - name: Upload coverage report
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
