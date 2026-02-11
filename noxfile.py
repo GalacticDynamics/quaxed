@@ -1,3 +1,7 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# dependencies = ["nox"]
+# ///
 """Nox setup."""
 
 import shutil
@@ -134,3 +138,7 @@ def build(s: nox.Session, /) -> None:
         shutil.rmtree(build_path)
 
     s.run("python", "-m", "build")
+
+
+if __name__ == "__main__":
+    nox.main()
