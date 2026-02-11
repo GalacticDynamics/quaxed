@@ -1,9 +1,4 @@
 [project]
-name = "quaxed"
-dynamic = ["version"]
-description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
-readme = "README.md"
-requires-python = ">=3.11"
 authors = [
   { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
 ]
@@ -30,31 +25,37 @@ dependencies = [
   "plum-dispatch>=2.5.2",
   "quax>=0.2.1",
 ]
+description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
+dynamic = ["version"]
+name = "quaxed"
+readme = "README.md"
+requires-python = ">=3.11"
 
 [project.urls]
-Homepage = "https://github.com/GalacticDynamics/quaxed"
 "Bug Tracker" = "https://github.com/GalacticDynamics/quaxed/issues"
-Discussions = "https://github.com/GalacticDynamics/quaxed/discussions"
-Changelog = "https://github.com/GalacticDynamics/quaxed/releases"
+Changelog     = "https://github.com/GalacticDynamics/quaxed/releases"
+Discussions   = "https://github.com/GalacticDynamics/quaxed/discussions"
+Homepage      = "https://github.com/GalacticDynamics/quaxed"
 
 [project.scripts]
 quaxed-make-stubs = "quaxed._tools.make_stubs:main"
 
 
 [build-system]
-requires = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
 build-backend = "hatchling.build"
+requires      = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
 
 
 [dependency-groups]
+build = ["hatchling>=1.28.0"]
 dev = [
   "cz-conventional-gitmoji>=0.6.1",
-  {include-group = "build"},
-  {include-group = "docs"},
-  {include-group = "jupyter"},
-  {include-group = "lint"},
-  {include-group = "nox"},
-  {include-group = "test"},
+  { include-group = "build" },
+  { include-group = "docs" },
+  { include-group = "jupyter" },
+  { include-group = "lint" },
+  { include-group = "nox" },
+  { include-group = "test" },
 ]
 docs = [
   "hippogriffe==0.2.0",
@@ -65,50 +66,47 @@ docs = [
   "mkdocstrings[python]==0.28.3",
   "pymdown-extensions==10.16.1",
 ]
-jupyter = [
-    "ipykernel>=6.29.5",
-]
+jupyter = ["ipykernel>=6.29.5"]
 lint = [
-    "mypy>=1.19.0",
-    "pre-commit>=4.2.0",
-    "pylint>=4.0.3",
-    "pyright>=1.1.407",
-    "ruff>=0.14.6",
+  "mypy>=1.19.0",
+  "pre-commit>=4.2.0",
+  "pylint>=4.0.3",
+  "pyright>=1.1.407",
+  "ruff>=0.14.6",
 ]
-nox = [
-    "nox>=2025.11.12",
-    "nox-uv>=0.6.3",
-]
+nox = ["nox>=2025.11.12", "nox-uv>=0.6.3"]
 test = [
   "optional-dependencies>=0.4.0",
   "mypy>=1.19.0",
-  "pytest>=8.3",
+  "pytest>=9.0.0",
   "pytest-cov>= 6.2.1",
   "pytest-env>=1.1.5",
   "pytest-github-actions-annotate-failures>=0.3.0", # only applies to GHA
   "sybil[pytest]>=9.2.0",
-  "typing_extensions"
-]
-build = [
-    "hatchling>=1.28.0",
+  "typing_extensions",
 ]
 
 
 [tool.hatch]
-version.source = "vcs"
-build.hooks.vcs.version-file = "src/quaxed/_version.py"
 build.hooks.custom.path = "src/quaxed/_tools/make_numpy_stub.py"
+build.hooks.vcs.version-file = "src/quaxed/_version.py"
+build.hooks.vcs.version-file-template = """\
+version: str = {version!r}
+version_tuple: tuple[int, int, int] | tuple[int, int, int, str, str]
+version_tuple = {version_tuple!r}
+"""
+version.source = "vcs"
 
 
 [tool.codespell]
-skip = [
-  "uv.lock",
-  "src/quaxed/_tools/make_numpy_stub.py",
-  "src/quaxed/numpy/__init__.pyi"
-]
 ignore-words-list = """
     fro,
 """
+skip = [
+  "uv.lock",
+  "src/quaxed/_tools/make_numpy_stub.py",
+  "src/quaxed/numpy/__init__.pyi",
+]
 
 
 [tool.commitizen]
@@ -116,65 +114,64 @@ name = "cz_gitmoji"
 
 
 [tool.coverage]
-run.source = ["quaxed"]
-port.exclude_lines = [
-  'pragma: no cover',
-  '\.\.\.',
-  'if TYPE_CHECKING:'
-]
+report.exclude_lines = ['pragma: no cover', '\.\.\.', 'if TYPE_CHECKING:']
+run.source           = ["quaxed"]
 
 
 [tool.mypy]
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
+enable_error_code = [
+  "ignore-without-code",
+  "redundant-expr",
+  "truthy-bool",
+  "unused-ignore",
+]
 files = ["src"]
 python_version = "3.11"
-warn_unused_configs = true
 strict = true
-enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool", "unused-ignore"]
-warn_unreachable = true
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
 warn_return_any = false
+warn_unreachable = true
+warn_unused_configs = true
 
 [[tool.mypy.overrides]]
-  module = "quaxed.*"
-  disallow_untyped_defs = true
-  disallow_incomplete_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_defs    = true
+module                   = "quaxed.*"
 
 [[tool.mypy.overrides]]
-  module = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
-  ignore_missing_imports = true
+ignore_missing_imports = true
+module                 = ["jax.*", "jaxtyping.*", "plum.*", "quax.*"]
 
 
 [tool.pyright]
-include = ["src"]
-exclude = ["src/quaxed/numpy/__init__.pyi"]
+exclude                            = ["src/quaxed/numpy/__init__.pyi"]
+include                            = ["src"]
 reportUnnecessaryTypeIgnoreComment = "error"
 
 
 [tool.pylint]
-py-version = "3.11"
 ignore-paths = [".*/_version.py"]
-reports.output-format = "colorized"
-similarities.ignore-imports = "yes"
 messages_control.disable = [
-  "C0415",  # Import outside toplevel -- handled by ruff
+  "C0415",                      # Import outside toplevel -- handled by ruff
   "design",
   "fixme",
   "line-too-long",
   "missing-function-docstring", # TODO: reinstate.
   "missing-module-docstring",
   "redefined-builtin",
-  "unused-argument",  # handled by ruff
-  "useless-import-alias",  # handled by ruff
+  "unused-argument",            # handled by ruff
+  "useless-import-alias",       # handled by ruff
   "wrong-import-position",
-  "R0801",  # Similar lines
+  "R0801",                      # Similar lines
 ]
+py-version = "3.11"
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
 
 
 [tool.pytest.ini_options]
-minversion = "8.3"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-xfail_strict = true
 filterwarnings = [
   "error",
   # jaxtyping
@@ -182,10 +179,12 @@ filterwarnings = [
   # jax
   "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
 ]
-log_level = "INFO"
 log_cli_level = "INFO"
-testpaths = ["src", "docs", "tests"]
+log_level = "INFO"
+minversion = "9"
 norecursedirs = ["src/quaxed/_tools"]
+testpaths = ["src", "docs", "tests"]
+xfail_strict = true
 
 
 [tool.pytest_env]
@@ -216,19 +215,30 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-combine-as-imports = true
+combine-as-imports     = true
 extra-standard-library = ["typing_extensions"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/quaxed/**" = ["A004"]
-"src/quaxed/numpy/__init__.pyi" = ["ALL"]
-"tests/**" = ["ANN", "C419", "FBT001", "INP001", "N816", "PLR0913", "PLR2004", "S101", "T20", "TID252"]
-"tests/static/**" = ["F841", "PYI015"]
 "__init__.py" = ["F403"]
-"noxfile.py" = ["T20"]
 "docs/**" = ["INP001"]
+"noxfile.py" = ["T20"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
+"src/quaxed/**" = ["A004"]
 "src/quaxed/_tools/**" = ["E501", "INP001", "RET504"]
+"src/quaxed/numpy/__init__.pyi" = ["ALL"]
+"tests/**" = [
+  "ANN",
+  "C419",
+  "FBT001",
+  "INP001",
+  "N816",
+  "PLR0913",
+  "PLR2004",
+  "S101",
+  "T20",
+  "TID252",
+]
+"tests/static/**" = ["F841", "PYI015"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
