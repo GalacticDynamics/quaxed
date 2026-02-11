@@ -182,8 +182,8 @@ filterwarnings = [
   # jax
   "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
 ]
-log_level = "INFO"
 log_cli_level = "INFO"
+log_level = "INFO"
 testpaths = ["src", "docs", "tests"]
 norecursedirs = ["src/quaxed/_tools"]
 
