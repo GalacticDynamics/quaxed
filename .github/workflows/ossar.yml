@@ -34,7 +34,7 @@ jobs:
 
       # Run Microsoft Security DevOps
       - name: Run Microsoft Security DevOps
-        uses: microsoft/security-devops-action@4bd98452f97c3aac2cec5c7d42961c9753d73041 # v1.12.0
+        uses: microsoft/security-devops-action@4eaf69ee6aff7104270029dbfd8d3c0ba2853174 # v1.12.0
         id: msdo
 
         # Upload results to the Security tab
