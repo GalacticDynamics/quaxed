@@ -1841,7 +1841,7 @@ dev = [
     { name = "pylint", specifier = ">=4.0.3" },
     { name = "pymdown-extensions", specifier = "==10.16.1" },
     { name = "pyright", specifier = ">=1.1.407" },
-    { name = "pytest", specifier = ">=8.3" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "pytest-env", specifier = ">=1.1.5" },
     { name = "pytest-github-actions-annotate-failures", specifier = ">=0.3.0" },
@@ -1873,7 +1873,7 @@ nox = [
 test = [
     { name = "mypy", specifier = ">=1.19.0" },
     { name = "optional-dependencies", specifier = ">=0.4.0" },
-    { name = "pytest", specifier = ">=8.3" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "pytest-cov", specifier = ">=6.2.1" },
     { name = "pytest-env", specifier = ">=1.1.5" },
     { name = "pytest-github-actions-annotate-failures", specifier = ">=0.3.0" },
