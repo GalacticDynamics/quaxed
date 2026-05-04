@@ -14,5 +14,6 @@ def test_direct_transfer(name):
 
 def test_linalg_dir():
     """Test the __dir__ function."""
-    assert set(qnp.linalg.__dir__()) == set(qnp.linalg.__all__)
-    assert set(qnp.linalg.__dir__()).issubset(set(dir(jnp.linalg)))
+    exp = set(qnp.linalg.__dir__())
+    assert exp == set(qnp.linalg.__all__) | {"__all__"}
+    assert (exp - {"__all__"}).issubset(set(dir(jnp.linalg)))

@@ -1,7 +1,6 @@
-"""Quaxed :mod:`jax.scipy`.
+"""Quaxed `jax.scipy`.
 
-This module wraps the functions in :external:`jax.scipy` with
-:external:`quax.quaxify`.
+This module wraps the functions in `jax.scipy` with `quax.quaxify`.
 
 """
 

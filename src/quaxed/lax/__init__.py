@@ -243,12 +243,12 @@ if JAX_VERSION >= (0, 7, 0):
 
 def __dir__() -> list[str]:
     """List the module contents."""
-    return sorted(__all__)
+    return ["__all__", *sorted(__all__)]
 
 
 # TODO: return type hint signature
 def __getattr__(name: str) -> Callable[..., Any]:
-    """Get the :external:`quax.quaxify`'ed function."""
+    """Get the `quax.quaxify`'ed function."""
     if name not in __all__:
         msg = f"Cannot get {name} from quaxed.lax."
         raise AttributeError(msg)

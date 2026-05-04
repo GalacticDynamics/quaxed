@@ -1,4 +1,4 @@
-"""Quaxed :mod:`jax.lax`."""
+"""Quaxed `jax.lax`."""
 # pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 
@@ -29,12 +29,12 @@ from quax import quaxify
 
 def __dir__() -> list[str]:
     """List the module contents."""
-    return sorted(__all__)
+    return ["__all__", *sorted(__all__)]
 
 
 # TODO: return type hint signature
 def __getattr__(name: str) -> Callable[..., Any]:
-    """Get the :external:`quax.quaxify`'ed function."""
+    """Get the `quax.quaxify`'ed function."""
     if name not in __all__:
         msg = f"Cannot get {name} from quaxed.lax.linalg"
         raise AttributeError(msg)

@@ -1,4 +1,4 @@
-"""Quaxed :mod:`jax`."""
+"""Quaxed `jax`."""
 
 __all__ = (
     "device_put",

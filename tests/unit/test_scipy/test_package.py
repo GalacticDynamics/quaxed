@@ -7,7 +7,8 @@ import quaxed
 
 def test_dir():
     """Test the `__dir__` method."""
-    assert set(quaxed.scipy.linalg.__dir__()) == set(quaxed.scipy.linalg.__all__)
+    exp = set(quaxed.scipy.linalg.__all__) | {"__all__"}
+    assert set(quaxed.scipy.linalg.__dir__()) == exp
 
 
 def test_not_in_scipy_special():

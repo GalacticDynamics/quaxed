@@ -1,4 +1,4 @@
-"""Quaxed :mod:`jax.numpy.linalg`."""
+"""Quaxed `jax.numpy.linalg`."""
 # pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 
@@ -40,7 +40,8 @@ from quax import quaxify
 
 
 def __dir__() -> list[str]:
-    return sorted(__all__)
+    """List the module contents."""
+    return ["__all__", *sorted(__all__)]
 
 
 def __getattr__(name: str) -> Callable[..., Any]:  # TODO: better type hint
