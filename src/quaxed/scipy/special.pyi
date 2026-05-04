@@ -36,7 +36,7 @@ from jax.scipy.special import (
     polygamma as polygamma,
     rel_entr as rel_entr,
     spence as spence,
-    sph_harm as sph_harm,
+    sph_harm_y as sph_harm_y,
     xlog1py as xlog1py,
     xlogy as xlogy,
     zeta as zeta,

@@ -137,7 +137,6 @@ from jax.lax import (
     tanh as tanh,
     top_k as top_k,
     transpose as transpose,
-    zeros_like_array as zeros_like_array,  # deprecated jax v0.7.0
     zeta as zeta,
 )
 

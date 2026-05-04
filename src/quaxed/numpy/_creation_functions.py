@@ -177,7 +177,7 @@ def linspace(  # noqa: PLR0913
     retstep: bool = False,
     dtype: DType | None = None,
     axis: int = 0,
-) -> jax.Array | jax.core.Tracer | Value:  # pyright: ignore[reportAttributeAccessIssue]
+) -> jax.Array | jax.core.Tracer | Value:  # type: ignore[type-arg]  # pyright: ignore[reportAttributeAccessIssue]
     return jnp.linspace(
         start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
     )
@@ -194,7 +194,7 @@ def linspace(  # noqa: PLR0913
     retstep: bool = False,
     dtype: DType | None = None,
     axis: int = 0,
-) -> jax.Array | jax.core.Tracer | Value:  # pyright: ignore[reportAttributeAccessIssue]
+) -> jax.Array | jax.core.Tracer | Value:  # type: ignore[type-arg]  # pyright: ignore[reportAttributeAccessIssue]
     # dispatch on `start`, `stop`, and `num`
     return linspace(
         start, stop, num, endpoint=endpoint, retstep=retstep, dtype=dtype, axis=axis
