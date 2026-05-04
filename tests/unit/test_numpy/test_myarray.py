@@ -629,7 +629,10 @@ xN3 = MyArray(jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float))
         ("eigh", (xN3,), {}),
         ("eigvalsh", (xN3,), {}),
         pytest.param(
-            "inv", (x1225,), {}, marks=pytest.mark.xfail(reason="FIXME: tracer leak")
+            "inv",
+            (x1225,),
+            {},
+            marks=pytest.mark.xfail(reason="FIXME: tracer leak", strict=True),
         ),
         ("matmul", (xN3, xN3), {}),
         ("matrix_norm", (xN3,), {"ord": 2}),
@@ -644,7 +647,7 @@ xN3 = MyArray(jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float))
             "solve",
             (x1225, jnp.array([1, 2])),
             {},
-            marks=pytest.mark.xfail(reason="FIXME: tracer leak"),
+            marks=pytest.mark.xfail(reason="FIXME: tracer leak", strict=True),
         ),
         ("svd", (xN3,), {}),
         ("svdvals", (xN3,), {}),

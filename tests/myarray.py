@@ -3,7 +3,7 @@
 
 from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any, Self, TypeGuard, cast, final
+from typing import Any, Self, TypeGuard, cast, final, overload
 
 import equinox as eqx
 import jax
@@ -87,9 +87,15 @@ def is_myarray(x: Any, /) -> TypeGuard[MyArray]:
     return isinstance(x, MyArray)
 
 
-def unwrap(x: MyArray | ArrayLike) -> jax.Array:
+@overload
+def unwrap(x: MyArray) -> jax.Array: ...
+@overload
+def unwrap(x: Array) -> Array: ...
+@overload
+def unwrap(x: ArrayLike) -> ArrayLike: ...
+def unwrap(x: MyArray | Array | ArrayLike) -> ArrayLike:
     """Unwrap the array."""
-    return jnp.asarray(x.array) if is_myarray(x) else jnp.asarray(x)
+    return x.array if is_myarray(x) else x  # type: ignore[return-value]
 
 
 # ==============================================================================
