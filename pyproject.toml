@@ -19,16 +19,19 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering",
   "Typing :: Typed",
 ]
 dependencies = [
   "equinox>=0.13.2",
-  "jax>=0.5.3",
+  'jax>=0.5.3; python_version < "3.14"',
+  'jax>=0.7.2; python_version >= "3.14"',
   "jaxtyping>=0.3.1",
   "optype>=0.8.0",
-  "plum-dispatch>=2.5.2",
-  "quax>=0.2.1",
+  'plum-dispatch>=2.5.7; python_version < "3.14"',
+  'plum-dispatch>=2.9.0; python_version >= "3.14"',
+  "quax>=0.3.2",
 ]
 
 [project.urls]
@@ -42,7 +45,13 @@ quaxed-make-stubs = "quaxed._tools.make_stubs:main"
 
 
 [build-system]
-requires = ["hatchling", "hatch-vcs", "jax>=0.5.3", "quax>=0.2.1"]
+requires = [
+  "hatchling",
+  "hatch-vcs",
+  'jax>=0.5.3; python_version < "3.14"',
+  'jax>=0.7.2; python_version >= "3.14"',
+  "quax>=0.3.2",
+]
 build-backend = "hatchling.build"
 
 
@@ -63,7 +72,7 @@ docs = [
   "mkdocs-ipynb==0.1.1",
   "mkdocs-material==9.6.7",
   "mkdocstrings[python]==0.28.3",
-  "pymdown-extensions==10.14.3",
+  "pymdown-extensions==10.16.1",
 ]
 jupyter = [
     "ipykernel>=6.29.5",
@@ -182,6 +191,7 @@ filterwarnings = [
   # jax
   "ignore:jax\\.core\\.pp_eqn_rules is deprecated:DeprecationWarning",
 ]
+log_level = "INFO"
 log_cli_level = "INFO"
 testpaths = ["src", "docs", "tests"]
 norecursedirs = ["src/quaxed/_tools"]
@@ -248,4 +258,5 @@ constraint-dependencies = [
   "psutil>=5.9.0",
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
+  'scipy>=1.16.1; python_version >= "3.14"',  # 1.15.x has no cp314 wheels
 ]

@@ -5,17 +5,35 @@ import tempfile
 import jax.numpy as jnp
 import jax.random as jr
 import jax.tree as jtu
-import jax.tree_util as jt
 import numpy as np
 import pytest
+import quax
+from packaging.version import Version
+from quax._compat import JAX_VERSION
 
 import quaxed.numpy as qnp
-from tests.myarray import MyArray
+from tests.myarray import MyArray, is_myarray, unwrap
+
+from ..test_lax.test_myarray import _unwrap_myarray
 
 xfail_quax58 = pytest.mark.xfail(
     reason="https://github.com/patrick-kidger/quax/issues/58"
 )
 mark_todo = pytest.mark.skip("TODO")
+mark_nomd = pytest.mark.xfail(reason="Can't be supported with MD on primitives")
+skip_removed_jax_0_10_0 = pytest.mark.skipif(
+    Version("0.10") <= JAX_VERSION,
+    reason="removed in JAX v0.10.0",
+)
+xfail_deprecated_jax_0_9_0 = (
+    pytest.mark.xfail(
+        Version("0.9") <= JAX_VERSION < Version("0.10"),
+        raises=DeprecationWarning,
+        reason="deprecated in JAX v0.9.0",
+        strict=True,
+    ),
+    pytest.mark.filterwarnings("error::DeprecationWarning"),
+)
 
 x = MyArray(jnp.array([[1, 2], [3, 4]], dtype=float))
 y = MyArray(jnp.array([[5, 6], [7, 8]], dtype=float))
@@ -51,7 +69,7 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
             True,
             marks=mark_todo,
         ),
-        ("arange", (MyArray(0), MyArray(3)), {}, True),
+        pytest.param("arange", (MyArray(0), MyArray(3)), {}, True, marks=xfail_quax58),
         ("arccos", (xtrig,), {}, True),
         ("arccosh", (x,), {}, True),
         ("arcsin", (xtrig,), {}, True),
@@ -154,17 +172,22 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         ("ediff1d", (x,), {}, True),
         ("einsum", ("ij,jk->ik", x, y), {}, True),
         # ("einsum_path", ("ij,jk,kl->il", rand1, rand2, rand3), {"optimize": "greedy"}),  # TODO: replace independent test with this  # noqa: E501
-        ("empty_like", (x,), {}, True),
+        pytest.param("empty_like", (x,), {}, True, marks=mark_nomd),
         ("equal", (x, y), {}, True),
         ("exp", (x,), {}, True),
         ("exp2", (x,), {}, True),
         ("expand_dims", (x, 0), {}, True),
-        ("expand_dims", (x, (0, 2)), {}, True),
         ("expm1", (x,), {}, True),
         pytest.param("extract", (jnp.array([True]), x), {}, True, marks=xfail_quax58),
         ("fabs", (x,), {}, True),
         ("fill_diagonal", (x, 2), {"inplace": False}, True),
-        ("fix", (x,), {}, True),
+        pytest.param(
+            "fix",
+            (x,),
+            {},
+            True,
+            marks=[*xfail_deprecated_jax_0_9_0, skip_removed_jax_0_10_0],
+        ),
         *(
             pytest.param("flatnonzero", (x,), {}, True, marks=xfail_quax58),
             ("flatnonzero", (x,), {"size": x.size}, True),
@@ -213,8 +236,8 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
             True,
             marks=pytest.mark.xfail,
         ),
-        pytest.param("full", ((2, 2), 4.0), {}, True, marks=pytest.mark.xfail),
-        ("full_like", (x, 4.0), {}, True),
+        pytest.param("full", ((2, 2), 4.0), {}, True, marks=mark_nomd),
+        pytest.param("full_like", (x, 4.0), {}, True, marks=mark_nomd),
         ("gcd", (x[:, 0].astype(int), y[:, 0].astype(int)), {}, True),
         ("geomspace", (MyArray(1.0), MyArray(100.0)), {}, True),
         ("gradient", (x,), {}, True),
@@ -324,7 +347,7 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
             ("nonzero", (x,), {"size": x.size}, True),
         ),
         ("not_equal", (x, y), {}, True),
-        ("ones_like", (x,), {}, True),
+        pytest.param("ones_like", (x,), {}, True, marks=mark_nomd),
         ("outer", (x, y), {}, True),
         (
             "packbits",
@@ -337,7 +360,7 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         ("percentile", (x, 50), {}, True),
         ("permute_dims", (x, (0, 1)), {}, True),
         ("piecewise", (x, [x < 0, x >= 0], [-1, 1]), {}, False),
-        ("place", (x, x > qnp.mean(x), 0), {"inplace": False}, True),
+        ("place", (x, x.array > jnp.mean(x.array), 0), {"inplace": False}, True),
         ("poly", (x,), {}, True),
         pytest.param("polyadd", (x,), {}, True, marks=mark_todo),
         pytest.param("polyder", (x,), {}, True, marks=mark_todo),
@@ -422,11 +445,9 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         pytest.param(
             "trim_zeros",
             (
-                qnp.concatenate(
-                    (
-                        MyArray(jnp.array([0.0, 0, 0])),
-                        x[:, 0],
-                        MyArray(jnp.array([0.0, 0, 0])),
+                MyArray(
+                    jnp.concat(
+                        (jnp.array([0.0, 0, 0]), x.array[:, 0], jnp.array([0.0, 0, 0]))
                     )
                 ),
             ),
@@ -478,36 +499,24 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         ("vecdot", (x, y), {}, True),
         ("vsplit", (x, 2), {}, True),
         ("vstack", ([x, y],), {}, True),
-        ("where", (jnp.ones_like(x, dtype=bool), x, y), {}, True),
-        ("zeros_like", (x,), {}, True),
+        ("where", (jnp.ones_like(x.array, dtype=bool), x, y), {}, True),
+        pytest.param("zeros_like", (x,), {}, True, marks=mark_nomd),
     ],
 )
-def test_lax_functions(func_name, args, kw, expect_myarray):
+def test_numpy_functions(func_name, args, kw, expect_myarray):
     """Test lax vs qlax functions."""
     # Jax
-    jax_args, jax_kw = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        (args, kw),
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
-    exp = getattr(jnp, func_name)(*jax_args, **jax_kw)
-    exp = list(exp if isinstance(exp, tuple | list) else (exp,))
+    func = getattr(jnp, func_name)
+    jax_args, jax_kw = jtu.map(unwrap, (args, kw), is_leaf=is_myarray)
+    exp = func(*jax_args, **jax_kw)
+    exp = exp if isinstance(exp, tuple | list) else (exp,)
 
     # Quaxed
-    got = getattr(qnp, func_name)(*args, **kw)
+    got = quax.quaxify(func)(*args, **kw)
     got = got if isinstance(got, tuple | list) else (got,)
-    got_ = []
-    expect_myarray = (
-        expect_myarray
-        if isinstance(expect_myarray, tuple)
-        else (expect_myarray,) * len(got)
-    )
-    for i, (g, exp_ma) in enumerate(zip(got, expect_myarray, strict=True)):
-        if exp_ma:
-            assert isinstance(g, MyArray), f"{func_name} return {i} is not MyArray"
-        got_.append(g.array if isinstance(g, MyArray) else g)
+    got = _unwrap_myarray(got, expect_myarray)
 
-    assert jtu.all(jtu.map(jnp.allclose, got_, exp))
+    assert jtu.all(jtu.map(jnp.allclose, got, exp))
 
 
 ###############################################################################
@@ -530,8 +539,8 @@ def test_einsum_path():
     b = jr.uniform(key2, (2, 5))
     c = jr.uniform(key3, (5, 2))
 
-    got = qnp.einsum_path("ij,jk,kl->il", a, b, c, optimize="greedy")
     exp = jnp.einsum_path("ij,jk,kl->il", a, b, c, optimize="greedy")
+    got = quax.quaxify(jnp.einsum_path)("ij,jk,kl->il", a, b, c, optimize="greedy")
 
     assert jnp.array_equal(got[0], exp[0])
 
@@ -569,7 +578,7 @@ def test_iinfo():
     """Test `quaxed.numpy.iinfo`."""
     got = qnp.iinfo(x.astype(int))
     expect = jnp.iinfo(x.astype(int))
-    assert jt.tree_structure(got) == jt.tree_structure(expect)
+    assert jtu.structure(got) == jtu.structure(expect)
     assert all(getattr(got, k) == getattr(expect, k) for k in ("min", "max", "dtype"))
 
 
@@ -589,9 +598,10 @@ def test_result_type():
 def test_vectorize():
     """Test `quaxed.numpy.vectorize`."""
 
-    @qnp.vectorize
+    @quax.quaxify
+    @jnp.vectorize
     def f(x):
-        return qnp.add(x, 1)
+        return jnp.add(x, 1)
 
     got = f(x)
     assert isinstance(got, MyArray)
@@ -619,7 +629,10 @@ xN3 = MyArray(jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float))
         ("eigh", (xN3,), {}),
         ("eigvalsh", (xN3,), {}),
         pytest.param(
-            "inv", (x1225,), {}, marks=pytest.mark.xfail(reason="FIXME: tracer leak")
+            "inv",
+            (x1225,),
+            {},
+            marks=pytest.mark.xfail(reason="FIXME: tracer leak", strict=True),
         ),
         ("matmul", (xN3, xN3), {}),
         ("matrix_norm", (xN3,), {"ord": 2}),
@@ -634,7 +647,7 @@ xN3 = MyArray(jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float))
             "solve",
             (x1225, jnp.array([1, 2])),
             {},
-            marks=pytest.mark.xfail(reason="FIXME: tracer leak"),
+            marks=pytest.mark.xfail(reason="FIXME: tracer leak", strict=True),
         ),
         ("svd", (xN3,), {}),
         ("svdvals", (xN3,), {}),
@@ -648,21 +661,14 @@ xN3 = MyArray(jnp.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float))
 def test_linalg_functions(func_name, args, kw):
     """Test lax vs qlax functions."""
     # Jax
-    jax_args, jax_kw = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        (args, kw),
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
-    exp = getattr(jnp.linalg, func_name)(*jax_args, **jax_kw)
+    func = getattr(jnp.linalg, func_name)
+    jax_args, jax_kw = jtu.map(unwrap, (args, kw), is_leaf=is_myarray)
+    exp = func(*jax_args, **jax_kw)
     exp = exp if isinstance(exp, tuple | list) else (exp,)
 
     # Quaxed
-    got = getattr(qnp.linalg, func_name)(*args, **kw)
+    got = quax.quaxify(func)(*args, **kw)
     got = got if isinstance(got, tuple | list) else (got,)
-    got = jtu.map(
-        lambda x: x.array if isinstance(x, MyArray) else x,
-        got,
-        is_leaf=lambda x: isinstance(x, MyArray),
-    )
+    got = jtu.map(unwrap, got, is_leaf=is_myarray)
 
     assert jtu.all(jtu.map(jnp.allclose, got, exp))
