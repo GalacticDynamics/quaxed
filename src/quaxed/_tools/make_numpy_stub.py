@@ -593,14 +593,16 @@ def _add_type_ignores(text: str, /) -> str:
     # Match function/method signature lines with unparameterized generics
     # Pattern matches lines that:
     # 1. Start with 'def ' OR are indented continuation lines with parameters
-    # 2. Contain unparameterized Callable, ndarray, or DType (not DTypeLike)
+    #    OR are closing-paren / return-type continuation lines
+    # 2. Contain unparameterized Callable, ndarray, DType (not DTypeLike), or Tracer
     # 3. Are part of a signature (contain -> or are parameter lines with commas)
     function_sig_with_unparameterized = re.compile(
         r"""
         (?:^\s*def\s+\w+\s*\(.*          # Function definition line
         |^\s+\w+:\s+.*                    # Indented parameter line
+        |^\s*\).*                         # Closing-paren / return-type continuation
         )
-        .*\b(?:Callable|ndarray|DType\b(?!Like))  # Unparameterized generic (not DTypeLike)
+        .*\b(?:Callable|ndarray|DType\b(?!Like)|Tracer)  # Unparameterized generic
         (?!\[)                             # Not followed by [
         """,
         re.VERBOSE,
