@@ -258,4 +258,5 @@ constraint-dependencies = [
   "psutil>=5.9.0",
   "pyparsing>=3.0.0",
   "pyzmq>=25.0",
+  'scipy>=1.16.1; python_version >= "3.14"',  # 1.15.x has no cp314 wheels
 ]
