@@ -3,7 +3,7 @@
 
 from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any, Self, TypeGuard, final
+from typing import Any, Self, TypeGuard, cast, final
 
 import equinox as eqx
 import jax
@@ -73,11 +73,11 @@ class MyArray(quax.ArrayValue):
         """Multiplication operator."""
         return replace(self, array=other * self.array)
 
-    def __add__(self, other: Any) -> Self:
+    def __add__(self, other: Any) -> "MyArray":
         """Addition operator."""
-        return quax.quaxify(jnp.add)(self, other)
+        return cast("MyArray", quax.quaxify(jnp.add)(self, other))  # type: ignore[arg-type]
 
-    def sum(self, **kw: Any) -> Self:
+    def sum(self, **kw: Any) -> "MyArray":
         """Sum the array."""
         return MyArray(self.array.sum(**kw))
 
@@ -89,7 +89,7 @@ def is_myarray(x: Any, /) -> TypeGuard[MyArray]:
 
 def unwrap(x: MyArray | ArrayLike) -> jax.Array:
     """Unwrap the array."""
-    return x.array if is_myarray(x) else x
+    return jnp.asarray(x.array) if is_myarray(x) else jnp.asarray(x)
 
 
 # ==============================================================================
@@ -236,7 +236,7 @@ if Version("0.9.0") <= JAX_VERSION:
 
     @quax.register(lax.tile_p)
     def tile_p(x: MyArray, /, **kw: Any) -> MyArray:
-        return replace(x, array=lax.tile_p.bind(x.array, **kw))
+        return replace(x, array=lax.tile_p.bind(x.array, **kw))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -276,7 +276,7 @@ def bitcast_convert_type_p(x: MyArray, /, **kw: Any) -> MyArray:
 
 @quax.register(lax.broadcast_in_dim_p)
 def broadcast_in_dim_p(operand: MyArray, **kw: Any) -> MyArray:
-    return replace(operand, array=lax.broadcast_in_dim_p.bind(operand.array, **kw))
+    return replace(operand, array=lax.broadcast_in_dim_p.bind(operand.array, **kw))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -394,7 +394,7 @@ def convert_element_type_myarray(operand: MyArray, **kw: Any) -> MyArray:
 
 @quax.register(lax.copy_p)
 def copy_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.copy_p.bind(x.array))
+    return replace(x, array=lax.copy_p.bind(x.array))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -827,12 +827,12 @@ def max_p_am(x: ArrayLike, y: MyArray) -> MyArray:
 
 @quax.register(lax.min_p)
 def min_p_m(x: MyArray, y: MyArray) -> MyArray:
-    return MyArray(lax.min_p.bind(x.array, y.array))
+    return MyArray(lax.min_p.bind(x.array, y.array))  # type: ignore[no-untyped-call]
 
 
 @quax.register(lax.min_p)
 def min_p_am(x: ArrayLike, y: MyArray) -> MyArray:
-    return MyArray(lax.min_p.bind(x, y.array))
+    return MyArray(lax.min_p.bind(x, y.array))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -967,9 +967,9 @@ def psum_p() -> MyArray:
 
 if Version("0.6.0") >= JAX_VERSION:
 
-    @quax.register(lax.random_gamma_grad_p)
+    @quax.register(lax.random_gamma_grad_p)  # type: ignore[attr-defined]
     def random_gamma_grad_p(a: float | int, x: MyArray) -> MyArray:
-        return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))
+        return replace(x, array=lax.random_gamma_grad_p.bind(a, x.array))  # type: ignore[attr-defined]
 
 
 # ==============================================================================
@@ -1434,7 +1434,7 @@ def slice_p(
 
 @quax.register(lax.split_p)
 def split_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
-    return [MyArray(x) for x in lax.split_p.bind(x.array, **kw)]
+    return [MyArray(x) for x in lax.split_p.bind(x.array, **kw)]  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -1442,20 +1442,20 @@ def split_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
 
 @quax.register(lax.sort_p)
 def sort_p_m(*args: MyArray, **kw: Any) -> list[MyArray]:
-    args = [arg.array for arg in args]
-    return [MyArray(x) for x in lax.sort_p.bind(*args, **kw)]
+    args_ = [arg.array for arg in args]
+    return [MyArray(x) for x in lax.sort_p.bind(*args_, **kw)]  # type: ignore[no-untyped-call]
 
 
 @quax.register(lax.sort_p)
 def sort_p_ma(arg0: MyArray, arg1: ArrayLike, /, **kw: Any) -> list[MyArray]:
-    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1, **kw)]
+    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1, **kw)]  # type: ignore[no-untyped-call]
 
 
 @quax.register(lax.sort_p)
 def sort_p_mma(
     arg0: MyArray, arg1: MyArray, arg2: ArrayLike, /, **kw: Any
 ) -> list[MyArray]:
-    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1.array, arg2, **kw)]
+    return [MyArray(x) for x in lax.sort_p.bind(arg0.array, arg1.array, arg2, **kw)]  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
@@ -1487,7 +1487,7 @@ def squeeze_p(x: MyArray, **kw: Any) -> MyArray:
 
 @quax.register(lax.stop_gradient_p)
 def stop_gradient_p(x: MyArray) -> MyArray:
-    return replace(x, array=lax.stop_gradient_p.bind(x.array))
+    return replace(x, array=lax.stop_gradient_p.bind(x.array))  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
