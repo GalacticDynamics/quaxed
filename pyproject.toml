@@ -118,8 +118,8 @@ name = "cz_gitmoji"
 
 
 [tool.coverage]
-port.exclude_lines = ['pragma: no cover', '\.\.\.', 'if TYPE_CHECKING:']
-run.source         = ["quaxed"]
+report.exclude_lines = ['pragma: no cover', '\.\.\.', 'if TYPE_CHECKING:']
+run.source           = ["quaxed"]
 
 
 [tool.mypy]

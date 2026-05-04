@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# dependencies = ["nox"]
+#    dependencies = ["nox", "nox_uv"]
 # ///
 """Nox setup."""
 
@@ -38,6 +38,18 @@ def _process_stub_flag(s: nox.Session, /) -> list[str]:
 
 
 # =============================================================================
+# Comprehensive sessions
+
+
+@session(uv_groups=["build", "lint", "test", "docs"], reuse_venv=True, default=True)
+def all(s: nox.Session, /) -> None:
+    """Run all default sessions."""
+    lint(s)
+    test(s)
+    docs(s)
+
+
+# =============================================================================
 # Linting
 
 
@@ -47,10 +59,10 @@ def lint(s: nox.Session, /) -> None:
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    precommit(s)  # reuse pre-commit session
-    pylint(s)  # reuse pylint session
-    mypy_lint(s)  # reuse mypy session
-    pyright_lint(s)  # reuse pyright session
+    precommit(s)
+    pylint(s)
+    mypy_lint(s)
+    pyright_lint(s)
 
 
 @session(uv_groups=["lint"], reuse_venv=True)
@@ -95,8 +107,15 @@ def test(s: nox.Session, /) -> None:
 
     Pass --remake-stubs to regenerate type stubs before type checking.
     """
-    pytest(s)  # reuse pytest session
-    mypy_test(s)  # reuse mypy test session
+    posargs = _process_stub_flag(s)
+
+    # Call pytest
+    s.notify("pytest", posargs=posargs)
+
+    # Remove coverage and duration flags before passing to mypy_test
+    filter_out = {"--cov", "--cov-report", "--durations"}
+    filtered_posargs = [a for a in posargs if not any(f in a for f in filter_out)]
+    s.notify("mypy_test", posargs=filtered_posargs)
 
 
 @session(uv_groups=["test"], reuse_venv=True)
@@ -139,6 +158,8 @@ def build(s: nox.Session, /) -> None:
 
     s.run("python", "-m", "build")
 
+
+# =============================================================================
 
 if __name__ == "__main__":
     nox.main()
