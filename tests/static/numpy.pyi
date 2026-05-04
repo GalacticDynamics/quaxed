@@ -62,7 +62,6 @@ result044: MyArray = qnp.floor(arr000)
 result045: MyArray = qnp.trunc(arr000)
 result046: MyArray = qnp.rint(arr000)
 result047: MyArray = qnp.round(arr000)
-result048: MyArray = qnp.fix(arr000)
 
 # Sign and angle functions
 result050: MyArray = qnp.sign(arr000)
