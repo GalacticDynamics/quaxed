@@ -142,7 +142,7 @@ def mypy_test(s: nox.Session, /) -> None:
 @session(uv_groups=["docs"], reuse_venv=True)
 def docs(s: nox.Session, /) -> None:
     """Build the docs. Pass "--serve" to serve. Pass "-b linkcheck" to check links."""
-    s.run("mkdocs", "build", *s.posargs)
+    s.run("zensical", "build", *s.posargs)
 
 
 # =============================================================================

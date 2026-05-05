@@ -22,20 +22,17 @@ theme:
         name: Switch to light mode
   icon:
     repo: fontawesome/brands/github # GitHub logo in top right
-  logo: "_static/favicon.png" # Quax logo in top left
+  logo: "_static/favicon.png"
   favicon: "_static/favicon.png"
-  # custom_dir: "docs/_overrides" # Overriding part of the HTML
 
 site_name: Quaxed
 site_description: The documentation for the Quaxed software library.
 site_author: GalacticDynamics
-site_url: https://quaxed.readthedocs.io/en/latest/
+site_url: https://GalacticDynamics.github.io/quaxed
 
 repo_url: https://github.com/GalacticDynamics/quaxed
 repo_name: GalacticDynamics/quaxed
 edit_uri: "" # No edit button, as some of our pages are in /docs and some in /examples via symlink, so it's impossible for them all to be accurate
-
-strict: true # Don't allow warnings during the build process
 
 extra_javascript:
   # The below two make MathJax work, see https://squidfunk.github.io/mkdocs-material/reference/mathjax/
@@ -49,6 +46,8 @@ markdown_extensions:
   - pymdownx.arithmatex: # Render LaTeX via MathJax
       generic: true
   - pymdownx.superfences # Seems to enable syntax highlighting when used with the Material theme.
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.details # Allowing hidden expandable regions denoted by ???
   - pymdownx.snippets: # Include one Markdown file into another
       base_path: docs
@@ -63,32 +62,27 @@ plugins:
       # and https://github.com/patrick-kidger/equinox/issues/984
       # In particular this allows for searching e.g. 'filter_grad' and to match 'equinox.filter_grad'.
       separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
-  - autorefs # Cross-links to headings
-  - include_exclude_files:
-      include:
-        - ".htaccess"
-      exclude:
-        - "_overrides"
-  - ipynb
+  - hippogriffe:
   - mkdocstrings:
       handlers:
         python:
           options:
+            docstring_style: numpy
+            filters:
+              - "^__all__$"
+              - "!^__"
             force_inspection: true
             heading_level: 4
             inherited_members: true
-            members_order: [__all__, source]
-            show_bases: true
+            members_order: source
+            show_bases: false
             show_if_no_docstring: true
             show_overloads: false
-            show_root_heading: false
+            show_root_heading: true
             show_signature_annotations: true
-            show_source: true
+            show_source: false
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-            docstring_style: numpy
-            filters:
-              - "!^__(?!all__$)" # hide all dunders except __all__
 
 nav:
   - "index.md"

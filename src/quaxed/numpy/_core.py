@@ -1,5 +1,5 @@
 # ruff: noqa: F822
-"""Quaxed :mod:`jax.numpy`."""
+"""Quaxed `jax.numpy`."""
 # pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable
 

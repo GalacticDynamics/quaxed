@@ -1,10 +1,9 @@
-"""Quaxed :mod:`jax.scipy.special`.
+"""Quaxed `jax.scipy.special`.
 
-This module wraps the functions in :external:`jax.scipy.special` with
-:external:`quax.quaxify`. The wrapping happens dynamically through a
-module-level ``__dir__`` and ``__getattr__``. The list of available functions is
-in ``__all__`` and documented in the built-in :external:`jax.scipy.special`
-library.
+This module wraps the functions in `jax.scipy.special` with `quax.quaxify`. The
+wrapping happens dynamically through a module-level ``__dir__`` and
+``__getattr__``. The list of available functions is in ``__all__`` and
+documented in the built-in `jax.scipy.special` library.
 
 """
 # ruff:noqa: F822
@@ -64,7 +63,8 @@ from quax import quaxify
 
 
 def __dir__() -> list[str]:
-    return sorted(__all__)
+    """List the module contents."""
+    return ["__all__", *sorted(__all__)]
 
 
 # TODO: better return type annotation

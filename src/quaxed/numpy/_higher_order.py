@@ -1,4 +1,4 @@
-"""Quaxed :mod:`jax.numpy`."""
+"""Quaxed `jax.numpy`."""
 
 __all__ = ("vectorize",)
 
@@ -37,7 +37,7 @@ def vectorize(  # noqa: C901, PLR0915
     """Define a vectorized function with broadcasting.
 
     This is a copy-paste from :func:`jax.numpy.vectorize`, but the internals are
-    all replaced with their :mod:`quaxed` counterparts to allow quax-friendly
+    all replaced with their `quaxed` counterparts to allow quax-friendly
     objects to pass through. The only thing that isn't quaxed is `jax.vmap`,
     which allows any array-like object to pass through without converting it.
     Note that this behaviour is DIFFERENT than doing ``quaxify(jnp.vectorize)``
