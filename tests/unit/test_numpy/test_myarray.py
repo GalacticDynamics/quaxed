@@ -16,6 +16,8 @@ from tests.myarray import MyArray, is_myarray, unwrap
 
 from ..test_lax.test_myarray import _unwrap_myarray
 
+NUMPY_VERSION = Version(np.__version__)
+
 xfail_quax58 = pytest.mark.xfail(
     reason="https://github.com/patrick-kidger/quax/issues/58"
 )
@@ -30,6 +32,15 @@ xfail_deprecated_jax_0_9_0 = (
         Version("0.9") <= JAX_VERSION < Version("0.10"),
         raises=DeprecationWarning,
         reason="deprecated in JAX v0.9.0",
+        strict=True,
+    ),
+    pytest.mark.filterwarnings("error::DeprecationWarning"),
+)
+xfail_numpy_2_3_implicit_conversion_jax = (
+    pytest.mark.xfail(
+        Version("2.3") <= NUMPY_VERSION,
+        raises=DeprecationWarning,
+        reason="deprecated in NumPy 2.3: implicit array-to-dtype conversion",
         strict=True,
     ),
     pytest.mark.filterwarnings("error::DeprecationWarning"),
@@ -271,7 +282,13 @@ xbool = MyArray(jnp.array([True, False, True], dtype=bool))
         ("isclose", (x, y), {}, True),
         ("iscomplex", (x,), {}, False),
         ("iscomplexobj", (x,), {}, False),
-        ("isdtype", (x, "real floating"), {}, False),
+        pytest.param(
+            "isdtype",
+            (x, "real floating"),
+            {},
+            False,
+            marks=[*xfail_numpy_2_3_implicit_conversion_jax],
+        ),
         ("isfinite", (x,), {}, True),
         (
             "isin",

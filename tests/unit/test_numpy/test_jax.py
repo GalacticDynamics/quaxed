@@ -14,10 +14,29 @@ from quax._compat import JAX_VERSION
 
 import quaxed.numpy as qnp
 
+NUMPY_VERSION = Version(np.__version__)
+
 xfail_quax58 = pytest.mark.xfail(
     reason="https://github.com/patrick-kidger/quax/issues/58"
 )
 mark_todo = pytest.mark.skip("TODO")
+xfail_numpy_2_3_implicit_conversion = pytest.mark.xfail(
+    Version("2.3") <= NUMPY_VERSION,
+    raises=TypeError,
+    reason="deprecated in NumPy 2.3: implicit array-to-dtype conversion",
+    strict=True,
+)
+# JAX raises DeprecationWarning (not TypeError) for the same implicit conversion.
+# Requires filterwarnings to promote the warning into a catchable error.
+xfail_numpy_2_3_implicit_conversion_jax = (
+    pytest.mark.xfail(
+        Version("2.3") <= NUMPY_VERSION,
+        raises=DeprecationWarning,
+        reason="deprecated in NumPy 2.3: implicit array-to-dtype conversion",
+        strict=True,
+    ),
+    pytest.mark.filterwarnings("error::DeprecationWarning"),
+)
 skip_removed_jax_0_10_0 = pytest.mark.skipif(
     Version("0.10") <= JAX_VERSION,
     reason="removed in JAX v0.10.0",
@@ -111,7 +130,9 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("broadcast_arrays", (x, y), {}),
         ("broadcast_shapes", (x.shape, y.shape), {}),
         ("broadcast_to", (x, (2, 2)), {}),
-        ("can_cast", (x, int), {}),
+        pytest.param(
+            "can_cast", (x, int), {}, marks=xfail_numpy_2_3_implicit_conversion
+        ),
         ("cbrt", (x,), {}),
         ("ceil", (x,), {}),
         pytest.param("choose", (0, [x, x]), {}, marks=xfail_quax58),
@@ -238,7 +259,12 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("isclose", (x, y), {}),
         ("iscomplex", (x,), {}),
         ("iscomplexobj", (x,), {}),
-        ("isdtype", (x, "real floating"), {}),
+        pytest.param(
+            "isdtype",
+            (x, "real floating"),
+            {},
+            marks=[*xfail_numpy_2_3_implicit_conversion_jax],
+        ),
         ("isfinite", (x,), {}),
         ("isin", (2 * jnp.arange(4).reshape((2, 2)), jnp.asarray([1, 2, 4, 8])), {}),
         ("isinf", (x,), {}),
@@ -477,6 +503,8 @@ def test_c_():
     assert jnp.all(qnp.c_[1:3, 4:6] == jnp.c_[1:3, 4:6])
 
 
+@xfail_numpy_2_3_implicit_conversion_jax[0]
+@xfail_numpy_2_3_implicit_conversion_jax[1]
 def test_dtype():
     """Test `quaxed.numpy.dtype`."""
     assert jnp.all(qnp.dtype(x) == jnp.dtype(x))
@@ -500,6 +528,8 @@ def test_euler_gamma():
     assert qnp.euler_gamma == jnp.euler_gamma
 
 
+@xfail_numpy_2_3_implicit_conversion_jax[0]
+@xfail_numpy_2_3_implicit_conversion_jax[1]
 def test_finfo():
     """Test `quaxed.numpy.finfo`."""
     assert jnp.all(qnp.finfo(x) == jnp.finfo(x))
@@ -531,6 +561,8 @@ def test_get_printoptions():
     assert jnp.all(qnp.get_printoptions() == jnp.get_printoptions())
 
 
+@xfail_numpy_2_3_implicit_conversion_jax[0]
+@xfail_numpy_2_3_implicit_conversion_jax[1]
 def test_iinfo():
     """Test `quaxed.numpy.iinfo`."""
     got = qnp.iinfo(x.astype(int))
