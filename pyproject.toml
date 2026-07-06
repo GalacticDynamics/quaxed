@@ -69,7 +69,7 @@ dev = [
 docs = [
   "hippogriffe==0.2.2",
   "mkdocstrings[python]==1.0.3",
-  "pymdown-extensions==10.21.2",
+  "pymdown-extensions==10.21.3",
   "zensical",
 ]
 jupyter = ["ipykernel>=6.29.5"]
