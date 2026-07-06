@@ -12,5 +12,5 @@ from jaxtyping import Array, ArrayLike
 
 @quax.register(lax.scan_p)
 def scan_p(*args: ArrayLike, **kw: Any) -> Array:
-    """Patched implementation of lax.map."""
+    """Patched implementation of lax.scan."""
     return lax.scan_p.bind(*args, **kw)  # type: ignore[no-untyped-call]
