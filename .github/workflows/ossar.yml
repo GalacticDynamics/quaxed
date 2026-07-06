@@ -30,15 +30,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       # Run Microsoft Security DevOps
       - name: Run Microsoft Security DevOps
-        uses: microsoft/security-devops-action@4eaf69ee6aff7104270029dbfd8d3c0ba2853174 # v1.12.0
+        uses: microsoft/security-devops-action@c0f73835fa1f80fc12cc96ea7f9185735705f433 # v1.12.0
         id: msdo
 
         # Upload results to the Security tab
       - name: Upload results to Security tab
-        uses: github/codeql-action/upload-sarif@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3.27.5
+        uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
         with:
           sarif_file: ${{ steps.msdo.outputs.sarifFile }}
