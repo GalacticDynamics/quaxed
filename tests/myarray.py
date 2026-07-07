@@ -1490,6 +1490,15 @@ def squeeze_p(x: MyArray, **kw: Any) -> MyArray:
 
 # ==============================================================================
 
+if Version("0.10.1") <= JAX_VERSION:
+
+    @quax.register(lax.stack_p)  # type: ignore[attr-defined]
+    def stack_p(*args: MyArray, **kw: Any) -> MyArray:
+        return MyArray(lax.stack_p.bind(*[arg.array for arg in args], **kw))  # type: ignore[attr-defined]
+
+
+# ==============================================================================
+
 
 @quax.register(lax.stop_gradient_p)
 def stop_gradient_p(x: MyArray) -> MyArray:
