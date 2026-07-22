@@ -1,7 +1,14 @@
 name: Auto-label PRs
 
+# pull_request_target (not pull_request) so PRs from forks can be labelled:
+# a plain pull_request event gives fork PRs a read-only token that the
+# permissions below cannot elevate, which made the labeler fail with
+# "Resource not accessible by integration". This is safe because the job never
+# runs PR head code -- the checkout below explicitly pins the trusted base
+# commit, and the labeler only reads the PR's changed-file paths via the API
+# plus that base-branch labeler config.
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 
 permissions:
@@ -15,6 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
+          # Explicitly check out the PR's base commit (trusted), not the fork
+          # head, so `pull_request_target`'s writable token never sees PR code.
+          ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
 
       - uses: actions/labeler@f27b608878404679385c85cfa523b85ccb86e213 # v6.1.0

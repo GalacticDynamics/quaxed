@@ -17,6 +17,11 @@ concurrency:
 env:
   FORCE_COLOR: 3
 
+# Deny the workflow token by default (least privilege); each job below opts
+# into exactly the permissions it needs. Without this top-level block the token
+# falls back to the repository default, which may be write-all (CKV2_GHA_1).
+permissions: {}
+
 jobs:
   dist:
     name: Distribution build
