@@ -1,0 +1,106 @@
+"""CodSpeed performance benchmarks for :mod:`quaxed`.
+
+These benchmarks exercise the core value proposition of ``quaxed``: applying
+:func:`quax.quaxify` to JAX functions so they operate on custom array-ish
+objects. We measure the overhead of the quaxed wrappers on a representative
+custom array type (:class:`MyArray`), covering elementwise ops, reductions,
+and autodiff transforms.
+
+The benchmarks are collected by ``pytest`` and run under CodSpeed via
+``pytest-codspeed``. Each benchmarked call performs a single, representative
+unit of work; CodSpeed handles warmup and repetition.
+"""
+
+import jax
+import jax.numpy as jnp
+import pytest
+
+import quaxed
+import quaxed.numpy as qnp
+from tests.myarray import MyArray
+
+# Representative inputs. Small arrays keep JAX tracing/dispatch overhead
+# dominant, which is exactly what quaxed adds on top of JAX.
+x = MyArray(jnp.arange(64.0).reshape(8, 8))
+y = MyArray(jnp.arange(64.0).reshape(8, 8) + 1.0)
+vec = MyArray(jnp.linspace(0.1, 1.0, 64))
+
+
+def _run(func, *args):
+    """Call ``func`` and block until the JAX result is ready.
+
+    JAX dispatches asynchronously, so blocking inside the measured region
+    ensures the benchmark captures the full computation rather than just the
+    dispatch, and prevents work from overlapping across iterations.
+    ``jax.block_until_ready`` traverses pytrees, so it handles ``MyArray`` and
+    the ``(value, grad)`` tuple uniformly.
+    """
+    return jax.block_until_ready(func(*args))
+
+
+def test_numpy_add(benchmark):
+    """Elementwise addition of two custom arrays via quaxed.numpy."""
+    result = benchmark(_run, qnp.add, x, y)
+    assert isinstance(result, MyArray)
+
+
+def test_numpy_multiply(benchmark):
+    """Elementwise multiplication of two custom arrays."""
+    result = benchmark(_run, qnp.multiply, x, y)
+    assert isinstance(result, MyArray)
+
+
+def test_numpy_sin(benchmark):
+    """Unary transcendental function over a custom array."""
+    result = benchmark(_run, qnp.sin, vec)
+    assert isinstance(result, MyArray)
+
+
+def test_numpy_sum(benchmark):
+    """Reduction over a custom array."""
+    result = benchmark(_run, qnp.sum, x)
+    assert isinstance(result, MyArray)
+
+
+def test_numpy_matmul(benchmark):
+    """Matrix multiplication over custom arrays."""
+    result = benchmark(_run, qnp.matmul, x, y)
+    assert isinstance(result, MyArray)
+
+
+def test_numpy_stack(benchmark):
+    """Stacking a list of custom arrays."""
+    result = benchmark(_run, qnp.stack, [x, y])
+    assert isinstance(result, MyArray)
+
+
+def test_grad(benchmark):
+    """Autodiff via the quaxed ``grad`` transform."""
+
+    def f(v):
+        return qnp.sum(qnp.square(v))
+
+    grad_f = quaxed.grad(f)
+    result = benchmark(_run, grad_f, vec)
+    assert isinstance(result, MyArray)
+
+
+def test_value_and_grad(benchmark):
+    """Combined value-and-grad transform through quaxed."""
+
+    def f(v):
+        return qnp.sum(qnp.square(v))
+
+    vg = quaxed.value_and_grad(f)
+    result = benchmark(_run, vg, vec)
+    value, grad = result
+    assert isinstance(value, MyArray)
+    assert isinstance(grad, MyArray)
+
+
+@pytest.mark.parametrize("name", ["abs", "exp", "sqrt", "tanh"])
+def test_numpy_unary_ops(benchmark, name):
+    """A spread of quaxed.numpy unary ops on a custom array."""
+    func = getattr(qnp, name)
+    result = benchmark(_run, func, vec)
+    assert isinstance(result, MyArray)
