@@ -40,4 +40,4 @@ jobs:
           mode: simulation
           run: >-
             uv run --no-default-groups --group bench --group test pytest
-            benchmarks/ --codspeed -p no:sybil -W ignore
+            benchmarks/ --codspeed -p no:sybil -W ignore::UserWarning
