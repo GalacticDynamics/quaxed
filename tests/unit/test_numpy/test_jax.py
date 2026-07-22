@@ -15,9 +15,13 @@ from quax._compat import JAX_VERSION
 import quaxed.numpy as qnp
 
 NUMPY_VERSION = Version(np.__version__)
+QUAX_VERSION = Version(quax.__version__)
 
+# quax v0.4.0 fixed https://github.com/patrick-kidger/quax/issues/58 for the
+# JAX-input path, so these functions now pass. Keep the xfail for older quax.
 xfail_quax58 = pytest.mark.xfail(
-    reason="https://github.com/patrick-kidger/quax/issues/58"
+    condition=Version("0.4") > QUAX_VERSION,
+    reason="https://github.com/patrick-kidger/quax/issues/58",
 )
 mark_todo = pytest.mark.skip("TODO")
 xfail_numpy_2_3_implicit_conversion = pytest.mark.xfail(
