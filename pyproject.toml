@@ -26,7 +26,8 @@ dependencies = [
   "optype>=0.8.0",
   'plum-dispatch>=2.5.7; python_version < "3.14"',
   'plum-dispatch>=2.9.0; python_version >= "3.14"',
-  "quax>=0.3.2",
+  'quax>=0.3.2; python_version < "3.14"',
+  'quax>=0.4.0; python_version >= "3.14"',
 ]
 description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
 dynamic = ["version"]
@@ -51,7 +52,8 @@ requires = [
   "hatch-vcs",
   'jax>=0.5.3; python_version < "3.14"',
   'jax>=0.7.2; python_version >= "3.14"',
-  "quax>=0.3.2",
+  'quax>=0.3.2; python_version < "3.14"',
+  'quax>=0.4.0; python_version >= "3.14"',
 ]
 
 
