@@ -1645,38 +1645,15 @@ wheels = [
 
 [[package]]
 name = "quax"
-version = "0.3.2"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version < '3.12'",
-]
-dependencies = [
-    { name = "equinox" },
-    { name = "jax" },
-    { name = "jaxtyping" },
-    { name = "packaging" },
-    { name = "plum-dispatch", version = "2.5.7", source = { registry = "https://pypi.org/simple" } },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/cf/15/66c9a1a32168726ba0f4adeb158e737a012e2a2ec19c638dfa24f7d4b0ab/quax-0.3.2.tar.gz", hash = "sha256:94a1656c55f813ca5f6e76b69f085c8dcc701673928f7616af1f2536da158f62", size = 171557, upload-time = "2026-05-04T13:43:07.09Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/28/08/ef6ff182c14090127dcb1cb0a7724e327b5a2ef0c0e3e8afcd1c5672441b/quax-0.3.2-py3-none-any.whl", hash = "sha256:d63ea1f6af06711ee256cfd38d19e980b9ded760c58c49a5ccb668d5f2a5c6c3", size = 39313, upload-time = "2026-05-04T13:43:05.48Z" },
-]
-
-[[package]]
-name = "quax"
 version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.14'",
-]
 dependencies = [
     { name = "equinox" },
     { name = "jax" },
     { name = "jaxtyping" },
     { name = "packaging" },
-    { name = "plum-dispatch", version = "2.9.0", source = { registry = "https://pypi.org/simple" } },
+    { name = "plum-dispatch", version = "2.5.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.14'" },
+    { name = "plum-dispatch", version = "2.9.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0c/06/445590bc5ec4f1ac493ac40456490a36136d43ed8d490a292144dbd938ad/quax-0.4.0.tar.gz", hash = "sha256:d1d8588a3b14b44954d23c957c90ac6ba5e6dc12b15f0b14b1f562ab983a7af2", size = 202233, upload-time = "2026-07-22T18:02:24.176Z" }
 wheels = [
@@ -1693,8 +1670,7 @@ dependencies = [
     { name = "optype" },
     { name = "plum-dispatch", version = "2.5.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.14'" },
     { name = "plum-dispatch", version = "2.9.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
-    { name = "quax", version = "0.3.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.14'" },
-    { name = "quax", version = "0.4.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
+    { name = "quax" },
 ]
 
 [package.dev-dependencies]
@@ -1762,14 +1738,12 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "equinox", specifier = ">=0.13.2" },
-    { name = "jax", marker = "python_full_version < '3.14'", specifier = ">=0.5.3" },
-    { name = "jax", marker = "python_full_version >= '3.14'", specifier = ">=0.7.2" },
-    { name = "jaxtyping", specifier = ">=0.3.1" },
+    { name = "jax", specifier = ">=0.7.2" },
+    { name = "jaxtyping", specifier = ">=0.3.3" },
     { name = "optype", specifier = ">=0.8.0" },
     { name = "plum-dispatch", marker = "python_full_version < '3.14'", specifier = ">=2.5.7" },
     { name = "plum-dispatch", marker = "python_full_version >= '3.14'", specifier = ">=2.9.0" },
-    { name = "quax", marker = "python_full_version < '3.14'", specifier = ">=0.3.2" },
-    { name = "quax", marker = "python_full_version >= '3.14'", specifier = ">=0.4.0" },
+    { name = "quax", specifier = ">=0.4.0" },
 ]
 
 [package.metadata.requires-dev]
