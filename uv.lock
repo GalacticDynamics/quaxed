@@ -1645,7 +1645,7 @@ wheels = [
 
 [[package]]
 name = "quax"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "equinox" },
@@ -1655,9 +1655,9 @@ dependencies = [
     { name = "plum-dispatch", version = "2.5.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.14'" },
     { name = "plum-dispatch", version = "2.9.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/06/445590bc5ec4f1ac493ac40456490a36136d43ed8d490a292144dbd938ad/quax-0.4.0.tar.gz", hash = "sha256:d1d8588a3b14b44954d23c957c90ac6ba5e6dc12b15f0b14b1f562ab983a7af2", size = 202233, upload-time = "2026-07-22T18:02:24.176Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/bf/b82c3951dc90de2ecead6c5bce06e7f4f492133d7a33cd3a0a2f50b7acf7/quax-0.4.1.tar.gz", hash = "sha256:d765430bf0f87a82311da7278e3e24148e854802fe765e6bc608383f059b2cb9", size = 202924, upload-time = "2026-07-22T19:51:31.037Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/e9/391ffa7a3c58998f47aa21414d74d817d611e4ee54300d2f70977402ccac/quax-0.4.0-py3-none-any.whl", hash = "sha256:1fa3d9ae506f2404bb1de09ecbcbf12205ec8cfd918dfcb1f65f3a8ce1a396e8", size = 58510, upload-time = "2026-07-22T18:02:22.807Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/f4/71ff3476add83f10d17f5e2aaa7d6d48c0aabed39150b2630e1c523564a0/quax-0.4.1-py3-none-any.whl", hash = "sha256:1973f80b5f0e9687253e67ed766299226e4acbd986ada2e566db0f85bfb44b4e", size = 58940, upload-time = "2026-07-22T19:51:29.713Z" },
 ]
 
 [[package]]
@@ -1743,7 +1743,7 @@ requires-dist = [
     { name = "optype", specifier = ">=0.8.0" },
     { name = "plum-dispatch", marker = "python_full_version < '3.14'", specifier = ">=2.5.7" },
     { name = "plum-dispatch", marker = "python_full_version >= '3.14'", specifier = ">=2.9.0" },
-    { name = "quax", specifier = ">=0.4.0" },
+    { name = "quax", specifier = ">=0.4.1" },
 ]
 
 [package.metadata.requires-dev]
