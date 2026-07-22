@@ -20,13 +20,12 @@ classifiers = [
 ]
 dependencies = [
   "equinox>=0.13.2",
-  'jax>=0.5.3; python_version < "3.14"',
-  'jax>=0.7.2; python_version >= "3.14"',
-  "jaxtyping>=0.3.1",
+  "jax>=0.7.2",
+  "jaxtyping>=0.3.3",
   "optype>=0.8.0",
   'plum-dispatch>=2.5.7; python_version < "3.14"',
   'plum-dispatch>=2.9.0; python_version >= "3.14"',
-  "quax>=0.3.2",
+  "quax>=0.4.1",
 ]
 description = "Pre-quaxed libraries for multiple dispatch over abstract array types in JAX"
 dynamic = ["version"]
@@ -46,13 +45,7 @@ quaxed-make-stubs = "quaxed._tools.make_stubs:main"
 
 [build-system]
 build-backend = "hatchling.build"
-requires = [
-  "hatchling",
-  "hatch-vcs",
-  'jax>=0.5.3; python_version < "3.14"',
-  'jax>=0.7.2; python_version >= "3.14"',
-  "quax>=0.3.2",
-]
+requires      = ["hatchling", "hatch-vcs", "jax>=0.7.2", "quax>=0.4.1"]
 
 
 [dependency-groups]
