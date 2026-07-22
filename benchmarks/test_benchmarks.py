@@ -4,7 +4,7 @@ These benchmarks exercise the core value proposition of ``quaxed``: applying
 :func:`quax.quaxify` to JAX functions so they operate on custom array-ish
 objects. We measure the overhead of the quaxed wrappers on a representative
 custom array type (:class:`MyArray`), covering elementwise ops, reductions,
-autodiff transforms, and the top-level lazy attribute forwarding.
+and autodiff transforms.
 
 The benchmarks are collected by ``pytest`` and run under CodSpeed via
 ``pytest-codspeed``. Each benchmarked call performs a single, representative
@@ -46,7 +46,7 @@ def test_numpy_sin(benchmark):
 def test_numpy_sum(benchmark):
     """Reduction over a custom array."""
     result = benchmark(qnp.sum, x)
-    assert result is not None
+    assert isinstance(result, MyArray)
 
 
 def test_numpy_matmul(benchmark):
@@ -69,7 +69,7 @@ def test_grad(benchmark):
 
     grad_f = quaxed.grad(f)
     result = benchmark(grad_f, vec)
-    assert result is not None
+    assert isinstance(result, MyArray)
 
 
 def test_value_and_grad(benchmark):
@@ -80,7 +80,9 @@ def test_value_and_grad(benchmark):
 
     vg = quaxed.value_and_grad(f)
     result = benchmark(vg, vec)
-    assert result is not None
+    value, grad = result
+    assert isinstance(value, MyArray)
+    assert isinstance(grad, MyArray)
 
 
 @pytest.mark.parametrize("name", ["abs", "exp", "sqrt", "tanh"])
