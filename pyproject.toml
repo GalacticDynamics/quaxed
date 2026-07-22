@@ -56,9 +56,11 @@ requires = [
 
 
 [dependency-groups]
+bench = ["pytest-codspeed>=5.0.3"]
 build = ["hatchling>=1.28.0"]
 dev = [
   "cz-conventional-gitmoji>=0.6.1",
+  { include-group = "bench" },
   { include-group = "build" },
   { include-group = "docs" },
   { include-group = "jupyter" },
@@ -221,6 +223,7 @@ extra-standard-library = ["typing_extensions"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
+"benchmarks/**" = ["ANN", "INP001", "N816", "PLR2004", "S101"]
 "docs/**" = ["INP001"]
 "noxfile.py" = ["T20"]
 "scratch/**" = ["ANN", "D", "FBT", "INP"]
