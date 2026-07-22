@@ -1,7 +1,13 @@
 name: Auto-label PRs
 
+# pull_request_target (not pull_request) so PRs from forks can be labelled: a
+# plain pull_request event gives fork PRs a read-only token that the
+# permissions below cannot elevate, which made the labeler fail with
+# "Resource not accessible by integration". This is safe because the job never
+# checks out or runs PR head code -- the labeler only reads the PR's
+# changed-file paths via the API and the trusted base-branch labeler config.
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 
 permissions:
