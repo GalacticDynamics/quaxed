@@ -91,7 +91,10 @@ repos:
     rev: v0.25
     hooks:
       - id: validate-pyproject
-        additional_dependencies: ["validate-pyproject-schema-store[all]"]
+        # Pin schema-store: 2026.7.20 crashes on the uv schema with
+        # "UnboundLocalError: data_keys". Unpin once upstream fixes it.
+        additional_dependencies:
+          ["validate-pyproject-schema-store[all]==2026.7.17"]
 
   - repo: local
     hooks:
