@@ -114,14 +114,17 @@ def empty_like(
 # =============================================================================
 
 
-# NB: ``shape`` is annotated with the *unparametrized* ``tuple``. A subscripted
-# generic is not "faithful" in plum, and a single unfaithful signature disables
-# method caching for the whole function -- so ``full`` re-resolved its methods
-# on every call. ``tuple`` and ``tuple[int, ...]`` match exactly the same values
-# here; only the caching differs.
+# NB: ``shape`` is annotated with the *unparametrized* ``tuple``, against mypy's
+# `disallow_any_generics`. A parametrised builtin such as ``tuple[int, ...]`` is
+# not cacheable in plum -- matching it inspects the elements, so two values of
+# the same type can match differently -- and a single uncacheable signature
+# disables method caching for the whole function, making ``full`` re-resolve its
+# methods on every call. ``tuple`` and ``tuple[int, ...]`` accept exactly the
+# same values here; only the caching differs, so the parameter is traded for the
+# cache and the loss is confined to these two lines.
 @plum.dispatch
 def full(
-    shape: tuple | int,
+    shape: tuple | int,  # type: ignore[type-arg]
     fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
@@ -131,7 +134,7 @@ def full(
 
 @plum.dispatch  # type: ignore[no-redef]
 def full(
-    shape: tuple | int,
+    shape: tuple | int,  # type: ignore[type-arg]
     *,
     fill_value: ArrayLike,
     dtype: DType | None = None,
