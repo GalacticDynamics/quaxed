@@ -114,9 +114,13 @@ def empty_like(
 # =============================================================================
 
 
+# NB: ``shape`` is deliberately unparametrized. A parametrised builtin is not
+# cacheable in plum (matching inspects the elements), and one uncacheable
+# signature disables method caching for the whole function. Both spellings
+# accept the same values.
 @plum.dispatch
 def full(
-    shape: tuple[int, ...] | int,
+    shape: tuple | int,  # type: ignore[type-arg]
     fill_value: ArrayLike,
     *,
     dtype: DType | None = None,
@@ -126,7 +130,7 @@ def full(
 
 @plum.dispatch  # type: ignore[no-redef]
 def full(
-    shape: tuple[int, ...] | int,
+    shape: tuple | int,  # type: ignore[type-arg]
     *,
     fill_value: ArrayLike,
     dtype: DType | None = None,
