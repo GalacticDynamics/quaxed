@@ -114,14 +114,10 @@ def empty_like(
 # =============================================================================
 
 
-# NB: ``shape`` is annotated with the *unparametrized* ``tuple``, against mypy's
-# `disallow_any_generics`. A parametrised builtin such as ``tuple[int, ...]`` is
-# not cacheable in plum -- matching it inspects the elements, so two values of
-# the same type can match differently -- and a single uncacheable signature
-# disables method caching for the whole function, making ``full`` re-resolve its
-# methods on every call. ``tuple`` and ``tuple[int, ...]`` accept exactly the
-# same values here; only the caching differs, so the parameter is traded for the
-# cache and the loss is confined to these two lines.
+# NB: ``shape`` is deliberately unparametrized. A parametrised builtin is not
+# cacheable in plum (matching inspects the elements), and one uncacheable
+# signature disables method caching for the whole function. Both spellings
+# accept the same values.
 @plum.dispatch
 def full(
     shape: tuple | int,  # type: ignore[type-arg]
