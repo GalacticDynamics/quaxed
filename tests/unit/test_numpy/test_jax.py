@@ -6,6 +6,7 @@ import jax.numpy as jnp
 import jax.random as jr
 import jax.tree as jtu
 import jax.tree_util as jt
+import ml_dtypes
 import numpy as np
 import pytest
 import quax
@@ -15,6 +16,7 @@ from quax._compat import JAX_VERSION
 import quaxed.numpy as qnp
 
 NUMPY_VERSION = Version(np.__version__)
+ML_DTYPES_VERSION = Version(ml_dtypes.__version__)
 
 xfail_quax58 = pytest.mark.xfail(
     reason="https://github.com/patrick-kidger/quax/issues/58"
@@ -31,6 +33,17 @@ xfail_numpy_2_3_implicit_conversion = pytest.mark.xfail(
 xfail_numpy_2_3_implicit_conversion_jax = (
     pytest.mark.xfail(
         Version("2.3") <= NUMPY_VERSION,
+        raises=DeprecationWarning,
+        reason="deprecated in NumPy 2.3: implicit array-to-dtype conversion",
+        strict=True,
+    ),
+    pytest.mark.filterwarnings("error::DeprecationWarning"),
+)
+# `jnp.finfo`/`jnp.iinfo` hit the same deprecation via `ml_dtypes`, which stopped
+# passing the array through to NumPy in 0.6.0.
+xfail_ml_dtypes_implicit_conversion = (
+    pytest.mark.xfail(
+        Version("2.3") <= NUMPY_VERSION and Version("0.6") > ML_DTYPES_VERSION,
         raises=DeprecationWarning,
         reason="deprecated in NumPy 2.3: implicit array-to-dtype conversion",
         strict=True,
@@ -528,8 +541,8 @@ def test_euler_gamma():
     assert qnp.euler_gamma == jnp.euler_gamma
 
 
-@xfail_numpy_2_3_implicit_conversion_jax[0]
-@xfail_numpy_2_3_implicit_conversion_jax[1]
+@xfail_ml_dtypes_implicit_conversion[0]
+@xfail_ml_dtypes_implicit_conversion[1]
 def test_finfo():
     """Test `quaxed.numpy.finfo`."""
     assert jnp.all(qnp.finfo(x) == jnp.finfo(x))
@@ -561,8 +574,8 @@ def test_get_printoptions():
     assert jnp.all(qnp.get_printoptions() == jnp.get_printoptions())
 
 
-@xfail_numpy_2_3_implicit_conversion_jax[0]
-@xfail_numpy_2_3_implicit_conversion_jax[1]
+@xfail_ml_dtypes_implicit_conversion[0]
+@xfail_ml_dtypes_implicit_conversion[1]
 def test_iinfo():
     """Test `quaxed.numpy.iinfo`."""
     got = qnp.iinfo(x.astype(int))

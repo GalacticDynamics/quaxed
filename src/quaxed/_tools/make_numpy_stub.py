@@ -282,18 +282,21 @@ def _add_typealias_imports(text: str, /) -> str:
     This function performs textual substitutions on the upstream `jax.numpy` stub:
 
     * Injects an import of ``quax`` alongside the existing ``os`` import.
-    * Extends the generic type variables with ``_ArrayValueT``, which is
-      bounded by ``quax.ArrayValue`` and is used to express value-preserving
-      overloads in function signatures.
+    * Declares ``_ArrayValueT``, which is bounded by ``quax.ArrayValue`` and is
+      used to express value-preserving overloads in function signatures.
 
     Critically, this does NOT widen the ``ArrayLike`` type alias. The original
     JAX ``ArrayLike`` remains unchanged. The overloads with ``_ArrayValueT``
     provide type preservation for ``ArrayValue`` subclasses, while the base
     ``ArrayLike`` overload remains for standard JAX array-like types.
 
+    ``TypeVar`` is imported under the private alias ``_TypeVar`` so that the
+    declaration does not depend on the upstream stub importing ``TypeVar``
+    itself: jax >= 0.11 no longer does.
+
     The transformation assumes the upstream stub follows the structure
     produced by JAX's stub generation scripts (in particular, that the
-    import blocks and ``_T`` definition appear exactly once).
+    ``import os`` line appears exactly once).
 
     Args:
         text: The complete contents of the upstream ``jax.numpy`` stub file.
@@ -304,15 +307,61 @@ def _add_typealias_imports(text: str, /) -> str:
         type variable, but with ``ArrayLike`` unchanged.
 
     """
-    text = text.replace("import os\n", "import os\nimport quax\n", 1)
     return text.replace(
-        "_T = TypeVar('_T')",
+        "import os\n",
         (
-            "_T = TypeVar('_T')\n"
-            "_ArrayValueT = TypeVar('_ArrayValueT', bound=quax.ArrayValue)"
+            "import os\n"
+            "import quax\n"
+            "from typing import TypeVar as _TypeVar\n"
+            "_ArrayValueT = _TypeVar('_ArrayValueT', bound=quax.ArrayValue)\n"
         ),
         1,
     )
+
+
+# RE_PEP695_ALIAS matches PEP 695 generic type aliases, e.g.
+#     type PadValueLike[T] = T | Sequence[T] | Sequence[Sequence[T]]
+# Only plain identifier type parameters are matched; anything fancier (bounds,
+# defaults, TypeVarTuples) is left alone rather than silently mangled.
+RE_PEP695_ALIAS = re.compile(
+    r"^type (?P<name>\w+)\[(?P<params>\w+(?:,\s*\w+)*)\] = (?P<rhs>.+)$",
+    re.MULTILINE,
+)
+
+
+def _downgrade_pep695_aliases(text: str, /) -> str:
+    r"""Rewrite PEP 695 type aliases into Python 3.11-compatible syntax.
+
+    jax >= 0.11 requires Python >= 3.12 and its stub uses ``type X[T] = ...``.
+    quaxed supports Python 3.11, and a wheel built on 3.12+ must still ship a
+    stub that a 3.11-targeted type checker can parse, so each generic alias is
+    rewritten as an explicit ``TypeVar`` plus a plain assignment.
+
+    Args:
+        text: The stub text to process.
+
+    Returns
+    -------
+        The stub text with PEP 695 type aliases downgraded.
+
+    Examples
+    --------
+        >>> _downgrade_pep695_aliases("type Pair[T] = tuple[T, T]")
+        "_Pair_T = _TypeVar('_Pair_T')\nPair = tuple[_Pair_T, _Pair_T]"
+
+    """
+
+    def repl(match: re.Match[str], /) -> str:
+        name = match.group("name")
+        rhs = match.group("rhs")
+        decls = []
+        for param in (p.strip() for p in match.group("params").split(",")):
+            typevar = f"_{name}_{param}"
+            decls.append(f"{typevar} = _TypeVar('{typevar}')")
+            rhs = re.sub(rf"\b{param}\b", typevar, rhs)
+        return "\n".join([*decls, f"{name} = {rhs}"])
+
+    return RE_PEP695_ALIAS.sub(repl, text)
 
 
 def _replace_binary_ufunc(text: str, /) -> str:
@@ -813,6 +862,7 @@ def generate_numpy_stub(output: Path, /) -> None:
     upstream = Path(jnp.__file__).with_suffix(".pyi")
     text = upstream.read_text(encoding="utf-8")
     text = _add_typealias_imports(text)
+    text = _downgrade_pep695_aliases(text)
     text = _replace_binary_ufunc(text)
     text = _rewrite_single_arraylike_param(text)
     text = _rewrite_multi_param_first_arraylike(text)
