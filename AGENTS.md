@@ -108,6 +108,9 @@ See `pyproject.toml`. Core: `jax`, `quax`, `equinox`, `plum-dispatch`,
 
 ## Further Reading
 
+- [.github/skills/code-review/SKILL.md](.github/skills/code-review/SKILL.md) —
+  what to look for when reviewing a quaxed change (also picked up by GitHub
+  Copilot code review)
 - [README.md](README.md) — install, quick start, contributor basics
 - [docs/](docs/) — published at <https://galacticdynamics.github.io/quaxed/>
 - [skills/quaxed/SKILL.md](skills/quaxed/SKILL.md) — using and extending quaxed
