@@ -15,6 +15,7 @@ nox -s test                         # pytest (incl. doctests) + mypy on tests/st
 nox -s lint                         # prek + pylint + mypy + pyright
 nox -s docs                         # build docs
 nox -s pytest -- tests/unit/test_numpy   # a subset
+nox -s skill_examples                    # skills/quaxed/SKILL.md examples (needs unxt; not part of `test`)
 ```
 
 Pass `--remake-stubs` to `test`, `lint`, `mypy_test`, or `pyright_lint` to
@@ -79,6 +80,14 @@ directly. `_version.pyi` pairs with the VCS-generated `_version.py`.
   in `src/` runs in CI. Doctests are skipped on Windows (numpy 2.0 scalar repr).
 - `tests/static/numpy.pyi` is type-checked by `nox -s mypy_test` — it is how
   stub correctness is asserted.
+- **`skills/quaxed/SKILL.md`'s example blocks are tests too**, but not via sybil
+  (that only collects `.py`/`.rst`). `tests/test_skill_examples.py` execs every
+  ` ```python ` block in the skill, run via `nox -s skill_examples` — a
+  separate, unlocked session, since it needs `unxt`, which can't join `uv.lock`
+  (it depends on `quaxed`, and uv can't resolve the project against a
+  differently-sourced package sharing its own name). A block meant to illustrate
+  a failure or non-runnable pseudocode is fenced ` ```py ` instead, so the test
+  skips it.
 - Test layout mirrors the source: `tests/unit/test_numpy`, `test_lax`,
   `test_scipy`, `test_operator`.
 

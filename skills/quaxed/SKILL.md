@@ -84,7 +84,7 @@ fires precisely on the real function you meant to call.
 So `quaxed.numpy` is not a complete cover of `jax.numpy`, and it does not tell
 you loudly when you have stepped outside it:
 
-```python
+```py
 import quaxed.numpy as jnp
 from unxt import Quantity
 
@@ -216,7 +216,7 @@ by qualified name, so defining `arange` under `@plum.dispatch` in your own
 module adds a method to `quaxed.numpy.arange`. The canonical example is unxt's
 `_src/quantity/register_dispatches.py`:
 
-```python
+```py
 import plum
 from jaxtyping import ArrayLike
 
