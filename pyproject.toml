@@ -167,7 +167,15 @@ similarities.ignore-imports = "yes"
 
 
 [tool.pytest.ini_options]
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+addopts = [
+  "-ra",
+  "--showlocals",
+  "--strict-markers",
+  "--strict-config",
+  # needs `unxt`, which isn't in uv.lock (see noxfile.py::skill_examples) --
+  # excluded from default collection, still runs when passed explicitly.
+  "--ignore=tests/test_skill_examples.py",
+]
 filterwarnings = [
   "error",
   # jaxtyping
