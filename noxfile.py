@@ -135,6 +135,36 @@ def mypy_test(s: nox.Session, /) -> None:
     s.run("mypy", "src/quaxed", "tests/static", *posargs)
 
 
+@nox.session(python="3.13", reuse_venv=True)
+def skill_examples(s: nox.Session, /) -> None:
+    """Run the skills/quaxed/SKILL.md examples against real `unxt`.
+
+    Deliberately outside uv.lock: `unxt` depends on `quaxed`, and uv cannot
+    resolve the main project against a differently-sourced package sharing
+    its own name. This session installs into its own unlocked venv instead of
+    syncing from the lockfile.
+    """
+    # --override: unxt declares `quaxed>=0.10.5`, but a non-tagged checkout's
+    # hatch-vcs dev version (e.g. 0.10.5.dev37+...) sorts *below* 0.10.5 under
+    # PEP 440, so that constraint would otherwise reject the local editable
+    # install. The bare override replaces it with an unconstrained `quaxed`,
+    # which the local `-e .` then satisfies unconditionally.
+    overrides = Path(s.create_tmp()) / "quaxed-override.txt"
+    overrides.write_text("quaxed\n")
+    # sybil: the root conftest.py imports it at collection time, even though
+    # this session only runs one test file.
+    s.install(
+        "-e",
+        ".",
+        "unxt>=2.0.2",
+        "pytest>=9.0.0",
+        "sybil[pytest]>=9.2.0",
+        "--override",
+        str(overrides),
+    )
+    s.run("pytest", "tests/test_skill_examples.py", *s.posargs)
+
+
 # =============================================================================
 # Documentation
 
