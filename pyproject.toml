@@ -257,6 +257,7 @@ constraint-dependencies = [
   "bleach>6.0",
   "cffi>=1.14",
   "decorator>=5.1.1",
+  "markdown>=3.8.1",                         # GHSA-5wmx-573v-2qwq / CVE-2025-69534
   "matplotlib>=3.7.1",
   "matplotlib-inline>=0.1.6",
   "opt-einsum>=3.2.1",
