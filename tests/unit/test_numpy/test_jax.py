@@ -17,7 +17,14 @@ import quaxed.numpy as qnp
 
 NUMPY_VERSION = Version(np.__version__)
 ML_DTYPES_VERSION = Version(ml_dtypes.__version__)
+QUAX_VERSION = Version(quax.__version__)
 
+# Fixed in quax 0.4.0 (JAX-input dispatch path); MyArray-specific cases in
+# test_myarray.py remain unfixed and are xfailed unconditionally there.
+xfail_quax58 = pytest.mark.xfail(
+    Version("0.4") > QUAX_VERSION,
+    reason="https://github.com/patrick-kidger/quax/issues/58",
+)
 mark_todo = pytest.mark.skip("TODO")
 xfail_numpy_2_3_implicit_conversion = pytest.mark.xfail(
     Version("2.3") <= NUMPY_VERSION,
@@ -99,7 +106,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("argpartition", (x, 1), {}),
         ("argsort", (x,), {}),
         *(
-            ("argwhere", (x,), {}),
+            pytest.param("argwhere", (x,), {}, marks=xfail_quax58),
             ("argwhere", (x,), {"size": x.size}),  # TODO: not need static size
         ),
         ("around", (x,), {}),
@@ -120,7 +127,9 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("average", (x,), {}),
         ("bartlett", (3,), {}),
         *(
-            ("bincount", (jnp.asarray([0, 1, 1, 2, 2, 2]),), {}),
+            pytest.param(
+                "bincount", (jnp.asarray([0, 1, 1, 2, 2, 2]),), {}, marks=xfail_quax58
+            ),
             ("bincount", (jnp.asarray([0, 1, 1, 2, 2, 2]),), {"length": 3}),
         ),
         ("bitwise_and", (xbool, xbool), {}),
@@ -143,14 +152,14 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ),
         ("cbrt", (x,), {}),
         ("ceil", (x,), {}),
-        pytest.param("choose", (0, [x, x]), {}),
+        pytest.param("choose", (0, [x, x]), {}, marks=xfail_quax58),
         ("clip", (x, 1, 2), {}),
         ("column_stack", ([x, x],), {}),
         pytest.param("complex128", (1,), {}, marks=pytest.mark.xfail),
         ("complex64", (1,), {}),
         pytest.param("complex_", (1,), {}, marks=pytest.mark.xfail),
         pytest.param("complexfloating", (1,), {}, marks=pytest.mark.xfail),
-        pytest.param("compress", (xbool, x), {}),
+        pytest.param("compress", (xbool, x), {}, marks=xfail_quax58),
         ("concat", ([x, x],), {}),
         ("concatenate", ([x, x],), {}),
         ("conj", (x,), {}),
@@ -194,7 +203,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("exp2", (x,), {}),
         ("expand_dims", (x, 0), {}),
         ("expm1", (x,), {}),
-        pytest.param("extract", (jnp.array([True]), x), {}),
+        pytest.param("extract", (jnp.array([True]), x), {}, marks=xfail_quax58),
         ("eye", (2,), {}),
         ("fabs", (x,), {}),
         ("fill_diagonal", (jnp.eye(3), 2), {"inplace": False}),
@@ -205,7 +214,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
             marks=[*xfail_deprecated_jax_0_9_0, skip_removed_jax_0_10_0],
         ),
         *(
-            pytest.param("flatnonzero", (x,), {}),
+            pytest.param("flatnonzero", (x,), {}, marks=xfail_quax58),
             ("flatnonzero", (x,), {"size": x.size}),
         ),
         ("flip", (x,), {}),
@@ -260,7 +269,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("insert", (x, 1, 2.0), {}),
         ("interp", (x[:, 0], x[:, 0], 2 * x[:, 0]), {}),
         *(
-            pytest.param("intersect1d", (x[:, 0], x[:, 0]), {}),
+            pytest.param("intersect1d", (x[:, 0], x[:, 0]), {}, marks=xfail_quax58),
             ("intersect1d", (x[:, 0], x[:, 0]), {"size": x[:, 0].size}),
         ),
         ("invert", (x.astype(int),), {}),
@@ -337,7 +346,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("negative", (x,), {}),
         ("nextafter", (x, y), {}),
         *(
-            pytest.param("nonzero", (x,), {}),
+            pytest.param("nonzero", (x,), {}, marks=xfail_quax58),
             ("nonzero", (x,), {"size": x.size}),
         ),
         ("not_equal", (x, y), {}),
@@ -370,7 +379,12 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("rad2deg", (x,), {}),
         ("radians", (x,), {}),
         ("ravel", (x,), {}),
-        ("ravel_multi_index", (jnp.array([[0, 1], [0, 1]]), (2, 2)), {}),
+        pytest.param(
+            "ravel_multi_index",
+            (jnp.array([[0, 1], [0, 1]]), (2, 2)),
+            {},
+            marks=xfail_quax58,
+        ),
         ("real", (x,), {}),
         ("reciprocal", (x,), {}),
         ("remainder", (x, y), {}),
@@ -382,7 +396,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("rint", (x,), {}),
         ("roll", (x, 4), {}),
         ("rollaxis", (x, -1), {}),
-        pytest.param("roots", (x[:, 0],), {}),
+        pytest.param("roots", (x[:, 0],), {}, marks=xfail_quax58),
         ("rot90", (x,), {}),
         ("round", (x,), {}),
         # pytest.param("round_", (x,), {}, marks=pytest.mark.deprecated),
@@ -391,11 +405,11 @@ xbool = jnp.array([True, False, True], dtype=bool)
         pytest.param("searchsorted", (x,), {}, marks=mark_todo),
         pytest.param("select", (x,), {}, marks=mark_todo),
         *(
-            pytest.param("setdiff1d", (x[:, 0], y[:, 0]), {}),
+            pytest.param("setdiff1d", (x[:, 0], y[:, 0]), {}, marks=xfail_quax58),
             ("setdiff1d", (x[:, 0], y[:, 0]), {"size": x[:, 0].size}),
         ),
         *(
-            pytest.param("setxor1d", (x[:, 0], y[:, 0]), {}),
+            pytest.param("setxor1d", (x[:, 0], y[:, 0]), {}, marks=xfail_quax58),
             ("setxor1d", (x[:, 0], y[:, 0]), {"size": x[:, 0].size}),
         ),
         ("shape", (x,), {}),
@@ -426,7 +440,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("transpose", (x,), {}),
         ("tril", (jnp.eye(4),), {}),
         ("tril_indices_from", (jnp.eye(4),), {}),
-        (
+        pytest.param(
             "trim_zeros",
             (
                 jnp.concatenate(
@@ -434,6 +448,7 @@ xbool = jnp.array([True, False, True], dtype=bool)
                 ),
             ),
             {},
+            marks=xfail_quax58,
         ),
         ("triu", (x,), {}),
         ("triu_indices_from", (x,), {}),
@@ -441,27 +456,27 @@ xbool = jnp.array([True, False, True], dtype=bool)
         ("trunc", (x,), {}),
         pytest.param("ufunc", (x,), {}, marks=mark_todo),
         *(
-            pytest.param("union1d", (x[:, 0], y[:, 0]), {}),
+            pytest.param("union1d", (x[:, 0], y[:, 0]), {}, marks=xfail_quax58),
             ("union1d", (x[:, 0], y[:, 0]), {"size": x[:, 0].size}),
         ),
         *(
-            pytest.param("unique", (x,), {}),
+            pytest.param("unique", (x,), {}, marks=xfail_quax58),
             ("unique", (x,), {"size": x.size}),
         ),
         *(
-            pytest.param("unique_all", (x,), {}),
+            pytest.param("unique_all", (x,), {}, marks=xfail_quax58),
             ("unique_all", (x,), {"size": x.size}),
         ),
         *(
-            pytest.param("unique_counts", (x,), {}),
+            pytest.param("unique_counts", (x,), {}, marks=xfail_quax58),
             ("unique_counts", (x,), {"size": x.size}),
         ),
         *(
-            pytest.param("unique_inverse", (x,), {}),
+            pytest.param("unique_inverse", (x,), {}, marks=xfail_quax58),
             ("unique_inverse", (x,), {"size": x.size}),
         ),
         *(
-            pytest.param("unique_values", (x,), {}),
+            pytest.param("unique_values", (x,), {}, marks=xfail_quax58),
             ("unique_values", (x,), {"size": x.size}),
         ),
         pytest.param(
