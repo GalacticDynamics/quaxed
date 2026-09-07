@@ -1440,7 +1440,7 @@ def slice_p(
 
 @quax.register(lax.split_p)
 def split_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
-    return [MyArray(x) for x in lax.split_p.bind(x.array, **kw)]  # type: ignore[no-untyped-call]
+    return [MyArray(arr) for arr in lax.split_p.bind(x.array, **kw)]  # type: ignore[no-untyped-call]
 
 
 # ==============================================================================
