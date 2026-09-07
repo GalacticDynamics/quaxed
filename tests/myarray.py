@@ -971,7 +971,7 @@ def psum_p() -> MyArray:
 
 # ==============================================================================
 
-if Version("0.6.0") <= JAX_VERSION:
+if Version("0.6.0") >= JAX_VERSION:
 
     @quax.register(lax.random_gamma_grad_p)  # type: ignore[attr-defined]
     def random_gamma_grad_p(a: float | int, x: MyArray) -> MyArray:
