@@ -1611,7 +1611,7 @@ def hessenberg_p(x: MyArray, /) -> list[MyArray]:
 
 
 @quax.register(lax.linalg.lu_p)
-def lu(x: MyArray, /) -> list[MyArray]:
+def lu_p(x: MyArray, /) -> list[MyArray]:
     return [MyArray(x) for x in lax.linalg.lu_p.bind(x.array)]
 
 
