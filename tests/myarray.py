@@ -1468,7 +1468,7 @@ def sort_p_mma(
 
 
 @quax.register(lax.square_p)
-def square(x: MyArray) -> MyArray:
+def square_p(x: MyArray) -> MyArray:
     return replace(x, array=lax.square_p.bind(x.array))
 
 
