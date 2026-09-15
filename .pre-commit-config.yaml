@@ -35,6 +35,8 @@ repos:
       - id: name-tests-test
         args: ["--pytest-test-first"]
         exclude: tests/myarray.py
+      - id: no-commit-to-branch
+        args: ["--branch", "main", "--pattern", "^versions/.*"]
       - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/pygrep-hooks
