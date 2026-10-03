@@ -6,14 +6,16 @@
 
 quax's duck is a black rubber duck; quaxed's carries a white badge with a blue
 tick on its body, for libraries that come already quaxified. The shapes are
-measured from the original 48 px icon and drawn in its 48-unit grid, so a larger
-image is the same picture, only sharper. Re-run it for a larger image::
+measured from the original 48 px icon and drawn in its 48-unit grid, so the
+picture is the same at any size. The docs use it as an SVG; for a bitmap, name a
+.png and give its size::
 
-    uv run docs/_static/make_logo.py                    # favicon.png, 512 px
+    uv run docs/_static/make_logo.py                     # favicon.svg
     uv run docs/_static/make_logo.py --size 2048 big.png
 """
 
 import argparse
+import io
 from pathlib import Path
 
 import matplotlib as mpl
@@ -22,7 +24,7 @@ mpl.use("Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import Circle, PathPatch, Polygon
+from matplotlib.patches import Circle, PathPatch
 from matplotlib.path import Path as MplPath
 
 BLACK, WHITE, BLUE = "#000000", "#ffffff", "#1473f0"
@@ -45,37 +47,38 @@ BADGE = ((19.6, 31.2), 8.4)  # the white disc on the body
 TICK = [(15.1, 30.8), (18.3, 34.3), (24.3, 27.8)]
 
 
-def smooth(points: list[tuple[float, float]], n: int = 400) -> np.ndarray:
-    """Return a closed Catmull-Rom curve through ``points``."""
+def smooth(points: list[tuple[float, float]]) -> MplPath:
+    """Return a closed Catmull-Rom curve through ``points``, as Bezier curves.
+
+    Each span of the curve is exactly one cubic Bezier, which SVG stores as is,
+    so the outline is smooth at any size and costs four points a span.
+    """
     p = np.asarray(points, dtype=float)
-    k = len(p)
-    t = np.linspace(0, k, n, endpoint=False)
-    i = t.astype(int)
-    s = (t - i)[:, None]
-    p0, p1, p2, p3 = (p[(i + d) % k] for d in (-1, 0, 1, 2))
-    return 0.5 * (
-        2 * p1
-        + (p2 - p0) * s
-        + (2 * p0 - 5 * p1 + 4 * p2 - p3) * s**2
-        + (3 * p1 - p0 - 3 * p2 + p3) * s**3
+    p0, p2, p3 = np.roll(p, 1, 0), np.roll(p, -1, 0), np.roll(p, -2, 0)
+    c1, c2 = p + (p2 - p0) / 6, p2 - (p3 - p) / 6
+    verts = np.concatenate(
+        [p[:1], np.stack([c1, c2, p2], axis=1).reshape(-1, 2), p[:1]]
     )
+    codes = [MplPath.MOVETO, *[MplPath.CURVE4] * (3 * len(p)), MplPath.CLOSEPOLY]
+    return MplPath(verts, codes)
+
+
+def disc(centre: tuple[float, float], radius: float, *, hole: bool = False) -> MplPath:
+    """Return a circle as Bezier curves, wound the other way for a ``hole``."""
+    unit = MplPath.unit_circle()
+    verts = unit.vertices[:-1] * radius + centre
+    if hole:  # reversed, so it cuts out of a shape it is combined with
+        verts = verts[::-1]
+    return MplPath(np.concatenate([verts, verts[:1]]), unit.codes)
 
 
 def duck(ax: plt.Axes) -> None:
     """Draw quax's duck: body, beak and head in black, the eye a hole."""
-    body = smooth(BODY)
-    ax.add_patch(Polygon(body, color=BLACK, lw=0))
-    ax.add_patch(Polygon(smooth(BEAK), color=BLACK, lw=0))
-    # The head with the eye cut out, so it shows whatever the logo sits on.
-    t = np.linspace(0, 2 * np.pi, 200)
-    (hx, hy), hr = HEAD
-    (ex, ey), er = EYE
-    head = np.column_stack([hx + hr * np.cos(t), hy + hr * np.sin(t)])
-    eye = np.column_stack([ex + er * np.cos(t), ey - er * np.sin(t)])  # reversed
-    codes = np.full(400, MplPath.LINETO)
-    codes[[0, 200]] = MplPath.MOVETO
-    path = MplPath(np.concatenate([head, eye]), codes)
-    ax.add_patch(PathPatch(path, color=BLACK, lw=0))
+    ax.add_patch(PathPatch(smooth(BODY), color=BLACK, lw=0))
+    ax.add_patch(PathPatch(smooth(BEAK), color=BLACK, lw=0))
+    # The eye is cut out of the head, so it shows whatever the logo sits on.
+    head = MplPath.make_compound_path(disc(*HEAD), disc(*EYE, hole=True))
+    ax.add_patch(PathPatch(head, color=BLACK, lw=0))
 
 
 def badge(ax: plt.Axes) -> None:
@@ -99,10 +102,12 @@ def main() -> None:
         "out",
         nargs="?",
         type=Path,
-        default=Path(__file__).with_name("favicon.png"),
-        help="output file (default: favicon.png)",
+        default=Path(__file__).with_name("favicon.svg"),
+        help="output file, SVG or PNG by its extension (default: favicon.svg)",
     )
-    parser.add_argument("--size", type=int, default=512, help="pixels per side")
+    parser.add_argument(
+        "--size", type=int, default=512, help="pixels per side, for a PNG"
+    )
     args = parser.parse_args()
 
     dpi = 100
@@ -112,7 +117,16 @@ def main() -> None:
     ax.axis("off")
     duck(ax)
     badge(ax)
-    fig.savefig(args.out, transparent=True)
+    # No timestamp and fixed element ids, so a re-run gives the same file.
+    mpl.rcParams["svg.hashsalt"] = "logo"
+    if args.out.suffix == ".svg":
+        svg = io.StringIO()
+        fig.savefig(svg, format="svg", transparent=True, metadata={"Date": None})
+        # matplotlib ends path lines with a space, which pre-commit would strip.
+        lines = svg.getvalue().splitlines()
+        args.out.write_text("\n".join(line.rstrip() for line in lines) + "\n")
+    else:
+        fig.savefig(args.out, transparent=True)
     plt.close(fig)
 
 
