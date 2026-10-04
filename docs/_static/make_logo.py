@@ -1,103 +1,71 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["matplotlib", "numpy"]
+# dependencies = ["resvg-py"]
 # ///
 """Draw the quaxed logo: quax's duck, wearing a tick.
 
-quax's duck is a black rubber duck; quaxed's carries a white badge with a blue
-tick on its body, for libraries that come already quaxified. The shapes are
-measured from the original 48 px icon and drawn in its 48-unit grid, so the
-picture is the same at any size. The docs use it as an SVG; for a bitmap, name a
-.png and give its size::
+quaxed's duck carries a white badge with a blue tick on its body, for libraries
+that come already quaxified.
+The duck is quax's logo, Material Design Icons' "duck", drawn from its own path,
+so it is the same duck quax's docs show. The shapes are vector, so the logo is
+written as an SVG, sharp at any size; for a bitmap, name a .png and give its
+size::
 
     uv run docs/_static/make_logo.py                     # favicon.svg
     uv run docs/_static/make_logo.py --size 2048 big.png
 """
 
 import argparse
-import io
 from pathlib import Path
 
-import matplotlib as mpl
-
-mpl.use("Agg")
-
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.patches import Circle, PathPatch
-from matplotlib.path import Path as MplPath
-
+# Material Design Icons' "duck", by Pictogrammers, under the Apache License 2.0
+# (https://pictogrammers.com/library/mdi/), in its 24-unit grid. It is drawn at
+# twice that, in the 48-unit grid the badge below is placed in.
+DUCK = (
+    "M8.5,5A1.5,1.5 0 0,0 7,6.5A1.5,1.5 0 0,0 8.5,8"
+    "A1.5,1.5 0 0,0 10,6.5A1.5,1.5 0 0,0 8.5,5M10,2A5,5 0 0,1 15,7"
+    "C15,8.7 14.15,10.2 12.86,11.1C14.44,11.25 16.22,11.61 18,12.5"
+    "C21,14 22,12 22,12C22,12 21,21 15,21H9C9,21 4,21 4,16"
+    "C4,13 7,12 6,10C2,10 2,6.5 2,6.5C3,7 4.24,7 5,6.65"
+    "C5.19,4.05 7.36,2 10,2Z"
+)
 BLACK, WHITE, BLUE = "#000000", "#ffffff", "#1473f0"
+BADGE = ((19.6, 31.2), 8.4)  # the white disc on the duck's body: centre, radius
+TICK = [(15.1, 30.8), (18.3, 34.3), (24.3, 27.8)]  # the tick's three points
+TICK_WIDTH = 2.6
 
-# The duck in the original icon's 48-unit grid, x right and y down. The body's
-# outline, clockwise: up the neck into the head, along the back to the tail's
-# tip, down the breast, along the bottom and up the front.
-BODY = [
-    (12.7, 19.5), (14, 16), (27.5, 16), (27.2, 20), (28.6, 22.4), (32, 22.9),
-    (35, 24), (38, 25.2), (41, 24.8), (43.8, 23.6), (43.6, 27), (42.8, 30),
-    (41.5, 33.5), (39.5, 36.5), (37, 39), (33.5, 41.3), (28, 42), (20, 42),
-    (14.5, 41.3), (11.5, 39.5), (9.3, 37), (8.3, 33.5), (8.4, 29.5), (9.4, 26.5),
-    (10.8, 24.6), (12.2, 22.2),
-]  # fmt: skip
-HEAD = ((20.3, 12.7), 9.1)  # centre, radius
-EYE = ((17.1, 12.6), 2.6)
-BEAK = [(12, 12.6), (7, 12.9), (4.6, 13.1), (4.3, 14.5), (5, 16.3), (6.5, 17.8),
-        (9.5, 19.6), (12.5, 20.2)]  # fmt: skip
-BADGE = ((19.6, 31.2), 8.4)  # the white disc on the body
-TICK = [(15.1, 30.8), (18.3, 34.3), (24.3, 27.8)]
+SVG = """\
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="512" height="512">
+  <path d="{duck}" transform="scale(2)" fill="{black}"/>
+  <circle cx="{bx:g}" cy="{by:g}" r="{br:g}" fill="{white}"/>
+  <path d="{tick}" fill="none" stroke="{blue}" stroke-width="{width:g}"
+    stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+"""
 
 
-def smooth(points: list[tuple[float, float]]) -> MplPath:
-    """Return a closed Catmull-Rom curve through ``points``, as Bezier curves.
-
-    Each span of the curve is exactly one cubic Bezier, which SVG stores as is,
-    so the outline is smooth at any size and costs four points a span.
-    """
-    p = np.asarray(points, dtype=float)
-    p0, p2, p3 = np.roll(p, 1, 0), np.roll(p, -1, 0), np.roll(p, -2, 0)
-    c1, c2 = p + (p2 - p0) / 6, p2 - (p3 - p) / 6
-    verts = np.concatenate(
-        [p[:1], np.stack([c1, c2, p2], axis=1).reshape(-1, 2), p[:1]]
-    )
-    codes = [MplPath.MOVETO, *[MplPath.CURVE4] * (3 * len(p)), MplPath.CLOSEPOLY]
-    return MplPath(verts, codes)
-
-
-def disc(centre: tuple[float, float], radius: float, *, hole: bool = False) -> MplPath:
-    """Return a circle as Bezier curves, wound the other way for a ``hole``."""
-    unit = MplPath.unit_circle()
-    verts = unit.vertices[:-1] * radius + centre
-    if hole:  # reversed, so it cuts out of a shape it is combined with
-        verts = verts[::-1]
-    return MplPath(np.concatenate([verts, verts[:1]]), unit.codes)
-
-
-def duck(ax: plt.Axes) -> None:
-    """Draw quax's duck: body, beak and head in black, the eye a hole."""
-    ax.add_patch(PathPatch(smooth(BODY), color=BLACK, lw=0))
-    ax.add_patch(PathPatch(smooth(BEAK), color=BLACK, lw=0))
-    # The eye is cut out of the head, so it shows whatever the logo sits on.
-    head = MplPath.make_compound_path(disc(*HEAD), disc(*EYE, hole=True))
-    ax.add_patch(PathPatch(head, color=BLACK, lw=0))
-
-
-def badge(ax: plt.Axes) -> None:
-    """Draw the white badge on the body, with its blue tick."""
-    centre, radius = BADGE
-    ax.add_patch(Circle(centre, radius, color=WHITE, lw=0))
-    points_per_unit = ax.figure.get_figwidth() * 72 / 48  # the axes span 48
-    ax.plot(
-        *np.transpose(TICK),
-        color=BLUE,
-        lw=2.6 * points_per_unit,
-        solid_capstyle="round",
-        solid_joinstyle="round",
+def svg() -> str:
+    """Return the logo as SVG text."""
+    (bx, by), br = BADGE
+    tick = "M" + "L".join(f"{x:g} {y:g}" for x, y in TICK)
+    return SVG.format(
+        duck=DUCK,
+        black=BLACK,
+        white=WHITE,
+        blue=BLUE,
+        bx=bx,
+        by=by,
+        br=br,
+        tick=tick,
+        width=TICK_WIDTH,
     )
 
 
 def main() -> None:
     """Parse the command line and save the logo."""
-    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser = argparse.ArgumentParser(
+        description="Draw the quaxed logo: quax's duck, wearing a tick."
+    )
     parser.add_argument(
         "out",
         nargs="?",
@@ -110,24 +78,13 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    dpi = 100
-    fig = plt.figure(figsize=(args.size / dpi, args.size / dpi), dpi=dpi)
-    ax = fig.add_axes((0, 0, 1, 1))
-    ax.set(xlim=(0, 48), ylim=(48, 0), aspect="equal")  # y down, as the icon's
-    ax.axis("off")
-    duck(ax)
-    badge(ax)
-    # No timestamp and fixed element ids, so a re-run gives the same file.
-    mpl.rcParams["svg.hashsalt"] = "logo"
     if args.out.suffix == ".svg":
-        svg = io.StringIO()
-        fig.savefig(svg, format="svg", transparent=True, metadata={"Date": None})
-        # matplotlib ends path lines with a space, which pre-commit would strip.
-        lines = svg.getvalue().splitlines()
-        args.out.write_text("\n".join(line.rstrip() for line in lines) + "\n")
+        args.out.write_text(svg())
     else:
-        fig.savefig(args.out, transparent=True)
-    plt.close(fig)
+        import resvg_py  # noqa: PLC0415  # only a PNG needs a renderer
+
+        png = resvg_py.svg_to_bytes(svg_string=svg(), width=args.size)
+        args.out.write_bytes(bytes(png))
 
 
 if __name__ == "__main__":
