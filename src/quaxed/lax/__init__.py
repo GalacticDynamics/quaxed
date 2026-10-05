@@ -120,7 +120,6 @@ __all__ = [
     "nextafter",
     "pad",
     "polygamma",
-    "population_count",
     "pow",
     "random_gamma_grad",
     "real",
