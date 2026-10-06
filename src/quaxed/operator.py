@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxed `operator`.
 
 This module wraps the functions in `operator` with `quax.quaxify`. The wrapping

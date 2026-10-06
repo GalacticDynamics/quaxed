@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 # /// script
 # requires-python = ">=3.11"
 # dependencies = ["resvg-py"]

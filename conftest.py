@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Doctest configuration."""
 
 import platform

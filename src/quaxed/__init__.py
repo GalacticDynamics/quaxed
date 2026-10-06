@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Pre-`quaxify`ed jax and related libraries.
 
 `quax` is JAX + multiple dispatch + custom array-ish objects. `quaxed` is a

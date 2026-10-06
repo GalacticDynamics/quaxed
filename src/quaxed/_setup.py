@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Setup file for the Quaxed package."""
 
 from importlib.metadata import version

@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 from jax.lax.linalg import (
     cholesky as cholesky,
     eig as eig,
