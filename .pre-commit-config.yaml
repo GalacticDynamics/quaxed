@@ -56,6 +56,12 @@ repos:
       - id: check-github-workflows
       - id: check-readthedocs
 
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.26.1
+    hooks:
+      - id: zizmor
+        args: ["--no-exit-codes"]
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.16.10"
     hooks:
