@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Test with :class:`MyArray` inputs."""
 # mypy: disable-error-code=no-redef
 
@@ -746,7 +747,7 @@ def lgamma_p(x: MyArray) -> MyArray:
 
 
 @quax.register(lax.linear_solve_p)
-def linear_solve_p(
+def linear_solve_p(  # noqa: PLR0917  (signature fixed by the primitive)
     arg0: MyArray,
     arg1: MyArray,
     arg2: MyArray,

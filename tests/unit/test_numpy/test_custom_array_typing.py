@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Tests for typing of custom array types in quaxed.numpy."""
 
 from dataclasses import dataclass

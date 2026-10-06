@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxed `jax.lax`."""
 # pyright: reportUnsupportedDunderAll=false
 # pylint: disable=undefined-all-variable

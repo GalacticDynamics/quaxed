@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Array API creation functions."""
 # pyright: reportCallIssue=false, reportRedeclaration=false, reportUnnecessaryTypeIgnoreComment=false
 # pylint: disable=E0102,E1121,E1125

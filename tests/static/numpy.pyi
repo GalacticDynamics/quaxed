@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 # Static type tests for quaxed.numpy with MyArray.
 #
 # This module contains static type tests that verify MyArray works correctly

@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Test with JAX inputs."""
 
 import operator as ops

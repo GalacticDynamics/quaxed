@@ -1,4 +1,5 @@
 #!/usr/bin/env -S uv run --script
+# Copyright (c) 2023, Nathaniel Starkman.
 # /// script
 #    dependencies = ["nox", "nox_uv"]
 # ///

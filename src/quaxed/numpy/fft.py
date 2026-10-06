@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """FFT functions."""
 
 __all__ = (

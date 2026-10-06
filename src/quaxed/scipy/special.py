@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxed `jax.scipy.special`.
 
 This module wraps the functions in `jax.scipy.special` with `quax.quaxify`. The

@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxed `jax.scipy.linalg`.
 
 This module wraps the functions in `jax.scipy.linalg` with `quax.quaxify`. The

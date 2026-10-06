@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Patches for `quax`."""
 # pyright: reportUnnecessaryTypeIgnoreComment=false
 

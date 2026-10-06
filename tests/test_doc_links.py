@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Agent-facing docs are mostly links; a stale one silently misleads the agent.
 
 `AGENTS.md` and the skills route agents to source and test files by relative

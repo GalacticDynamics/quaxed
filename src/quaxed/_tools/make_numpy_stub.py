@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 # /// script
 # dependencies = [
 #   "jax>=0.5.3",

@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Test fallback warnings for numpy functions not in quaxed.numpy.__all__."""
 
 import inspect

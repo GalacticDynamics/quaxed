@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Test the package itself."""
 
 import importlib.metadata

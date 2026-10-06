@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """The quaxed skill ships example code that agents copy verbatim.
 
 An example that stops running as `unxt` or JAX moves is a real defect, so

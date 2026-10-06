@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxified `jax.lax`.
 
 This module wraps the functions in `jax.lax` with `quax.quaxify`. The wrapping

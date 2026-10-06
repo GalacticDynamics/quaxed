@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxed `jax.numpy`."""
 
 __all__ = ("vectorize",)

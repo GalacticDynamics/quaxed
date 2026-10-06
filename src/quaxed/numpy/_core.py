@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 # ruff: noqa: F822
 """Quaxed `jax.numpy`."""
 # pyright: reportUnsupportedDunderAll=false

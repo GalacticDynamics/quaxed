@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 from jax.scipy.special import (
     bernoulli as bernoulli,
     bessel_jn as bessel_jn,

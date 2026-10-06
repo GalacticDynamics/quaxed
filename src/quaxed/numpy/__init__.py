@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """Quaxified `jax.numpy`.
 
 This module wraps the functions in `jax.numpy` with `quax.quaxify`. The wrapping

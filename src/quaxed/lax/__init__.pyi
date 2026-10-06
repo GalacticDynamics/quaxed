@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 # ----- Operators -----
 # isort: split
 from jax.lax import (

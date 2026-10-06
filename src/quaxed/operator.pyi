@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 from operator import (
     abs as abs,
     add as add,

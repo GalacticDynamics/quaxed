@@ -1,3 +1,4 @@
+# Copyright (c) 2023, Nathaniel Starkman.
 """CodSpeed performance benchmarks for :mod:`quaxed`.
 
 These benchmarks exercise the core value proposition of ``quaxed``: applying
