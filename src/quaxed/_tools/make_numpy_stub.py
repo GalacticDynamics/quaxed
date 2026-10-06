@@ -554,14 +554,11 @@ def _rewrite_binary(text: str, /) -> str:
         return "\n".join(
             (
                 "@overload",
-                f"def {name}({param1}: _ArrayValueT, {param2}: {param2type_filtered}"
-                f"{tail}) -> _ArrayValueT: ...",
+                f"def {name}({param1}: _ArrayValueT, {param2}: {param2type_filtered}{tail}) -> _ArrayValueT: ...",
                 "@overload",
-                f"def {name}({param1}: _ArrayValueT, {param2}: {param2type}{tail}) "
-                "-> _ArrayValueT: ...",
+                f"def {name}({param1}: _ArrayValueT, {param2}: {param2type}{tail}) -> _ArrayValueT: ...",
                 "@overload",
-                f"def {name}({param1}: ArrayLike, {param2}: {param2type_filtered}"
-                f"{tail}) -> _ArrayValueT: ...",
+                f"def {name}({param1}: ArrayLike, {param2}: {param2type_filtered}{tail}) -> _ArrayValueT: ...",
                 "@overload",
                 f"def {name}({param1}: ArrayLike, {param2}: {param2type}{tail}) -> Array: ...",
             )
@@ -606,17 +603,13 @@ def _rewrite_binary_with_union_first(text: str, /) -> str:
         return "\n".join(
             (
                 "@overload",
-                f"def {name}({param1}: {param1type_filtered}, {param2}: "
-                f"{param2type_filtered}{tail}) -> _ArrayValueT: ...",
+                f"def {name}({param1}: {param1type_filtered}, {param2}: {param2type_filtered}{tail}) -> _ArrayValueT: ...",
                 "@overload",
-                f"def {name}({param1}: {param1type_filtered}, {param2}: "
-                f"{param2type}{tail}) -> _ArrayValueT: ...",
+                f"def {name}({param1}: {param1type_filtered}, {param2}: {param2type}{tail}) -> _ArrayValueT: ...",
                 "@overload",
-                f"def {name}({param1}: {param1type}, {param2}: "
-                f"{param2type_filtered}{tail}) -> _ArrayValueT: ...",
+                f"def {name}({param1}: {param1type}, {param2}: {param2type_filtered}{tail}) -> _ArrayValueT: ...",
                 "@overload",
-                f"def {name}({param1}: {param1type}, {param2}: {param2type}{tail}) "
-                "-> Array: ...",
+                f"def {name}({param1}: {param1type}, {param2}: {param2type}{tail}) -> Array: ...",
             )
         )
 

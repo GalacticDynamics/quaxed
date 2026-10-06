@@ -207,6 +207,7 @@ ignore = [
   "D103",   # Missing docstring in public function  # TODO
   "D203",   # one-blank-line-before-class
   "D213",   # Multi-line docstring summary should start at the second line
+  "CPY001", # Missing copyright notice at top of file
   "ISC001", # handled by formatter
   "ERA001", # Found commented-out code
   "F811",   # Redefinition of unused variable  <- plum
@@ -238,6 +239,7 @@ extra-standard-library = ["typing_extensions"]
   "INP001",
   "N816",
   "PLR0913",
+  "PLR0917",
   "PLR2004",
   "S101",
   "T20",
