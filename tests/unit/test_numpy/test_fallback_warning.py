@@ -81,3 +81,26 @@ def test_nonexistent_attribute_raises_error():
     """Test that truly nonexistent attributes raise AttributeError."""
     with pytest.raises(AttributeError, match="has no attribute 'nonexistent_function'"):
         _ = qnp.nonexistent_function  # type: ignore[attr-defined]
+
+
+@pytest.mark.parametrize(
+    "func_name",
+    [
+        "cumulative_prod",
+        "cumulative_sum",
+        "matvec",
+        "put_along_axis",
+        "spacing",
+        "trapezoid",
+        "unstack",
+        "vecmat",
+    ],
+)
+def test_previously_missing_functions_are_quaxified(func_name):
+    """These used to fall back to bare `jax.numpy` (GalacticDynamics/quaxed#221)."""
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        func = getattr(qnp, func_name)
+
+    assert not [x for x in w if "Falling back" in str(x.message)]
+    assert func is not getattr(jnp, func_name)
