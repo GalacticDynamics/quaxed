@@ -1554,6 +1554,15 @@ def transpose_p(operand: MyArray, /, **kw: Any) -> MyArray:
 
 # ==============================================================================
 
+if Version("0.10.1") <= JAX_VERSION:
+
+    @quax.register(lax.unstack_p)  # type: ignore[attr-defined]
+    def unstack_p(x: MyArray, /, **kw: Any) -> list[MyArray]:
+        return [MyArray(arr) for arr in lax.unstack_p.bind(x.array, **kw)]  # type: ignore[attr-defined]
+
+
+# ==============================================================================
+
 
 @quax.register(lax.while_p)
 def while_p() -> MyArray:
