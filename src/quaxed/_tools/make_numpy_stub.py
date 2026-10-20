@@ -838,6 +838,34 @@ def _add_missing_return_types(text: str, /) -> str:
     return pattern.sub(r"\1 -> Any: ...", text)
 
 
+def _fix_scalar_type_protocol(text: str, /) -> str:
+    """Make upstream's ``_ScalarType`` protocol valid under strict mypy.
+
+    Newer JAX stubs spell the protocol with a bare ``_np.dtype`` and a ``bool``
+    return type; the latter is shadowed by the ``bool`` dtype defined in this
+    module, so it must be ``builtins.bool``.
+
+    Args:
+        text: The stub text to process.
+
+    Returns
+    -------
+        The stub text with the ``_ScalarType`` protocol fixed (a no-op when
+        absent).
+
+    """
+    return re.sub(
+        r"^class _ScalarType\(Protocol\):\n(?:  .*\n)+",
+        lambda m: (
+            m.group(0)
+            .replace("_np.dtype:", "_np.dtype[Any]:")
+            .replace("-> bool:", "-> builtins.bool:")
+        ),
+        text,
+        flags=re.MULTILINE,
+    )
+
+
 def generate_numpy_stub(output: Path, /) -> None:
     """Generate the ``quaxed.numpy`` stub from the upstream ``jax.numpy`` stub.
 
@@ -874,6 +902,7 @@ def generate_numpy_stub(output: Path, /) -> None:
     text = _add_device_type_ignores(text)
     text = _add_missing_return_types(text)
     text = _add_type_ignores(text)
+    text = _fix_scalar_type_protocol(text)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(text)
 

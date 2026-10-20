@@ -31,7 +31,7 @@ dependencies = [
   "optype>=0.8.0",
   'plum-dispatch>=2.5.7; python_version < "3.14"',
   'plum-dispatch>=2.9.0; python_version >= "3.14"',
-  "quax>=0.3.2",
+  "quax>=0.4.6",
 ]
 
 [project.urls]
@@ -50,7 +50,7 @@ requires = [
   "hatch-vcs",
   'jax>=0.5.3; python_version < "3.14"',
   'jax>=0.7.2; python_version >= "3.14"',
-  "quax>=0.3.2",
+  "quax>=0.4.6",
 ]
 build-backend = "hatchling.build"
 
