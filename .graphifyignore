@@ -1,0 +1,15 @@
+# Fixes what graphify indexes, so every rebuild — here, in CI, in a fresh clone —
+# produces the same graph. `graphify update` has no `--code-only` flag and the scope
+# `extract --code-only` used lives in an untracked cache, so the scope has to be
+# committed here instead.
+#
+# Prose and images: not code, and the image path wants an LLM.
+*.md
+*.pdf
+*.png
+*.svg
+
+# YAML config: workflows, mkdocs and the commit-check config contributed a third of
+# the survey graph (258 nodes from .github/workflows alone) as bare mapping keys.
+*.yml
+*.yaml

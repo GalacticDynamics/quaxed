@@ -77,6 +77,9 @@ Quantity['area'](Array(4, dtype=int64, weak_type=True), unit='km2')
 
 We welcome contributions!
 
+Contributors and AI assistants: this repository ships a queryable code graph —
+see [CONTRIBUTING.md](.github/CONTRIBUTING.md#the-code-graph).
+
 ### Running Tests
 
 To run tests locally, you'll need to install `nox` with `nox-uv`:
