@@ -1,0 +1,101 @@
+name: Refresh code graph
+
+# Rebuilds graphify-out/graph.json and opens a pull request if it drifted from the code,
+# e.g. because someone committed with SKIP=graphify-update. Never pushes to main: the graph
+# is code-derived, but a bad rebuild is still a change nobody reviewed.
+#
+# This runs on Linux, and the graph is not byte-reproducible across platforms: the same
+# source and pin give a few fewer __init__.py re-export edges here than on macOS. So a run
+# after a commit from another platform opens a pull request that only normalises those
+# edges. That is the job working, not a bug; merging it makes the committed graph this
+# runner's flavour until the next such commit.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays, 07:00 UTC
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  refresh:
+    name: Rebuild graph
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # This repository's GITHUB_TOKEN is read-only and Actions is not permitted to create
+      # pull requests, so the final step needs its own token. The GitHub App needs
+      # "Contents: Read and write" and "Pull requests: Read and write"; set GRAPHIFY_APP_ID
+      # and GRAPHIFY_APP_PRIVATE_KEY as repository or organization secrets. Until they
+      # exist this job fails here, which is the signal that it is not configured yet.
+      - name: Mint a GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
+        with:
+          app-id: ${{ secrets.GRAPHIFY_APP_ID }}
+          private-key: ${{ secrets.GRAPHIFY_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+
+      # The version is pinned once, in .pre-commit-config.yaml, so this job clusters the
+      # graph exactly the way the commit hook does.
+      - name: Rebuild graph
+        run: |
+          # Require at least one digit and take the first hit, so a mention of the package
+          # in a comment cannot be picked up as a second "pin".
+          pin=$(grep -oE 'graphifyy==[0-9]+(\.[0-9]+)*' .pre-commit-config.yaml | head -1)
+          if [ -z "$pin" ]; then
+            echo "::error::no graphifyy== pin found in .pre-commit-config.yaml"
+            exit 1
+          fi
+          echo "Rebuilding with $pin"
+          PYTHONHASHSEED=0 uvx --from "$pin" graphify update . --force
+
+      # A rebuild on one platform is byte-for-byte reproducible — .graphifyignore pins what
+      # is indexed, PYTHONHASHSEED=0 pins community numbering, and update keeps the stored
+      # built_at_commit rather than rewriting it — so a plain diff is a true drift check.
+      - name: Check for drift
+        id: drift
+        run: |
+          if git diff --quiet -- graphify-out/graph.json; then
+            echo "drifted=false" >> "$GITHUB_OUTPUT"
+            echo "The committed graph matches a fresh rebuild."
+          else
+            echo "drifted=true" >> "$GITHUB_OUTPUT"
+            echo "The committed graph has drifted from the code."
+          fi
+
+      - name: Open pull request
+        if: steps.drift.outputs.drifted == 'true'
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          # main requires signed commits, and requires extra approval for unattributed
+          # changes. Without this the action pushes with plain git, the commit is unsigned,
+          # and the pull request can only be merged with an administrator override. This
+          # commits through the GitHub API so GitHub signs it, and attributes it to the
+          # app, which clears the unattributed-changes rule too.
+          sign-commits: true
+          add-paths: graphify-out/graph.json
+          commit-message: "🧹 chore(graph): refresh the committed code graph"
+          title: "🧹 chore(graph): refresh the committed code graph"
+          body: |
+            Rebuild of `graphify-out/graph.json`. Either the committed graph drifted from
+            the code, or it was last built on a different operating system — graphify
+            extracts a few edges differently per platform, so a rebuild here moves the
+            graph to this runner's flavour.
+
+            Generated output, one line, collapsed by GitHub. Nothing to review beyond a
+            green build.
+          branch: chore/refresh-graphify
+          delete-branch: true

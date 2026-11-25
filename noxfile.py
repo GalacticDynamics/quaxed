@@ -71,8 +71,13 @@ def lint(s: nox.Session, /) -> None:
 def precommit(s: nox.Session, /) -> None:
     """Run the pre-commit hooks (via prek)."""
     # Not a real commit -- no-commit-to-branch would always fail here.
+    # graphify-update rebuilds the committed code graph, which is not byte-reproducible
+    # across platforms, so a --all-files run fails for anyone not on the platform that
+    # built the committed copy.
     # Merge into any SKIP already set, rather than clobber it.
-    skip = ",".join(filter(None, [os.environ.get("SKIP"), "no-commit-to-branch"]))
+    skip = ",".join(
+        filter(None, [os.environ.get("SKIP"), "no-commit-to-branch,graphify-update"])
+    )
     s.run("prek", "run", "--all-files", *s.posargs, env={"SKIP": skip})
 
 

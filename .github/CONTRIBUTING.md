@@ -58,6 +58,75 @@ pre-commit install # Will install a pre-commit hook into the git repo
 You can also/alternatively run `pre-commit run` (changes only) or
 `pre-commit run --all-files` to check even without installing the hook.
 
+# The code graph
+
+`graphify-out/graph.json` is a
+[graphify](https://github.com/Graphify-Labs/graphify) map of this repository:
+its symbols and the relationships between them. AI assistants query it instead
+of grepping, and you can too. Extraction is local tree-sitter parsing — no model
+call, and nothing leaves your machine — and every edge is marked `EXTRACTED`
+(explicit in the source) or `INFERRED` (resolved by graphify), so you can tell
+what was read from what was deduced. `.graphifyignore` keeps the scope to code:
+Markdown, images and YAML are out, which also keeps every rebuild reproducible.
+
+The graph is committed, and the commit checks rebuild it. Install the pinned
+release — the `graphifyy==` pin in `.pre-commit-config.yaml`, which is the only
+place the version is written down — and register the merge driver once per
+clone, so two branches that both changed the graph merge cleanly:
+
+```bash
+uv tool install "graphifyy==0.9.119"
+PY="$(sed -n '1s/^#!//p' "$(command -v graphify)")"
+git config merge.graphify.name "graphify graph.json union merge"
+git config merge.graphify.driver "\"$PY\" -m graphify merge-driver %O %A %B"
+```
+
+Git refuses to take a merge-driver command from a tracked file, so this cannot
+be committed for you — every clone needs the two `git config` lines once.
+
+Then query it:
+
+```bash
+graphify query "how is jax.numpy quaxified"   # a scoped subgraph for a question
+graphify explain "vectorize"                  # one symbol and its neighbours
+graphify path "quaxed.numpy" "quax.quaxify"   # how two things connect
+open graphify-out/graph.html                  # the clickable graph
+```
+
+Day to day:
+
+- The rebuild runs with your other commit checks. Like a formatter, it rebuilds
+  and stops the commit; `git add graphify-out/graph.json` and commit again.
+- Commit without rebuilding: `SKIP=graphify-update git commit ...`.
+- If a rebuild is ever refused because the graph would shrink — you deleted code
+  — use `GRAPHIFY_FORCE=1 git commit ...`. It usually just shrinks and says
+  nothing.
+- If the graph ever conflicts in a merge, rebuild rather than edit it:
+  `rm graphify-out/graph.json && graphify update . --force && git add graphify-out/graph.json`.
+- If the graph has fallen behind the code, rebuild it with the pin:
+  `PYTHONHASHSEED=0 uvx --from graphifyy==0.9.119 graphify update . --force`,
+  then commit it.
+- A changed `graph.json` in a pull request is generated output. It is one line,
+  collapsed by GitHub, and is not reviewed.
+
+A rebuild is byte-identical from a fresh clone on one platform, and not
+otherwise. Two things move it, both expected:
+
+- **A checkout that has been built** has `src/quaxed/_version.py` on disk, which
+  a fresh clone does not. Its mere presence shifts graphify's scan order, so
+  about 300 of the 700 nodes get different community _numbers_ — same nodes,
+  same edges, same community names. `.graphifyignore` cannot suppress this: the
+  scope controls which symbols are extracted, not which files are walked.
+- **A different operating system** reclassifies a handful of `__init__.py`
+  re-export edges.
+
+So the committed graph carries the flavour of whichever checkout last built it.
+If your rebuild rewrites it, that is not a conflict — stage it and commit.
+`nox -s lint` and pre-commit.ci both skip the rebuild for the same reason, and
+the weekly `Refresh code graph` workflow will occasionally open a pull request
+that only normalises the graph back to a fresh Linux checkout. That is the job
+working, not a bug.
+
 # Testing
 
 Use pytest to run the unit checks:
