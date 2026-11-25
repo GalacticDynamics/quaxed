@@ -277,6 +277,43 @@ def _filter_arrayvalue_unions(type_with_arrayvalue: str, /) -> str:
     return " | ".join(filtered_types)
 
 
+# RE_PRIVATE_IMPORT_ALIAS matches a re-export-hiding alias, e.g. "X as _X".
+RE_PRIVATE_IMPORT_ALIAS = re.compile(r"\b(\w+) as _\1\b")
+
+
+def _unalias_private_imports(text: str, /) -> str:
+    r"""Undo ``X as _X`` import aliases, restoring the bare names.
+
+    jax 0.11 began hiding every name its ``jax.numpy`` stub imports behind such
+    an alias, so ``ArrayLike`` became ``_ArrayLike`` and ``Array`` became
+    ``_Array``. Every rewrite below matches the bare spelling, so an aliased
+    stub slips past all of them and comes out with no ``_ArrayValueT`` overloads
+    at all. Normalising here beats teaching each pattern both spellings, and
+    re-exports nothing: in a stub only an explicit ``X as X`` is a re-export.
+    Only aliases spelled ``_`` + the name are touched, so ``numpy as _np``
+    survives.
+
+    Args:
+        text: The stub text to process.
+
+    Returns
+    -------
+        The stub text with the private import aliases removed.
+
+    Examples
+    --------
+        >>> _unalias_private_imports("from m import Array as _Array\nx: _Array")
+        'from m import Array\nx: Array'
+
+    """
+    names = {m.group(1) for m in RE_PRIVATE_IMPORT_ALIAS.finditer(text)}
+    if not names:
+        return text
+    text = RE_PRIVATE_IMPORT_ALIAS.sub(r"\1", text)
+    alternation = "|".join(sorted(names))
+    return re.sub(rf"\b_({alternation})\b", r"\1", text)
+
+
 def _add_typealias_imports(text: str, /) -> str:
     """Add quax imports and type variables for ArrayValue overloads.
 
@@ -645,7 +682,7 @@ def _add_type_ignores(text: str, /) -> str:
         |^\s+\w+:\s+.*                    # Indented parameter line
         |^\s*\).*                         # Closing-paren / return-type continuation
         )
-        .*\b(?:Callable|ndarray|DType\b(?!Like)|Tracer)  # Unparameterized generic
+        .*\b(?:Callable|ndarray|DType\b(?!Like)|_np\.dtype|Tracer)  # Unparameterized generic
         (?!\[)                             # Not followed by [
         """,
         re.VERBOSE,
@@ -809,6 +846,31 @@ def _add_device_type_ignores(text: str, /) -> str:
     return "\n".join(result)
 
 
+def _qualify_shadowed_bool(text: str, /) -> str:
+    """Qualify a bare ``bool`` annotation as ``builtins.bool``.
+
+    A module-level ``bool`` (the numpy scalar type) shadows the builtin, which
+    is why upstream writes ``builtins.bool`` everywhere. Where it slips, jax
+    0.12 types that variable ``_ScalarType``, which a type checker rejects, and
+    jax 0.10 types it ``Any``, which silently annotates nothing. Only annotation
+    positions are rewritten, so the declaration itself is left alone.
+
+    Args:
+        text: The stub text to process.
+
+    Returns
+    -------
+        The stub text with bare ``bool`` annotations qualified.
+
+    Examples
+    --------
+        >>> _qualify_shadowed_bool("def __eq__(self, o: Any, /) -> bool: ...")
+        'def __eq__(self, o: Any, /) -> builtins.bool: ...'
+
+    """
+    return re.sub(r"(-> |: )bool\b", r"\1builtins.bool", text)
+
+
 def _add_missing_return_types(text: str, /) -> str:
     """Add '-> Any' return type to functions missing return type annotations.
 
@@ -883,6 +945,7 @@ def generate_numpy_stub(output: Path, /) -> None:
     """
     upstream = Path(jnp.__file__).with_suffix(".pyi")
     text = upstream.read_text(encoding="utf-8")
+    text = _unalias_private_imports(text)
     text = _add_typealias_imports(text)
     text = _downgrade_pep695_aliases(text)
     text = _replace_binary_ufunc(text)
@@ -894,6 +957,7 @@ def generate_numpy_stub(output: Path, /) -> None:
     text = _add_positional_param_annotations(text)
     text = _add_specific_import_ignores(text)
     text = _add_device_type_ignores(text)
+    text = _qualify_shadowed_bool(text)
     text = _add_missing_return_types(text)
     text = _add_type_ignores(text)
     text = _fix_scalar_type_protocol(text)

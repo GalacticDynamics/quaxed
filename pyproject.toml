@@ -156,6 +156,7 @@ messages_control.disable = [
   "missing-function-docstring", # TODO: reinstate.
   "missing-module-docstring",
   "redefined-builtin",
+  "too-many-lines",             # as with line-too-long, not a useful signal here
   "unused-argument",            # handled by ruff
   "useless-import-alias",       # handled by ruff
   "wrong-import-position",
